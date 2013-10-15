@@ -131,4 +131,8 @@ public class AppTest {
         people.remove(new BasicDBObject("name", "loki2302"));        
         assertEquals(0, people.count());
     }
+    
+    // todo: aggregation [sum, avg]
+    // todo: find by multiple fields [just-multiple, nested]
+    // todo: use index
 }
