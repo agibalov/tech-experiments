@@ -2,13 +2,16 @@ package me.loki2302;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.mongodb.BasicDBObject;
@@ -18,15 +21,43 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
+import de.flapdoodle.embed.mongo.MongodExecutable;
+import de.flapdoodle.embed.mongo.MongodProcess;
+import de.flapdoodle.embed.mongo.MongodStarter;
+import de.flapdoodle.embed.mongo.config.IMongodConfig;
+import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
+import de.flapdoodle.embed.mongo.config.Net;
+import de.flapdoodle.embed.mongo.distribution.Version;
+import de.flapdoodle.embed.process.runtime.Network;
+
 public class AppTest {
-    private final static String MONGO_HOST = "win7dev-home";
+    private final static String MONGO_HOST = "localhost";
+    private final static int MONGO_PORT = 12345;
     private final static String MONGO_DB = "testdb";
     
-    private MongoClient mongoClient;
+    private static MongodProcess mongodProcess;
+    private MongoClient mongoClient;    
+    
+    @BeforeClass
+    public static void startMongo() throws UnknownHostException, IOException {
+        IMongodConfig mongodConfig = new MongodConfigBuilder()
+            .version(Version.Main.PRODUCTION)
+            .net(new Net(MONGO_PORT, Network.localhostIsIPv6()))
+            .build();
+    
+        MongodStarter mongodStarter = MongodStarter.getDefaultInstance();
+        MongodExecutable mongodExecutable = mongodStarter.prepare(mongodConfig);
+        mongodProcess = mongodExecutable.start();
+    }
+    
+    @AfterClass
+    public static void stopMongo() {        
+        mongodProcess.stop();
+    }
     
     @Before
     public void setUp() throws UnknownHostException {
-        mongoClient = new MongoClient(MONGO_HOST);
+        mongoClient = new MongoClient(MONGO_HOST, MONGO_PORT);
         mongoClient.dropDatabase(MONGO_DB);
     }
     
