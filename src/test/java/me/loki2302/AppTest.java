@@ -7,6 +7,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -151,6 +152,32 @@ public class AppTest {
         assertEquals(2, names.size());
         assertTrue(names.contains("loki2302_1"));
         assertTrue(names.contains("loki2302_3"));
+    }
+
+    @Test
+    public void canFindDocumentsByLikeAttribute() {
+        DB db = mongoClient.getDB(MONGO_DB);
+        DBCollection people = db.getCollection("people");
+        people.insert(new BasicDBObject("name", "loki2302"));
+        people.insert(new BasicDBObject("name", "john"));
+        people.insert(new BasicDBObject("name", "mocking"));
+
+        List<String> names = new ArrayList<String>();
+        BasicDBObject criterion = new BasicDBObject();
+        criterion.put("name", Pattern.compile("ki"));
+        DBCursor cursor = people.find(criterion);
+        try {
+            while(cursor.hasNext()) {
+                DBObject person = cursor.next();
+                names.add((String)person.get("name"));
+            }
+        } finally {
+            cursor.close();
+        }
+
+        assertEquals(2, names.size());
+        assertTrue(names.contains("loki2302"));
+        assertTrue(names.contains("mocking"));
     }
     
     @Test
