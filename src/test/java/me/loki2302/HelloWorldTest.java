@@ -1,72 +1,16 @@
 package me.loki2302;
 
-import static org.junit.Assert.*;
+import com.mongodb.*;
+import org.junit.Test;
 
-import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
-
-import de.flapdoodle.embed.mongo.MongodExecutable;
-import de.flapdoodle.embed.mongo.MongodProcess;
-import de.flapdoodle.embed.mongo.MongodStarter;
-import de.flapdoodle.embed.mongo.config.IMongodConfig;
-import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
-import de.flapdoodle.embed.mongo.config.Net;
-import de.flapdoodle.embed.mongo.distribution.Version;
-import de.flapdoodle.embed.process.runtime.Network;
-
-public class AppTest {
-    private final static String MONGO_HOST = "localhost";
-    private final static int MONGO_PORT = 12345;
-    private final static String MONGO_DB = "testdb";
-    
-    private static MongodProcess mongodProcess;
-    private MongoClient mongoClient;    
-    
-    @BeforeClass
-    public static void startMongo() throws UnknownHostException, IOException {
-        IMongodConfig mongodConfig = new MongodConfigBuilder()
-            .version(Version.Main.PRODUCTION)
-            .net(new Net(MONGO_PORT, Network.localhostIsIPv6()))
-            .build();
-    
-        MongodStarter mongodStarter = MongodStarter.getDefaultInstance();
-        MongodExecutable mongodExecutable = mongodStarter.prepare(mongodConfig);
-        mongodProcess = mongodExecutable.start();
-    }
-    
-    @AfterClass
-    public static void stopMongo() {        
-        mongodProcess.stop();
-    }
-    
-    @Before
-    public void setUp() throws UnknownHostException {
-        mongoClient = new MongoClient(MONGO_HOST, MONGO_PORT);
-        mongoClient.dropDatabase(MONGO_DB);
-    }
-    
-    @After
-    public void cleanUp() {
-        mongoClient.dropDatabase(MONGO_DB);
-    }
-    
+public class HelloWorldTest extends AbstractMongoTest {
     @Test
     public void canCreateDatabase() {
         List<String> databaseNames = mongoClient.getDatabaseNames();
@@ -179,7 +123,7 @@ public class AppTest {
         assertTrue(names.contains("loki2302"));
         assertTrue(names.contains("mocking"));
     }
-    
+
     @Test
     public void canDeleteDocuments() {
         DB db = mongoClient.getDB(MONGO_DB);
@@ -190,7 +134,6 @@ public class AppTest {
         assertEquals(0, people.count());
     }
     
-    // todo: aggregation [sum, avg]
     // todo: find by multiple fields [just-multiple, nested]
     // todo: use index
 }
