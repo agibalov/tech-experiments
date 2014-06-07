@@ -1,5 +1,6 @@
 package me.loki2302;
 
+import org.elasticsearch.action.admin.indices.stats.IndicesStatsResponse;
 import org.elasticsearch.action.count.CountResponse;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetResponse;
@@ -37,7 +38,12 @@ public class AppTest {
     }
 
     @Test
-    public void dummy() throws IOException, InterruptedException {
+    public void thereAreNoIndicesByDefault() {
+        assertThereAreNoIndices();
+    }
+
+    @Test
+    public void canCreateAnIndexByAddingADocument() throws IOException, InterruptedException {
         IndexResponse indexResponse = client.prepareIndex("notes", "note", "1").setSource(
                 XContentFactory.jsonBuilder()
                         .startObject()
@@ -45,31 +51,51 @@ public class AppTest {
                         .endObject())
                 .execute()
                 .actionGet();
+
         assertTrue(indexResponse.isCreated());
+        assertThereAreNIndices(1);
+        assertThereAreNNotes(1);
+    }
 
-        GetResponse getResponse = client.prepareGet("notes", "note", "1")
+    @Test
+    public void canDeleteADocument() throws IOException, InterruptedException {
+        client.prepareIndex("notes", "note", "1").setSource(
+                XContentFactory.jsonBuilder()
+                        .startObject()
+                        .field("text", "hello")
+                        .endObject())
                 .execute()
                 .actionGet();
-        assertEquals("hello", getResponse.getSource().get("text"));
-
-        Thread.sleep(1000);
-
-        CountResponse countResponse = client.prepareCount("notes")
-                .execute()
-                .actionGet();
-        assertEquals(1, countResponse.getCount());
 
         DeleteResponse deleteResponse = client.prepareDelete("notes", "note", "1")
                 .execute()
                 .actionGet();
         assertTrue(deleteResponse.isFound());
 
-        Thread.sleep(1000);
+        assertThereAreNoNotes();
+    }
 
-        CountResponse afterDeleteCountResponse = client.prepareCount("notes")
-                .setQuery(termQuery("_type", "note"))
+    private void assertThereAreNoIndices() {
+        assertThereAreNIndices(0);
+    }
+
+    private void assertThereAreNIndices(int expected) {
+        IndicesStatsResponse indicesStatsResponse = client.admin().indices().prepareStats()
                 .execute()
                 .actionGet();
-        assertEquals(0, afterDeleteCountResponse.getCount());
+        assertEquals(expected, indicesStatsResponse.getIndices().size());
+    }
+
+    private void assertThereAreNoNotes() throws InterruptedException {
+        assertThereAreNNotes(0);
+    }
+
+    private void assertThereAreNNotes(int expected) throws InterruptedException {
+        Thread.sleep(1000);
+
+        CountResponse countResponse = client.prepareCount("notes")
+                .execute()
+                .actionGet();
+        assertEquals(expected, countResponse.getCount());
     }
 }
