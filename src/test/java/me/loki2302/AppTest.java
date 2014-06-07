@@ -14,6 +14,7 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class AppTest {
     private EmbeddedElasticSearch embeddedElasticSearch;
@@ -87,12 +88,22 @@ public class AppTest {
         assertThereAreNNotes(0);
     }
 
+    // this one is not guaranteed to work correctly. what is a better approach?
     private void assertThereAreNNotes(int expected) throws InterruptedException {
-        Thread.sleep(1000);
+        long actualNoteCount = -1;
+        for(int i = 0; i < 10; ++i) {
+            CountResponse countResponse = client.prepareCount("notes")
+                    .execute()
+                    .actionGet();
 
-        CountResponse countResponse = client.prepareCount("notes")
-                .execute()
-                .actionGet();
-        assertEquals(expected, countResponse.getCount());
+            actualNoteCount = countResponse.getCount();
+            if(actualNoteCount == expected) {
+                return;
+            }
+
+            Thread.sleep(500);
+        }
+
+        fail(String.format("Expected to get %d notes, but had only %d", expected, actualNoteCount));
     }
 }
