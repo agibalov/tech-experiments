@@ -1,11 +1,20 @@
 package me.loki2302;
 
+import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.admin.indices.stats.IndicesStatsResponse;
 import org.elasticsearch.action.count.CountResponse;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.common.bytes.BytesReference;
+import org.elasticsearch.common.xcontent.ToXContent;
+import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
+import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -71,6 +80,37 @@ public class AppTest {
         assertTrue(deleteResponse.isFound());
 
         assertThereAreNoNotes();
+    }
+
+    @Test
+    public void canSearchDocuments() throws IOException, InterruptedException {
+        client.prepareIndex("notes", "note", "1").setSource(
+                XContentFactory.jsonBuilder()
+                        .startObject().field("text", "remember the milk").endObject())
+                .execute()
+                .actionGet();
+        client.prepareIndex("notes", "note", "2").setSource(
+                XContentFactory.jsonBuilder()
+                        .startObject().field("text", "get some vodka").endObject())
+                .execute()
+                .actionGet();
+
+        for(int i = 0; i < 10; ++i) {
+            SearchResponse searchResponse = client.prepareSearch("notes")
+                    .setTypes("note")
+                    .setSearchType(SearchType.QUERY_THEN_FETCH)
+                    .setQuery(QueryBuilders.termQuery("text", "milk"))
+                    .execute()
+                    .actionGet();
+
+            if(searchResponse.getHits().totalHits() == 1) {
+                return;
+            }
+
+            Thread.sleep(500);
+        }
+
+        fail("Didn't get any matching results");
     }
 
     private void assertThereAreNoIndices() {
