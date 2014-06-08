@@ -1,6 +1,5 @@
 package me.loki2302;
 
-import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.admin.indices.stats.IndicesStatsResponse;
 import org.elasticsearch.action.count.CountResponse;
 import org.elasticsearch.action.delete.DeleteResponse;
@@ -8,12 +7,7 @@ import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.Client;
-import org.elasticsearch.common.bytes.BytesReference;
-import org.elasticsearch.common.xcontent.ToXContent;
-import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
-import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.junit.After;
 import org.junit.Before;
@@ -23,7 +17,6 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class AppTest {
     private EmbeddedElasticSearch embeddedElasticSearch;
@@ -50,7 +43,7 @@ public class AppTest {
     }
 
     @Test
-    public void canCreateAnIndexByAddingADocument() throws IOException, InterruptedException {
+    public void canCreateAnIndexByAddingADocument() throws IOException {
         IndexResponse indexResponse = client.prepareIndex("notes", "note", "1").setSource(
                 XContentFactory.jsonBuilder()
                         .startObject()
@@ -58,8 +51,10 @@ public class AppTest {
                         .endObject())
                 .execute()
                 .actionGet();
-
         assertTrue(indexResponse.isCreated());
+
+        refreshIndices();
+
         assertThereAreNIndices(1);
         assertThereAreNNotes(1);
     }
@@ -73,11 +68,13 @@ public class AppTest {
                         .endObject())
                 .execute()
                 .actionGet();
+        refreshIndices();
 
         DeleteResponse deleteResponse = client.prepareDelete("notes", "note", "1")
                 .execute()
                 .actionGet();
         assertTrue(deleteResponse.isFound());
+        refreshIndices();
 
         assertThereAreNoNotes();
     }
@@ -95,22 +92,16 @@ public class AppTest {
                 .execute()
                 .actionGet();
 
-        for(int i = 0; i < 10; ++i) {
-            SearchResponse searchResponse = client.prepareSearch("notes")
-                    .setTypes("note")
-                    .setSearchType(SearchType.QUERY_THEN_FETCH)
-                    .setQuery(QueryBuilders.termQuery("text", "milk"))
-                    .execute()
-                    .actionGet();
+        refreshIndices();
 
-            if(searchResponse.getHits().totalHits() == 1) {
-                return;
-            }
+        SearchResponse searchResponse = client.prepareSearch("notes")
+                .setTypes("note")
+                .setSearchType(SearchType.QUERY_THEN_FETCH)
+                .setQuery(QueryBuilders.termQuery("text", "milk"))
+                .execute()
+                .actionGet();
 
-            Thread.sleep(500);
-        }
-
-        fail("Didn't get any matching results");
+        assertEquals(1, searchResponse.getHits().totalHits());
     }
 
     private void assertThereAreNoIndices() {
@@ -124,26 +115,18 @@ public class AppTest {
         assertEquals(expected, indicesStatsResponse.getIndices().size());
     }
 
-    private void assertThereAreNoNotes() throws InterruptedException {
+    private void assertThereAreNoNotes() {
         assertThereAreNNotes(0);
     }
 
-    // this one is not guaranteed to work correctly. what is a better approach?
-    private void assertThereAreNNotes(int expected) throws InterruptedException {
-        long actualNoteCount = -1;
-        for(int i = 0; i < 10; ++i) {
-            CountResponse countResponse = client.prepareCount("notes")
-                    .execute()
-                    .actionGet();
+    private void assertThereAreNNotes(int expected) {
+        CountResponse countResponse = client.prepareCount("notes")
+                .execute()
+                .actionGet();
+        assertEquals(expected, countResponse.getCount());
+    }
 
-            actualNoteCount = countResponse.getCount();
-            if(actualNoteCount == expected) {
-                return;
-            }
-
-            Thread.sleep(500);
-        }
-
-        fail(String.format("Expected to get %d notes, but had only %d", expected, actualNoteCount));
+    private void refreshIndices() {
+        client.admin().indices().prepareRefresh().execute().actionGet();
     }
 }
