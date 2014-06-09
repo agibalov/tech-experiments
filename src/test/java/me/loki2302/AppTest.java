@@ -9,6 +9,8 @@ import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -101,7 +103,12 @@ public class AppTest {
                 .execute()
                 .actionGet();
 
-        assertEquals(1, searchResponse.getHits().totalHits());
+        SearchHits searchHits = searchResponse.getHits();
+        assertEquals(1, searchHits.totalHits());
+        SearchHit[] searchHitsArray = searchHits.getHits();
+        SearchHit firstSearchHit = searchHitsArray[0];
+        assertEquals("1", firstSearchHit.id());
+        assertEquals("remember the milk", firstSearchHit.sourceAsMap().get("text"));
     }
 
     private void assertThereAreNoIndices() {
