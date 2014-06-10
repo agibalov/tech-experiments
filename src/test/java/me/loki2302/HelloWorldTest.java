@@ -99,6 +99,30 @@ public class HelloWorldTest extends AbstractMongoTest {
     }
 
     @Test
+    public void canFindDocumentsByManyAttributes() {
+        DB db = mongoClient.getDB(MONGO_DB);
+        DBCollection people = db.getCollection("people");
+        people.insert(new BasicDBObject("name", "loki2302_1").append("age", 33).append("sex", "m"));
+        people.insert(new BasicDBObject("name", "loki2302_2").append("age", 33).append("sex", "m"));
+        people.insert(new BasicDBObject("name", "loki2302_3").append("age", 33).append("sex", "f"));
+
+        List<String> names = new ArrayList<String>();
+        DBCursor cursor = people.find(new BasicDBObject("age", 33).append("sex", "m"));
+        try {
+            while(cursor.hasNext()) {
+                DBObject person = cursor.next();
+                names.add((String)person.get("name"));
+            }
+        } finally {
+            cursor.close();
+        }
+
+        assertEquals(2, names.size());
+        assertTrue(names.contains("loki2302_1"));
+        assertTrue(names.contains("loki2302_2"));
+    }
+
+    @Test
     public void canFindDocumentsByLikeAttribute() {
         DB db = mongoClient.getDB(MONGO_DB);
         DBCollection people = db.getCollection("people");
@@ -133,7 +157,6 @@ public class HelloWorldTest extends AbstractMongoTest {
         people.remove(new BasicDBObject("name", "loki2302"));        
         assertEquals(0, people.count());
     }
-    
-    // todo: find by multiple fields [just-multiple, nested]
+
     // todo: use index
 }
