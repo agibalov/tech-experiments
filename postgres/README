@@ -1,0 +1,8 @@
+Run postgres.sh
+This will set up a new Ubuntu with Postgres installed.
+Instance name will be `pg1`. To get IP, run `sudo docker inspect pg1 | grep IPAddress`
+
+psql --host=172.17.0.2 --username=postgres
+password is `qwerty`.
+
+stop with `sudo docker stop pg1`
