@@ -1,0 +1,1 @@
+sudo docker port pg1 5432
