@@ -6,13 +6,10 @@ import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
-import org.elasticsearch.client.Client;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -20,25 +17,8 @@ import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class AppTest {
-    private EmbeddedElasticSearch embeddedElasticSearch;
-    private Client client;
-
-    @Before
-    public void startElasticSearch() {
-        embeddedElasticSearch = new EmbeddedElasticSearch();
-        embeddedElasticSearch.start();
-
-        client = embeddedElasticSearch.client();
-    }
-
-    @After
-    public void stopElasticSearch() {
-        client = null;
-        embeddedElasticSearch.stop();
-        embeddedElasticSearch = null;
-    }
-
+public class AppTest extends ElasticSearchTest {
+    // TODO: this one fails sometimes. why?
     @Test
     public void thereAreNoIndicesByDefault() {
         assertThereAreNoIndices();
