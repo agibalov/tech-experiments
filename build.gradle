@@ -9,5 +9,5 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
-    compile('org.elasticsearch:elasticsearch:1.1.0')
+    compile('org.elasticsearch:elasticsearch:1.4.2')
 }
