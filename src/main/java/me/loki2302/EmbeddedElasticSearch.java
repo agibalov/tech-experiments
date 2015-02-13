@@ -8,9 +8,10 @@ import org.elasticsearch.node.Node;
 import org.elasticsearch.node.NodeBuilder;
 
 import java.io.File;
+import java.util.UUID;
 
 public class EmbeddedElasticSearch {
-    private final static String dataDirectory = "1";
+    private String dataDirectory;
     private Node node;
 
     public void start() {
@@ -18,6 +19,7 @@ public class EmbeddedElasticSearch {
             throw new IllegalStateException();
         }
 
+        dataDirectory = UUID.randomUUID().toString();
         Settings settings = ImmutableSettings.builder()
                 .put("http.enabled", false)
                 .put("path.data", dataDirectory)
@@ -35,9 +37,10 @@ public class EmbeddedElasticSearch {
         }
 
         node.close();
-        FileSystemUtils.deleteRecursively(new File(dataDirectory));
-
         node = null;
+
+        FileSystemUtils.deleteRecursively(new File(dataDirectory));
+        dataDirectory = null;
     }
 
     public Client client() {
