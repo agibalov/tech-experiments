@@ -2,12 +2,16 @@ package me.loki2302;
 
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.bucket.MultiBucketsAggregation;
 import org.elasticsearch.search.aggregations.bucket.terms.StringTerms;
+import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.metrics.avg.Avg;
+import org.elasticsearch.search.aggregations.metrics.min.Min;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -23,7 +27,8 @@ public class AggregationTest extends ElasticSearchTest {
                 .addAggregation(AggregationBuilders.terms("allInterests").field("interests"))
                 .execute().actionGet();
         StringTerms allInterestsStringTerms = searchResponse.getAggregations().get("allInterests");
-        assertEquals(3, allInterestsStringTerms.getBuckets().size());
+        List<Terms.Bucket> buckets = allInterestsStringTerms.getBuckets();
+        assertEquals(3, buckets.size());
     }
 
     @Test
@@ -37,6 +42,5 @@ public class AggregationTest extends ElasticSearchTest {
 
     // +TODO: get all tags
     // TODO: get all tags with person count per each tag
-    // TODO: get min age and the related person
     // +TODO: get avg age
 }
