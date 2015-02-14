@@ -2,11 +2,9 @@ package me.loki2302;
 
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
-import org.elasticsearch.search.aggregations.bucket.MultiBucketsAggregation;
 import org.elasticsearch.search.aggregations.bucket.terms.StringTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.metrics.avg.Avg;
-import org.elasticsearch.search.aggregations.metrics.min.Min;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,6 +27,12 @@ public class AggregationTest extends ElasticSearchTest {
         StringTerms allInterestsStringTerms = searchResponse.getAggregations().get("allInterests");
         List<Terms.Bucket> buckets = allInterestsStringTerms.getBuckets();
         assertEquals(3, buckets.size());
+        assertEquals("music", buckets.get(0).getKey());
+        assertEquals(2, buckets.get(0).getDocCount());
+        assertEquals("forestry", buckets.get(1).getKey());
+        assertEquals(1, buckets.get(1).getDocCount());
+        assertEquals("sports", buckets.get(2).getKey());
+        assertEquals(1, buckets.get(2).getDocCount());
     }
 
     @Test
@@ -39,8 +43,4 @@ public class AggregationTest extends ElasticSearchTest {
         Avg averageAge = searchResponse.getAggregations().get("averageAge");
         assertEquals(30.66, averageAge.getValue(), 0.01); // 30.6666666666666....
     }
-
-    // +TODO: get all tags
-    // TODO: get all tags with person count per each tag
-    // +TODO: get avg age
 }
