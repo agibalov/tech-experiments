@@ -60,7 +60,7 @@ public class CRUDTest extends ElasticSearchTest {
     }
 
     @Test
-    public void canGetEmployeeIfItDoesNotExist() throws IOException {
+    public void cantGetEmployeeIfItDoesNotExist() throws IOException {
         client.prepareIndex("megacorp", "employee", "1")
                 .setSource(XContentFactory.jsonBuilder()
                         .startObject()
