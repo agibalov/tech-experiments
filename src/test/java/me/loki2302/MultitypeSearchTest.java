@@ -3,6 +3,7 @@ package me.loki2302;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.xcontent.XContentFactory;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,11 +18,35 @@ public class MultitypeSearchTest extends ElasticSearchTest {
     }
 
     @Test
+    public void canFindEverything() {
+        SearchResponse searchResponse = client.prepareSearch("notebook")
+                .execute().actionGet();
+        assertEquals(5, searchResponse.getHits().getTotalHits());
+    }
+
+    @Test
     public void canFindAllNotesAndEvents() {
-        SearchResponse searchResult = client.prepareSearch("notebook")
+        SearchResponse searchResponse = client.prepareSearch("notebook")
                 .setTypes("note", "event")
                 .execute().actionGet();
-        assertEquals(5, searchResult.getHits().getTotalHits());
+        assertEquals(5, searchResponse.getHits().getTotalHits());
+    }
+
+    @Test
+    public void canFindEverythingAboutVodka() {
+        SearchResponse searchResponse = client.prepareSearch("notebook")
+                .setQuery(QueryBuilders.matchQuery("text", "vodka"))
+                .execute().actionGet();
+        assertEquals(2, searchResponse.getHits().getTotalHits());
+    }
+
+    @Test
+    public void canFindVodkaNotesAndEvents() {
+        SearchResponse searchResponse = client.prepareSearch("notebook")
+                .setTypes("note", "event")
+                .setQuery(QueryBuilders.matchQuery("text", "vodka"))
+                .execute().actionGet();
+        assertEquals(2, searchResponse.getHits().getTotalHits());
     }
 
     public static class NotesAndEventsDataset {
