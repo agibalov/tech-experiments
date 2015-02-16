@@ -21,15 +21,17 @@ public class HighlightingTest extends ElasticSearchTest {
                 .setSource(XContentFactory.jsonBuilder()
                         .startObject()
                         .field("text", "Once upon a time there was Java")
-                        .endObject()).execute().actionGet();
+                        .endObject())
+                .setRefresh(true)
+                .execute().actionGet();
 
         client.prepareIndex("notes", "note", "2")
                 .setSource(XContentFactory.jsonBuilder()
                         .startObject()
                         .field("text", "Sponge Bob rocks!")
-                        .endObject()).execute().actionGet();
-
-        client.admin().indices().prepareRefresh("notes").setForce(true).execute().actionGet();
+                        .endObject())
+                .setRefresh(true)
+                .execute().actionGet();
 
         SearchResponse searchResponse = client.prepareSearch("notes")
                 .setTypes("note")

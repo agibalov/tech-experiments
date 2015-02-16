@@ -15,7 +15,9 @@ public class EmployeesDataset {
                         .field("age", 25)
                         .field("about", "I love to go rock climbing")
                         .array("interests", "sports", "music")
-                        .endObject()).execute().actionGet();
+                        .endObject())
+                .setRefresh(true)
+                .execute().actionGet();
 
         client.prepareIndex("megacorp", "employee", "2")
                 .setSource(XContentFactory.jsonBuilder()
@@ -25,7 +27,9 @@ public class EmployeesDataset {
                         .field("age", 32)
                         .field("about", "I like to collect rock albums")
                         .array("interests", "music")
-                        .endObject()).execute().actionGet();
+                        .endObject())
+                .setRefresh(true)
+                .execute().actionGet();
 
         client.prepareIndex("megacorp", "employee", "3")
                 .setSource(XContentFactory.jsonBuilder()
@@ -35,8 +39,8 @@ public class EmployeesDataset {
                         .field("age", 35)
                         .field("about", "I like to build cabinets")
                         .array("interests", "forestry")
-                        .endObject()).execute().actionGet();
-
-        client.admin().indices().prepareRefresh("megacorp").setForce(true).execute().actionGet();
+                        .endObject())
+                .setRefresh(true)
+                .execute().actionGet();
     }
 }

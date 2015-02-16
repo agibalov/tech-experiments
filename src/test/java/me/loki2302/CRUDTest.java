@@ -24,7 +24,9 @@ public class CRUDTest extends ElasticSearchTest {
                         .field("age", 25)
                         .field("about", "I love to go rock climbing")
                         .array("interests", "sports", "music")
-                        .endObject()).execute().actionGet();
+                        .endObject())
+                .setRefresh(true)
+                .execute().actionGet();
 
         assertTrue(indexResponse.isCreated());
         assertEquals(1, indexResponse.getVersion());
@@ -40,7 +42,9 @@ public class CRUDTest extends ElasticSearchTest {
                         .field("age", 25)
                         .field("about", "I love to go rock climbing")
                         .array("interests", "sports", "music")
-                        .endObject()).execute().actionGet();
+                        .endObject())
+                .setRefresh(true)
+                .execute().actionGet();
 
         GetResponse getResponse = client.prepareGet("megacorp", "employee", "1")
                 .execute().actionGet();
@@ -69,7 +73,9 @@ public class CRUDTest extends ElasticSearchTest {
                         .field("age", 25)
                         .field("about", "I love to go rock climbing")
                         .array("interests", "sports", "music")
-                        .endObject()).execute().actionGet();
+                        .endObject())
+                .setRefresh(true)
+                .execute().actionGet();
 
         GetResponse getResponse = client.prepareGet("megacorp", "employee", "123")
                 .execute().actionGet();
@@ -86,7 +92,9 @@ public class CRUDTest extends ElasticSearchTest {
                         .field("age", 25)
                         .field("about", "I love to go rock climbing")
                         .array("interests", "sports", "music")
-                        .endObject()).execute().actionGet();
+                        .endObject())
+                .setRefresh(true)
+                .execute().actionGet();
 
         IndexResponse indexResponse = client.prepareIndex("megacorp", "employee", "1")
                 .setSource(XContentFactory.jsonBuilder()
@@ -96,7 +104,8 @@ public class CRUDTest extends ElasticSearchTest {
                         .field("age", 25)
                         .field("about", "I hate to go rock climbing")
                         .array("interests", "sports", "music")
-                        .endObject()).execute().actionGet();
+                        .endObject())
+                .execute().actionGet();
 
         assertFalse(indexResponse.isCreated());
         assertEquals(2, indexResponse.getVersion());
@@ -112,7 +121,9 @@ public class CRUDTest extends ElasticSearchTest {
                         .field("age", 25)
                         .field("about", "I love to go rock climbing")
                         .array("interests", "sports", "music")
-                        .endObject()).execute().actionGet();
+                        .endObject())
+                .setRefresh(true)
+                .execute().actionGet();
 
         IndexResponse indexResponse = client.prepareIndex("megacorp", "employee", "1")
                 .setVersion(1)
@@ -123,7 +134,9 @@ public class CRUDTest extends ElasticSearchTest {
                         .field("age", 25)
                         .field("about", "I hate to go rock climbing")
                         .array("interests", "sports", "music")
-                        .endObject()).execute().actionGet();
+                        .endObject())
+                .setRefresh(true)
+                .execute().actionGet();
 
         assertFalse(indexResponse.isCreated());
         assertEquals(2, indexResponse.getVersion());
@@ -139,7 +152,9 @@ public class CRUDTest extends ElasticSearchTest {
                         .field("age", 25)
                         .field("about", "I love to go rock climbing")
                         .array("interests", "sports", "music")
-                        .endObject()).execute().actionGet();
+                        .endObject())
+                .setRefresh(true)
+                .execute().actionGet();
 
         IndexResponse updateOneIndexResponse = client.prepareIndex("megacorp", "employee", "1")
                 .setSource(XContentFactory.jsonBuilder()
@@ -149,7 +164,9 @@ public class CRUDTest extends ElasticSearchTest {
                         .field("age", 25)
                         .field("about", "I hate to go rock climbing")
                         .array("interests", "sports", "music")
-                        .endObject()).execute().actionGet();
+                        .endObject())
+                .setRefresh(true)
+                .execute().actionGet();
         assertEquals(2, updateOneIndexResponse.getVersion());
 
         try {
@@ -162,7 +179,9 @@ public class CRUDTest extends ElasticSearchTest {
                             .field("age", 25)
                             .field("about", "I ... to go rock climbing")
                             .array("interests", "sports", "music")
-                            .endObject()).execute().actionGet();
+                            .endObject())
+                    .setRefresh(true)
+                    .execute().actionGet();
 
             fail();
         } catch (VersionConflictEngineException e) {
@@ -181,7 +200,9 @@ public class CRUDTest extends ElasticSearchTest {
                         .field("age", 25)
                         .field("about", "I love to go rock climbing")
                         .array("interests", "sports", "music")
-                        .endObject()).execute().actionGet();
+                        .endObject())
+                .setRefresh(true)
+                .execute().actionGet();
 
         DeleteResponse deleteResponse = client.prepareDelete("megacorp", "employee", "1")
                 .execute().actionGet();

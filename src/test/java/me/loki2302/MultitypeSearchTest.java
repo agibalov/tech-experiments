@@ -56,8 +56,6 @@ public class MultitypeSearchTest extends ElasticSearchTest {
             makeEvent(client, "1", "the vodka party!");
             makeEvent(client, "2", "the beer party!");
             makeEvent(client, "3", "the sponge bob party!");
-
-            client.admin().indices().prepareRefresh("notebook").setForce(true).execute().actionGet();
         }
 
         private static void makeNote(Client client, String id, String text) throws IOException {
@@ -65,7 +63,9 @@ public class MultitypeSearchTest extends ElasticSearchTest {
                     .setSource(XContentFactory.jsonBuilder()
                             .startObject()
                             .field("text", text)
-                            .endObject()).execute().actionGet();
+                            .endObject())
+                    .setRefresh(true)
+                    .execute().actionGet();
         }
 
         private static void makeEvent(Client client, String id, String text) throws IOException {
@@ -73,7 +73,9 @@ public class MultitypeSearchTest extends ElasticSearchTest {
                     .setSource(XContentFactory.jsonBuilder()
                             .startObject()
                             .field("text", text)
-                            .endObject()).execute().actionGet();
+                            .endObject())
+                    .setRefresh(true)
+                    .execute().actionGet();
         }
     }
 }
