@@ -55,20 +55,39 @@ public class SuggestionsTest extends ElasticSearchTest {
                 .setRefresh(true)
                 .execute().actionGet();
 
-        SuggestResponse suggestResponse = client.prepareSuggest("notes")
-                .addSuggestion(SuggestBuilders.completionSuggestion("textSuggest")
-                        .field("text")
-                        .text("i"))
-                .execute().actionGet();
+        if(true) {
+            SuggestResponse suggestResponse = client.prepareSuggest("notes")
+                    .addSuggestion(SuggestBuilders.completionSuggestion("textSuggest")
+                            .field("text")
+                            .text("i"))
+                    .execute().actionGet();
 
-        Suggest.Suggestion suggestion = suggestResponse.getSuggest().getSuggestion("textSuggest");
-        List<Suggest.Suggestion.Entry> entries = suggestion.getEntries();
-        assertEquals(1, entries.size()); // TODO: what are these entries?
+            Suggest.Suggestion suggestion = suggestResponse.getSuggest().getSuggestion("textSuggest");
+            List<Suggest.Suggestion.Entry> entries = suggestion.getEntries();
+            assertEquals(1, entries.size()); // TODO: what are these entries?
 
-        Suggest.Suggestion.Entry entry = entries.get(0);
-        List<Suggest.Suggestion.Entry.Option> options = entry.getOptions();
-        assertEquals(2, options.size());
-        assertEquals("ipad", options.get(0).getText().string());
-        assertEquals("iphone", options.get(1).getText().string());
+            Suggest.Suggestion.Entry entry = entries.get(0);
+            List<Suggest.Suggestion.Entry.Option> options = entry.getOptions();
+            assertEquals(2, options.size());
+            assertEquals("ipad", options.get(0).getText().string());
+            assertEquals("iphone", options.get(1).getText().string());
+        }
+
+        if(true) {
+            SuggestResponse suggestResponse = client.prepareSuggest("notes")
+                    .addSuggestion(SuggestBuilders.completionSuggestion("textSuggest")
+                            .field("text")
+                            .text("and"))
+                    .execute().actionGet();
+
+            Suggest.Suggestion suggestion = suggestResponse.getSuggest().getSuggestion("textSuggest");
+            List<Suggest.Suggestion.Entry> entries = suggestion.getEntries();
+            assertEquals(1, entries.size()); // TODO: what are these entries?
+
+            Suggest.Suggestion.Entry entry = entries.get(0);
+            List<Suggest.Suggestion.Entry.Option> options = entry.getOptions();
+            assertEquals(1, options.size());
+            assertEquals("android", options.get(0).getText().string());
+        }
     }
 }
