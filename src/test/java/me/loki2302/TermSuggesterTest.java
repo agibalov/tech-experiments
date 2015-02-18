@@ -70,5 +70,40 @@ public class TermSuggesterTest extends ElasticSearchTest {
             assertEquals(1, options.size());
             assertEquals("iphone", options.get(0).getText().string());
         }
+
+        if(true) {
+            SuggestResponse suggestResponse = client.prepareSuggest("devices")
+                    .addSuggestion(SuggestBuilders.termSuggestion("nameSuggest")
+                            .field("name")
+                            .text("iphne"))
+                    .execute().actionGet();
+
+            Suggest.Suggestion suggestion = suggestResponse.getSuggest().getSuggestion("nameSuggest");
+            List<Suggest.Suggestion.Entry> entries = suggestion.getEntries();
+            assertEquals(1, entries.size());
+
+            Suggest.Suggestion.Entry entry = entries.get(0);
+            List<Suggest.Suggestion.Entry.Option> options = entry.getOptions();
+            assertEquals(1, options.size());
+            assertEquals("iphone", options.get(0).getText().string());
+        }
+
+        if(true) {
+            SuggestResponse suggestResponse = client.prepareSuggest("devices")
+                    .addSuggestion(SuggestBuilders.termSuggestion("nameSuggest")
+                            .field("name")
+                            .text("ipne"))
+                    .execute().actionGet();
+
+            Suggest.Suggestion suggestion = suggestResponse.getSuggest().getSuggestion("nameSuggest");
+            List<Suggest.Suggestion.Entry> entries = suggestion.getEntries();
+            assertEquals(1, entries.size());
+
+            Suggest.Suggestion.Entry entry = entries.get(0);
+            List<Suggest.Suggestion.Entry.Option> options = entry.getOptions();
+            assertEquals(2, options.size());
+            assertEquals("ipad", options.get(0).getText().string());
+            assertEquals("iphone", options.get(1).getText().string());
+        }
     }
 }
