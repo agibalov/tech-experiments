@@ -11,18 +11,18 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class SuggestionsTest extends ElasticSearchTest {
+public class CompletionSuggesterTest extends ElasticSearchTest {
     @Test
     public void canGetCompletionSuggestions() throws IOException {
         // TODO: can it be not so ugly?
-        client.admin().indices().prepareCreate("notes").execute().actionGet();
+        client.admin().indices().prepareCreate("devices").execute().actionGet();
 
-        client.admin().indices().preparePutMapping("notes").setType("note").setSource(
+        client.admin().indices().preparePutMapping("devices").setType("device").setSource(
                 XContentFactory.jsonBuilder()
                         .startObject()
-                            .startObject("note")
+                            .startObject("device")
                                 .startObject("properties")
-                                    .startObject("text")
+                                    .startObject("name")
                                         .field("type", "completion")
                                         .field("payloads", false)
                                     .endObject()
@@ -31,38 +31,38 @@ public class SuggestionsTest extends ElasticSearchTest {
                         .endObject()
         ).execute().actionGet();
 
-        client.prepareIndex("notes", "note", "1")
+        client.prepareIndex("devices", "device", "1")
                 .setSource(XContentFactory.jsonBuilder()
                         .startObject()
-                        .field("text", "iphone")
+                        .field("name", "iphone")
                         .endObject())
                 .setRefresh(true)
                 .execute().actionGet();
 
-        client.prepareIndex("notes", "note", "2")
+        client.prepareIndex("devices", "device", "2")
                 .setSource(XContentFactory.jsonBuilder()
                         .startObject()
-                        .field("text", "ipad")
+                        .field("name", "ipad")
                         .endObject())
                 .setRefresh(true)
                 .execute().actionGet();
 
-        client.prepareIndex("notes", "note", "3")
+        client.prepareIndex("devices", "device", "3")
                 .setSource(XContentFactory.jsonBuilder()
                         .startObject()
-                        .field("text", "android")
+                        .field("name", "android")
                         .endObject())
                 .setRefresh(true)
                 .execute().actionGet();
 
         if(true) {
-            SuggestResponse suggestResponse = client.prepareSuggest("notes")
-                    .addSuggestion(SuggestBuilders.completionSuggestion("textSuggest")
-                            .field("text")
+            SuggestResponse suggestResponse = client.prepareSuggest("devices")
+                    .addSuggestion(SuggestBuilders.completionSuggestion("nameSuggest")
+                            .field("name")
                             .text("i"))
                     .execute().actionGet();
 
-            Suggest.Suggestion suggestion = suggestResponse.getSuggest().getSuggestion("textSuggest");
+            Suggest.Suggestion suggestion = suggestResponse.getSuggest().getSuggestion("nameSuggest");
             List<Suggest.Suggestion.Entry> entries = suggestion.getEntries();
             assertEquals(1, entries.size()); // TODO: what are these entries?
 
@@ -74,13 +74,13 @@ public class SuggestionsTest extends ElasticSearchTest {
         }
 
         if(true) {
-            SuggestResponse suggestResponse = client.prepareSuggest("notes")
-                    .addSuggestion(SuggestBuilders.completionSuggestion("textSuggest")
-                            .field("text")
+            SuggestResponse suggestResponse = client.prepareSuggest("devices")
+                    .addSuggestion(SuggestBuilders.completionSuggestion("nameSuggest")
+                            .field("name")
                             .text("and"))
                     .execute().actionGet();
 
-            Suggest.Suggestion suggestion = suggestResponse.getSuggest().getSuggestion("textSuggest");
+            Suggest.Suggestion suggestion = suggestResponse.getSuggest().getSuggestion("nameSuggest");
             List<Suggest.Suggestion.Entry> entries = suggestion.getEntries();
             assertEquals(1, entries.size()); // TODO: what are these entries?
 
