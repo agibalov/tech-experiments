@@ -11,6 +11,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
+// Completion suggester only looks for records which start with the search text
 public class CompletionSuggesterTest extends ElasticSearchTest {
     @Test
     public void canGetCompletionSuggestions() throws IOException {

@@ -17,7 +17,7 @@ public class TermSuggesterTest extends ElasticSearchTest {
         client.prepareIndex("devices", "device", "1")
                 .setSource(XContentFactory.jsonBuilder()
                         .startObject()
-                        .field("name", "iphone")
+                        .field("name", "Apple iPhone")
                         .endObject())
                 .setRefresh(true)
                 .execute().actionGet();
@@ -25,7 +25,7 @@ public class TermSuggesterTest extends ElasticSearchTest {
         client.prepareIndex("devices", "device", "2")
                 .setSource(XContentFactory.jsonBuilder()
                         .startObject()
-                        .field("name", "ipad")
+                        .field("name", "Apple iPad")
                         .endObject())
                 .setRefresh(true)
                 .execute().actionGet();
@@ -33,77 +33,49 @@ public class TermSuggesterTest extends ElasticSearchTest {
         client.prepareIndex("devices", "device", "3")
                 .setSource(XContentFactory.jsonBuilder()
                         .startObject()
-                        .field("name", "android")
+                        .field("name", "HTC Tattoo")
                         .endObject())
                 .setRefresh(true)
                 .execute().actionGet();
 
-        if(true) {
-            SuggestResponse suggestResponse = client.prepareSuggest("devices")
-                    .addSuggestion(SuggestBuilders.termSuggestion("nameSuggest")
-                            .field("name")
-                            .text("iphone"))
-                    .execute().actionGet();
+        checkSuggestions("a", new String[]{});
+        checkSuggestions("ap", new String[]{});
+        checkSuggestions("app", new String[]{});
+        checkSuggestions("appl", new String[]{"apple"});
+        checkSuggestions("apple", new String[]{});
+        checkSuggestions("aple", new String[]{"apple"});
 
-            Suggest.Suggestion suggestion = suggestResponse.getSuggest().getSuggestion("nameSuggest");
-            List<Suggest.Suggestion.Entry> entries = suggestion.getEntries();
-            assertEquals(1, entries.size());
+        checkSuggestions("iphone", new String[]{});
+        checkSuggestions("iphane", new String[]{"iphone"});
+        checkSuggestions("iphne", new String[]{"iphone"});
+        checkSuggestions("ipne", new String[]{"ipad", "iphone"});
 
-            Suggest.Suggestion.Entry entry = entries.get(0);
-            List<Suggest.Suggestion.Entry.Option> options = entry.getOptions();
-            assertEquals(0, options.size());
-        }
+        checkSuggestions("tatu", new String[]{});
+        checkSuggestions("tatoo", new String[]{"tattoo"});
+        checkSuggestions("tattu", new String[]{"tattoo"});
+    }
 
-        if(true) {
-            SuggestResponse suggestResponse = client.prepareSuggest("devices")
-                    .addSuggestion(SuggestBuilders.termSuggestion("nameSuggest")
-                            .field("name")
-                            .text("iphane"))
-                    .execute().actionGet();
+    private void checkSuggestions(String searchText, String[] expectedOptions) {
+        SuggestResponse suggestResponse = client.prepareSuggest("devices")
+                .addSuggestion(SuggestBuilders.termSuggestion("nameSuggest")
+                        .field("name")
+                        .text(searchText))
+                .execute().actionGet();
 
-            Suggest.Suggestion suggestion = suggestResponse.getSuggest().getSuggestion("nameSuggest");
-            List<Suggest.Suggestion.Entry> entries = suggestion.getEntries();
-            assertEquals(1, entries.size());
+        Suggest.Suggestion suggestion = suggestResponse.getSuggest().getSuggestion("nameSuggest");
+        List<Suggest.Suggestion.Entry> entries = suggestion.getEntries();
+        assertEquals(1, entries.size());
 
-            Suggest.Suggestion.Entry entry = entries.get(0);
-            List<Suggest.Suggestion.Entry.Option> options = entry.getOptions();
-            assertEquals(1, options.size());
-            assertEquals("iphone", options.get(0).getText().string());
-        }
+        Suggest.Suggestion.Entry entry = entries.get(0);
+        List<Suggest.Suggestion.Entry.Option> options = entry.getOptions();
 
-        if(true) {
-            SuggestResponse suggestResponse = client.prepareSuggest("devices")
-                    .addSuggestion(SuggestBuilders.termSuggestion("nameSuggest")
-                            .field("name")
-                            .text("iphne"))
-                    .execute().actionGet();
+        int expectedNumberOfOptions = expectedOptions.length;
+        assertEquals(expectedNumberOfOptions, options.size());
 
-            Suggest.Suggestion suggestion = suggestResponse.getSuggest().getSuggestion("nameSuggest");
-            List<Suggest.Suggestion.Entry> entries = suggestion.getEntries();
-            assertEquals(1, entries.size());
-
-            Suggest.Suggestion.Entry entry = entries.get(0);
-            List<Suggest.Suggestion.Entry.Option> options = entry.getOptions();
-            assertEquals(1, options.size());
-            assertEquals("iphone", options.get(0).getText().string());
-        }
-
-        if(true) {
-            SuggestResponse suggestResponse = client.prepareSuggest("devices")
-                    .addSuggestion(SuggestBuilders.termSuggestion("nameSuggest")
-                            .field("name")
-                            .text("ipne"))
-                    .execute().actionGet();
-
-            Suggest.Suggestion suggestion = suggestResponse.getSuggest().getSuggestion("nameSuggest");
-            List<Suggest.Suggestion.Entry> entries = suggestion.getEntries();
-            assertEquals(1, entries.size());
-
-            Suggest.Suggestion.Entry entry = entries.get(0);
-            List<Suggest.Suggestion.Entry.Option> options = entry.getOptions();
-            assertEquals(2, options.size());
-            assertEquals("ipad", options.get(0).getText().string());
-            assertEquals("iphone", options.get(1).getText().string());
+        for(int i = 0; i < expectedNumberOfOptions; ++i) {
+            String expectedOption = expectedOptions[i];
+            String actualOption = options.get(i).getText().string();
+            assertEquals(expectedOption, actualOption);
         }
     }
 }
