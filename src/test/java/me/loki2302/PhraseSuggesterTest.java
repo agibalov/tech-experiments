@@ -38,10 +38,26 @@ public class PhraseSuggesterTest extends ElasticSearchTest {
                 .setRefresh(true)
                 .execute().actionGet();
 
+        checkSuggestions("a", new String[] {});
+        checkSuggestions("ap", new String[] {});
+        checkSuggestions("apl", new String[] {});
+        checkSuggestions("aple", new String[] {"apple"});
+        checkSuggestions("apple", new String[] {});
+        checkSuggestions("apple i", new String[] {});
+        checkSuggestions("apple ip", new String[] {});
+        checkSuggestions("apple iph", new String[] {});
+        checkSuggestions("apple ipho", new String[] {"apple iphone"});
+        checkSuggestions("apple iphn", new String[] {"apple iphone"});
+        checkSuggestions("apple iphne", new String[] {"apple iphone"});
+        checkSuggestions("apple iphon", new String[] {"apple iphone"});
+        checkSuggestions("apple iphone", new String[] {});
+    }
+
+    private void checkSuggestions(String searchText, String[] expectedOptions) {
         SuggestResponse suggestResponse = client.prepareSuggest("devices")
                 .addSuggestion(SuggestBuilders.phraseSuggestion("nameSuggest")
-                    .field("name")
-                    .text("aple"))
+                        .field("name")
+                        .text(searchText))
                 .execute().actionGet();
 
         Suggest.Suggestion suggestion = suggestResponse.getSuggest().getSuggestion("nameSuggest");
@@ -50,7 +66,14 @@ public class PhraseSuggesterTest extends ElasticSearchTest {
 
         Suggest.Suggestion.Entry entry = entries.get(0);
         List<Suggest.Suggestion.Entry.Option> options = entry.getOptions();
-        assertEquals(1, options.size());
-        assertEquals("apple", options.get(0).getText().string());
+
+        int expectedNumberOfOptions = expectedOptions.length;
+        assertEquals(expectedNumberOfOptions, options.size());
+
+        for(int i = 0; i < expectedNumberOfOptions; ++i) {
+            String expectedOption = expectedOptions[i];
+            String actualOption = options.get(i).getText().string();
+            assertEquals(expectedOption, actualOption);
+        }
     }
 }
