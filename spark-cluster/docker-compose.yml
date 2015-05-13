@@ -1,0 +1,19 @@
+sparkmaster:
+  image: loki2302/sparkmaster
+  hostname: sparkmaster
+  ports:
+    - "8080:8080"
+sparkworker1:
+  image: loki2302/sparkworker
+  hostname: sparkworker1
+  links:
+    - sparkmaster
+  ports:
+    - "8081:8081"
+sparkworker2:
+  image: loki2302/sparkworker
+  hostname: sparkworker2
+  links:
+    - sparkmaster
+  ports:
+    - "8082:8081"
