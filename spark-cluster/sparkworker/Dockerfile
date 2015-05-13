@@ -4,4 +4,4 @@ MAINTAINER loki2302
 
 EXPOSE 8081
 
-CMD /opt/spark-1.3.1-bin-hadoop2.6/bin/spark-class org.apache.spark.deploy.worker.Worker spark://sparkmaster:7077
+CMD /opt/spark-1.3.1-bin-hadoop2.6/bin/spark-class org.apache.spark.deploy.worker.Worker spark://${SPARK_MASTER}

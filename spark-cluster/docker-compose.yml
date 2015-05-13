@@ -6,6 +6,8 @@ sparkmaster:
 sparkworker1:
   image: loki2302/sparkworker
   hostname: sparkworker1
+  environment:
+    SPARK_MASTER: "sparkmaster:7077"
   links:
     - sparkmaster
   ports:
@@ -13,6 +15,8 @@ sparkworker1:
 sparkworker2:
   image: loki2302/sparkworker
   hostname: sparkworker2
+  environment:
+    SPARK_MASTER: "sparkmaster:7077"
   links:
     - sparkmaster
   ports:
