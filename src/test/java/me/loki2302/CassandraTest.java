@@ -65,11 +65,15 @@ public class CassandraTest {
         assertEquals("second note", rows.get(1).getString("content"));
     }
 
+    // TODO: can I select by 'set contains'?
+    // TODO: add an item to set
+    // TODO: remove an item from set
+    // TODO: add a duplicate should result in no changes
+    // TODO: can I only fetch a subset of set items?
     @Test
     public void canUseASet() {
         session.execute("create table notes(id int primary key, content text, tags set<text>)");
         session.execute("insert into notes(id, content, tags) values(1, 'hello', {'one', 'two'})");
-        session.execute("insert into notes(id, content, tags) values(2, 'world', {'three', 'four', 'five'})");
 
         ResultSet resultSet = session.execute("select * from notes");
         List<Row> rows = resultSet.all();
@@ -77,6 +81,24 @@ public class CassandraTest {
         assertEquals(2, note1Tags.size());
         assertTrue(note1Tags.contains("one"));
         assertTrue(note1Tags.contains("two"));
+    }
+
+    // TODO: can I select by 'list contains'?
+    // TODO: append an item
+    // TODO: remove an item
+    // TODO: get item by index
+    // TODO: can I only fetch a part of the list
+    @Test
+    public void canUseAList() {
+        session.execute("create table notes(id int primary key, content text, tags list<text>)");
+        session.execute("insert into notes(id, content, tags) values(1, 'hello', ['one', 'two'])");
+
+        ResultSet resultSet = session.execute("select * from notes");
+        List<Row> rows = resultSet.all();
+        List<String> note1Tags = rows.get(0).getList("tags", String.class);
+        assertEquals(2, note1Tags.size());
+        assertEquals("one", note1Tags.get(0));
+        assertEquals("two", note1Tags.get(1));
     }
 
     @Test
