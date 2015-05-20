@@ -15,8 +15,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class CassandraTest {
     private Cluster cluster;
@@ -61,6 +63,20 @@ public class CassandraTest {
 
         assertEquals(222, rows.get(1).getInt("note_id"));
         assertEquals("second note", rows.get(1).getString("content"));
+    }
+
+    @Test
+    public void canUseASet() {
+        session.execute("create table notes(id int primary key, content text, tags set<text>)");
+        session.execute("insert into notes(id, content, tags) values(1, 'hello', {'one', 'two'})");
+        session.execute("insert into notes(id, content, tags) values(2, 'world', {'three', 'four', 'five'})");
+
+        ResultSet resultSet = session.execute("select * from notes");
+        List<Row> rows = resultSet.all();
+        Set<String> note1Tags = rows.get(0).getSet("tags", String.class);
+        assertEquals(2, note1Tags.size());
+        assertTrue(note1Tags.contains("one"));
+        assertTrue(note1Tags.contains("two"));
     }
 
     @Test
