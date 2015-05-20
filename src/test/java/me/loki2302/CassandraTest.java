@@ -1,9 +1,6 @@
 package me.loki2302;
 
-import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.ResultSet;
-import com.datastax.driver.core.Row;
-import com.datastax.driver.core.Session;
+import com.datastax.driver.core.*;
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
 import com.datastax.driver.mapping.annotations.Column;
@@ -113,6 +110,21 @@ public class CassandraTest {
         assertEquals(2, propertyMap.size());
         assertEquals("loki2302", propertyMap.get("name"));
         assertEquals("http://loki2302.me", propertyMap.get("url"));
+    }
+
+    @Test
+    public void canUseUDT() {
+        session.execute("create type user(id int, name text)");
+        session.execute("create table notes(id int primary key, content text, author frozen<user>)");
+        session.execute("insert into notes(id, content, author) values(1, 'hello', {id: 2302, name: 'loki2302'})");
+
+        ResultSet resultSet = session.execute("select * from notes");
+        List<Row> rows = resultSet.all();
+        Row firstRow = rows.get(0);
+        UDTValue author = firstRow.getUDTValue("author");
+        assertEquals("user", author.getType().getTypeName());
+        assertEquals(2302, author.getInt("id"));
+        assertEquals("loki2302", author.getString("name"));
     }
 
     @Test
