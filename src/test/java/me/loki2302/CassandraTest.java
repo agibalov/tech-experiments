@@ -64,8 +64,6 @@ public class CassandraTest {
     }
 
     // TODO: can I select by 'set contains'?
-    // TODO: add an item to set
-    // TODO: remove an item from set
     // TODO: add a duplicate should result in no changes
     // TODO: can I only fetch a subset of set items?
     @Test
@@ -108,6 +106,20 @@ public class CassandraTest {
         Set<String> note1Tags = rows.get(0).getSet("tags", String.class);
         assertEquals(2, note1Tags.size());
         assertTrue(note1Tags.contains("two"));
+        assertTrue(note1Tags.contains("four"));
+    }
+
+    @Test
+    public void canReplaceTheSetItems() {
+        session.execute("create table notes(id int primary key, content text, tags set<text>)");
+        session.execute("insert into notes(id, content, tags) values(1, 'hello', {'one', 'two'})");
+        session.execute("update notes set tags = {'three', 'four'} where id = 1");
+
+        ResultSet resultSet = session.execute("select * from notes");
+        List<Row> rows = resultSet.all();
+        Set<String> note1Tags = rows.get(0).getSet("tags", String.class);
+        assertEquals(2, note1Tags.size());
+        assertTrue(note1Tags.contains("three"));
         assertTrue(note1Tags.contains("four"));
     }
 
