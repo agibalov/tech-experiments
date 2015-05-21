@@ -63,7 +63,6 @@ public class CassandraTest {
         assertEquals("second note", rows.get(1).getString("content"));
     }
 
-    // TODO: can I select by 'set contains'?
     // TODO: add a duplicate should result in no changes
     // TODO: can I only fetch a subset of set items?
     @Test
@@ -121,6 +120,19 @@ public class CassandraTest {
         assertEquals(2, note1Tags.size());
         assertTrue(note1Tags.contains("three"));
         assertTrue(note1Tags.contains("four"));
+    }
+
+    @Test
+    public void canSelectBySetContains() {
+        session.execute("create table notes(id int primary key, content text, tags set<text>)");
+        session.execute("create index on notes(tags)");
+        session.execute("insert into notes(id, content, tags) values(1, 'hello1', {'one', 'two'})");
+        session.execute("insert into notes(id, content, tags) values(2, 'hello2', {'two', 'three'})");
+        session.execute("insert into notes(id, content, tags) values(3, 'hello3', {'one', 'three'})");
+
+        ResultSet resultSet = session.execute("select * from notes where tags contains 'two'");
+        List<Row> rows = resultSet.all();
+        assertEquals(2, rows.size());
     }
 
     // TODO: can I select by 'list contains'?
