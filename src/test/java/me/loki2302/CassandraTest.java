@@ -97,6 +97,20 @@ public class CassandraTest {
         assertTrue(note1Tags.contains("four"));
     }
 
+    @Test
+    public void canRemoveItemsFromTheSet() {
+        session.execute("create table notes(id int primary key, content text, tags set<text>)");
+        session.execute("insert into notes(id, content, tags) values(1, 'hello', {'one', 'two', 'three', 'four'})");
+        session.execute("update notes set tags = tags - {'one', 'three'} where id = 1");
+
+        ResultSet resultSet = session.execute("select * from notes");
+        List<Row> rows = resultSet.all();
+        Set<String> note1Tags = rows.get(0).getSet("tags", String.class);
+        assertEquals(2, note1Tags.size());
+        assertTrue(note1Tags.contains("two"));
+        assertTrue(note1Tags.contains("four"));
+    }
+
     // TODO: can I select by 'list contains'?
     // TODO: append an item
     // TODO: remove an item
