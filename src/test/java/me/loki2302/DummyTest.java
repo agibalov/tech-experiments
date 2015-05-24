@@ -17,19 +17,33 @@ public class DummyTest {
     @Test
     public void canSaveAndLoadAFewRows() {
         Session session = cassandraSessionRule.getSession();
-        session.execute("create table notes(note_id int primary key, content text)");
-        session.execute("insert into notes(note_id, content) values(111, 'hello there')");
-        session.execute("insert into notes(note_id, content) values(222, 'second note')");
+        session.execute("create table notes(id int primary key, content text)");
+        session.execute("insert into notes(id, content) values(111, 'hello there')");
+        session.execute("insert into notes(id, content) values(222, 'second note')");
 
         ResultSet resultSet = session.execute("select * from notes");
         List<Row> rows = resultSet.all();
 
         assertEquals(2, rows.size());
 
-        assertEquals(111, rows.get(0).getInt("note_id"));
+        assertEquals(111, rows.get(0).getInt("id"));
         assertEquals("hello there", rows.get(0).getString("content"));
 
-        assertEquals(222, rows.get(1).getInt("note_id"));
+        assertEquals(222, rows.get(1).getInt("id"));
         assertEquals("second note", rows.get(1).getString("content"));
+    }
+
+    @Test
+    public void canDeleteARow() {
+        Session session = cassandraSessionRule.getSession();
+        session.execute("create table notes(id int primary key, content text)");
+        session.execute("insert into notes(id, content) values(111, 'hello there')");
+        session.execute("insert into notes(id, content) values(222, 'second note')");
+        session.execute("delete from notes where id = 111");
+
+        ResultSet resultSet = session.execute("select * from notes");
+        List<Row> rows = resultSet.all();
+        assertEquals(1, rows.size());
+        assertEquals(222, rows.get(0).getInt("id"));
     }
 }
