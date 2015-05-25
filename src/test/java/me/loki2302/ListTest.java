@@ -32,4 +32,18 @@ public class ListTest {
         assertEquals("one", note1Tags.get(0));
         assertEquals("two", note1Tags.get(1));
     }
+
+    @Test
+    public void canSelectByListContains() {
+        Session session = cassandraSessionRule.getSession();
+        session.execute("create table notes(id int primary key, content text, tags list<text>)");
+        session.execute("create index on notes(tags)");
+        session.execute("insert into notes(id, content, tags) values(1, 'hello1', ['one', 'two'])");
+        session.execute("insert into notes(id, content, tags) values(2, 'hello2', ['two', 'three'])");
+        session.execute("insert into notes(id, content, tags) values(3, 'hello3', ['one', 'three'])");
+
+        ResultSet resultSet = session.execute("select * from notes where tags contains 'two'");
+        List<Row> rows = resultSet.all();
+        assertEquals(2, rows.size());
+    }
 }
