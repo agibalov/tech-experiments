@@ -14,8 +14,6 @@ public class ListTest {
     @Rule
     public CassandraSessionRule cassandraSessionRule = new CassandraSessionRule();
 
-    // TODO: can I select by 'list contains'?
-    // TODO: append an item
     // TODO: remove an item
     // TODO: get item by index
     // TODO: can I only fetch a part of the list
@@ -45,5 +43,21 @@ public class ListTest {
         ResultSet resultSet = session.execute("select * from notes where tags contains 'two'");
         List<Row> rows = resultSet.all();
         assertEquals(2, rows.size());
+    }
+
+    @Test
+    public void canAddAnItemToTheList() {
+        Session session = cassandraSessionRule.getSession();
+        session.execute("create table notes(id int primary key, tags list<text>)");
+        session.execute("insert into notes(id, tags) values(1, ['one', 'two'])");
+        session.execute("update notes set tags = tags + ['three'] where id = 1");
+
+        ResultSet resultSet = session.execute("select * from notes");
+        List<Row> rows = resultSet.all();
+        List<String> note1Tags = rows.get(0).getList("tags", String.class);
+        assertEquals(3, note1Tags.size());
+        assertEquals("one", note1Tags.get(0));
+        assertEquals("two", note1Tags.get(1));
+        assertEquals("three", note1Tags.get(2));
     }
 }

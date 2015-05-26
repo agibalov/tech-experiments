@@ -10,6 +10,8 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
+// TODO: where
+// TODO: order by
 public class DummyTest {
     @Rule
     public CassandraSessionRule cassandraSessionRule = new CassandraSessionRule();
