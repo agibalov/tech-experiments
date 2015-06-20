@@ -7,9 +7,16 @@ repositories {
 dependencies {
 	testCompile group: "junit", name: "junit", version: "4.11"
 	testCompile group: "org.mongodb", name: "mongo-java-driver", version: "2.11.4"
-	testCompile group: "de.flapdoodle.embed", name: "de.flapdoodle.embed.mongo", version: "1.42"
+	testCompile group: "de.flapdoodle.embed", name: "de.flapdoodle.embed.mongo", version: "1.48.0"
 }
 
 task wrapper(type: Wrapper) {
-	gradleVersion = "1.10"
+	gradleVersion = "2.4"
+}
+
+test {
+	testLogging {
+		showStandardStreams = true
+		events 'failed', 'passed', 'skipped'
+	}
 }
