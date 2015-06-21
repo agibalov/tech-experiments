@@ -53,6 +53,16 @@ public class SpringMongoRepositoriesTest extends AbstractMongoTest {
         assertEquals(3, personRepository.count());
     }
 
+    @Test
+    public void canFindPersonByName() {
+        personRepository.save(Arrays.asList(
+                makePerson("loki2302"),
+                makePerson("john"),
+                makePerson("andrey")));
+
+        assertEquals("loki2302", personRepository.findByName("loki2302").get(0).getName());
+    }
+
     private static Person makePerson(String name) {
         Person person = new Person();
         person.setName(name);
