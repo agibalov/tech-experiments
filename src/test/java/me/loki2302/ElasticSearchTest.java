@@ -4,7 +4,7 @@ import org.elasticsearch.client.Client;
 import org.junit.After;
 import org.junit.Before;
 
-public class ElasticSearchTest {
+public abstract class ElasticSearchTest {
     protected Client client;
     private EmbeddedElasticSearch embeddedElasticSearch;
 
