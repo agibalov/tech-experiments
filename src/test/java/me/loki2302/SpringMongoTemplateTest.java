@@ -32,8 +32,7 @@ public class SpringMongoTemplateTest extends AbstractMongoTest {
     public void canInsertAndGetPerson() {
         String id;
         {
-            Person p = new Person();
-            p.setName("loki2302");
+            Person p = makePerson("loki2302");
             mongoOperations.insert(p);
             id = p.getId();
         }
