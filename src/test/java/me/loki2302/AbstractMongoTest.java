@@ -18,8 +18,8 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 
 public abstract class AbstractMongoTest {
-    private final static String MONGO_HOST = "localhost";
-    private final static int MONGO_PORT = 12345;
+    protected final static String MONGO_HOST = "localhost";
+    protected final static int MONGO_PORT = 12345;
     protected final static String MONGO_DB = "testdb";
 
     private static MongodProcess mongodProcess;
