@@ -12,7 +12,9 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 @ContextConfiguration(classes = SpringDataElasticSearchTest.Config.class)
 @IntegrationTest
@@ -22,11 +24,59 @@ public class SpringDataElasticSearchTest {
     private BookRepository bookRepository;
 
     @Test
-    public void dummy() {
+    public void canCreateABookAndGetAnId() {
         Book book = new Book();
         book.setTitle("hello");
         book = bookRepository.save(book);
         assertNotNull(book.getId());
+    }
+
+    @Test
+    public void canGetBookById() {
+        String id;
+        {
+            Book book = new Book();
+            book.setTitle("hello");
+            book = bookRepository.save(book);
+            id = book.getId();
+        }
+
+        Book book = bookRepository.findOne(id);
+        assertEquals(id, book.getId());
+        assertEquals("hello", book.getTitle());
+    }
+
+    @Test
+    public void canUpdateBook() {
+        String id;
+        {
+            Book book = new Book();
+            book.setTitle("hello");
+            book = bookRepository.save(book);
+            id = book.getId();
+        }
+
+        Book book = bookRepository.findOne(id);
+        book.setTitle("omg");
+        bookRepository.save(book);
+
+        book = bookRepository.findOne(id);
+        assertEquals("omg", book.getTitle());
+    }
+
+    @Test
+    public void canDeleteBook() {
+        String id;
+        {
+            Book book = new Book();
+            book.setTitle("hello");
+            book = bookRepository.save(book);
+            id = book.getId();
+        }
+
+        bookRepository.delete(id);
+
+        assertNull(bookRepository.findOne(id));
     }
 
     @Configuration
