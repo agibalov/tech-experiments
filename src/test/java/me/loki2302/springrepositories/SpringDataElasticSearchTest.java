@@ -12,9 +12,7 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 @ContextConfiguration(classes = SpringDataElasticSearchTest.Config.class)
 @IntegrationTest
@@ -23,10 +21,12 @@ public class SpringDataElasticSearchTest {
     @Autowired
     private BookRepository bookRepository;
 
+    @Autowired
+    private ElasticsearchTemplate elasticsearchTemplate;
+
     @Test
     public void canCreateABookAndGetAnId() {
-        Book book = new Book();
-        book.setTitle("hello");
+        Book book = makeBook("hello");
         book = bookRepository.save(book);
         assertNotNull(book.getId());
     }
@@ -35,8 +35,7 @@ public class SpringDataElasticSearchTest {
     public void canGetBookById() {
         String id;
         {
-            Book book = new Book();
-            book.setTitle("hello");
+            Book book = makeBook("hello");
             book = bookRepository.save(book);
             id = book.getId();
         }
@@ -50,8 +49,7 @@ public class SpringDataElasticSearchTest {
     public void canUpdateBook() {
         String id;
         {
-            Book book = new Book();
-            book.setTitle("hello");
+            Book book = makeBook("hello");
             book = bookRepository.save(book);
             id = book.getId();
         }
@@ -68,8 +66,7 @@ public class SpringDataElasticSearchTest {
     public void canDeleteBook() {
         String id;
         {
-            Book book = new Book();
-            book.setTitle("hello");
+            Book book = makeBook("hello");
             book = bookRepository.save(book);
             id = book.getId();
         }
@@ -77,6 +74,12 @@ public class SpringDataElasticSearchTest {
         bookRepository.delete(id);
 
         assertNull(bookRepository.findOne(id));
+    }
+
+    private static Book makeBook(String title) {
+        Book book = new Book();
+        book.setTitle(title);
+        return book;
     }
 
     @Configuration
