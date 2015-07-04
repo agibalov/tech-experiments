@@ -1,0 +1,29 @@
+calc:
+  image: aglover/java8-pier
+  volumes:
+    - calculator-service/build/libs/calculator-service.jar:/tmp/app.jar
+  environment:
+    CALC_ADD_SERVICE_URL: http://adder:8080
+    CALC_SUB_SERVICE_URL: http://subtractor:8080
+  command: java -jar /tmp/app.jar
+  links:
+    - adder
+    - subtractor
+  ports:
+    - "8080:8080"
+
+adder:
+  image: aglover/java8-pier
+  volumes:
+    - add-service/build/libs/add-service.jar:/tmp/app.jar
+  command: java -jar /tmp/app.jar
+  ports:
+    - 8080
+
+subtractor:
+  image: aglover/java8-pier
+  volumes:
+    - sub-service/build/libs/sub-service.jar:/tmp/app.jar
+  command: java -jar /tmp/app.jar
+  ports:
+    - 8080
