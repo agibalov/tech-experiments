@@ -4,10 +4,7 @@ app:
     - "8080:8080"
 
 nginx:
-  image: nginx
-  volumes:
-    - nginx.conf:/etc/nginx/nginx.conf:ro
-    - web/:/tmp/web/:ro
+  image: loki2302/nginx
   ports:
     - "80:80"
   links:
