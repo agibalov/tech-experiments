@@ -1,0 +1,75 @@
+version: "2"
+
+services:
+  web1:
+    image: nginx
+    volumes:
+      - ./web1/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./web1/static/:/opt/web/:ro
+    ports:
+      - "81:80"
+    dns: 172.25.0.88
+    environment:
+      - DNSEXP_NAME=node1.test
+    networks:
+      test:
+        ipv4_address: 172.25.0.11
+
+  web2:
+    image: nginx
+    volumes:
+      - ./web2/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./web2/static/:/opt/web/:ro
+    ports:
+      - "82:80"
+    dns: 172.25.0.88
+    environment:
+      - DNSEXP_NAME=node2.test
+    networks:
+      test:
+        ipv4_address: 172.25.0.22
+
+  lb:
+    image: nginx
+    volumes:
+      - ./lb/nginx.conf:/etc/nginx/nginx.conf:ro
+    links:
+      - web1
+      - web2
+    ports:
+      - "80:80"
+    dns: 172.25.0.88
+    environment:
+      - DNSEXP_NAME=nodelb.test
+    networks:
+      test:
+        ipv4_address: 172.25.0.33
+
+  dnsexp:
+    build: ./docker-dns-experiment
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 53/udp
+    environment:
+      - DNS_PORT=53
+    networks:
+      test:
+        ipv4_address: 172.25.0.88
+
+  tester:
+    image: ubuntu
+    command: bash -c "ping node1.test -c3 && ping node2.test -c3 && ping nodelb.test -c3"
+    links:
+      - web1
+      - web2
+      - lb
+      - dnsexp
+    dns: 172.25.0.88
+    networks:
+      test:
+        ipv4_address: 172.25.0.99
+
+networks:
+  test:
+    external: true
