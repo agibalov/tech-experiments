@@ -4,11 +4,11 @@ Illustrates how to customize networking for Docker Compose.
 * Have Docker configured to run without `sudo`
 * Create a network using `./create-network.sh`. This will create a "test" network with subnet `172.25.0.0/16`.
 
-There are 4 network configuration experiment. In all cases there are 2 web nodes (web1 and web2) which are behind the load-balancer node. There's also a tester container which tries to ping all these 3 nodes.
+There are 5 network configuration experiments. In all cases there are 2 web nodes (web1 and web2) which are behind the load-balancer node. There's also a tester container which tries to ping all these 3 nodes.
 
-### dnsdock experiment
+### dnsdock-bridge and dnsdock-external experiments
 
-[dnsdock](https://github.com/tonistiigi/dnsdock) is a DNS server that takes its data from Docker. As of today it only seems to [support](https://github.com/tonistiigi/dnsdock/issues/67) the bridge networking scenario. Tester container pings nodes by names like `node1.omg.docker`.
+[dnsdock](https://github.com/tonistiigi/dnsdock) is a DNS server that takes its data from Docker. Tester container pings nodes by names like `node1.omg.docker`.
 
 ### dnsexp-bridge and dnsexp-external experiments
 
