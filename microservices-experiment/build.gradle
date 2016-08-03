@@ -16,15 +16,24 @@ buildscript {
     }
 }
 
-subprojects {
-    apply plugin: 'spring-boot'
+configure([project(':add-service'), project(':sub-service'), project(':calculator-service')]) {
+    apply plugin: 'spring-boot' // why is it also applied to integration-test?
 
+    dependencies {
+        compile 'org.springframework.boot:spring-boot-starter-web'
+    }
+}
+
+project(':integration-test') {
+    apply plugin: 'java'
+}
+
+subprojects {
     repositories {
         mavenCentral()
     }
 
     dependencies {
         testCompile group: 'junit', name: 'junit', version: '4.11'
-        compile 'org.springframework.boot:spring-boot-starter-web'
     }
 }

@@ -2,4 +2,5 @@ rootProject.name = 'microservices-experiment'
 include 'add-service'
 include 'sub-service'
 include 'calculator-service'
+include 'integration-test'
 
