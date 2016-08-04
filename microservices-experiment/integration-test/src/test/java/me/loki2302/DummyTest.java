@@ -74,7 +74,7 @@ public class DummyTest {
         }
 
         public int add(int a, int b) {
-            String url = fromHttpUrl(apiRootUrl).path("/add/{a}/{b}").buildAndExpand(2, 3).toUriString();
+            String url = fromHttpUrl(apiRootUrl).path("/add/{a}/{b}").buildAndExpand(a, b).toUriString();
             ResponseDTO responseDto = restTemplate.getForObject(url, ResponseDTO.class);
             return responseDto.result;
         }
@@ -89,7 +89,7 @@ public class DummyTest {
         }
 
         public int sub(int a, int b) {
-            String url = fromHttpUrl(apiRootUrl).path("/sub/{a}/{b}").buildAndExpand(2, 3).toUriString();
+            String url = fromHttpUrl(apiRootUrl).path("/sub/{a}/{b}").buildAndExpand(a, b).toUriString();
             ResponseDTO responseDto = restTemplate.getForObject(url, ResponseDTO.class);
             return responseDto.result;
         }
@@ -104,13 +104,13 @@ public class DummyTest {
         }
 
         public int add(int a, int b) {
-            String url = fromHttpUrl(apiRootUrl).path("/add/{a}/{b}").buildAndExpand(2, 3).toUriString();
+            String url = fromHttpUrl(apiRootUrl).path("/add/{a}/{b}").buildAndExpand(a, b).toUriString();
             ResponseDTO responseDto = restTemplate.getForObject(url, ResponseDTO.class);
             return responseDto.result;
         }
 
         public int sub(int a, int b) {
-            String url = fromHttpUrl(apiRootUrl).path("/sub/{a}/{b}").buildAndExpand(2, 3).toUriString();
+            String url = fromHttpUrl(apiRootUrl).path("/sub/{a}/{b}").buildAndExpand(a, b).toUriString();
             ResponseDTO responseDto = restTemplate.getForObject(url, ResponseDTO.class);
             return responseDto.result;
         }
