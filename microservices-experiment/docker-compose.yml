@@ -25,6 +25,8 @@ tester:
     ADD_SERVICE_URL: http://adder:8080
     SUB_SERVICE_URL: http://subtractor:8080
     CALC_SERVICE_URL: http://calc:8080
+  volumes:
+    - ./.gradle-cache:/.gradle-cache
   links:
     - adder
     - subtractor
