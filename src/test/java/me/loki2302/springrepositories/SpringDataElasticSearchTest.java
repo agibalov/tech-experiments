@@ -4,19 +4,17 @@ import me.loki2302.EmbeddedElasticSearch;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.IntegrationTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.*;
 
-@ContextConfiguration(classes = SpringDataElasticSearchTest.Config.class)
-@IntegrationTest
-@RunWith(SpringJUnit4ClassRunner.class)
+@SpringBootTest(classes = SpringDataElasticSearchTest.Config.class)
+@RunWith(SpringRunner.class)
 public class SpringDataElasticSearchTest {
     @Autowired
     private BookRepository bookRepository;
@@ -28,7 +26,7 @@ public class SpringDataElasticSearchTest {
     public void canCreateABookAndGetAnId() {
         Book book = makeBook("hello");
         book = bookRepository.save(book);
-        assertNotNull(book.getId());
+        assertNotNull(book.id);
     }
 
     @Test
@@ -37,12 +35,12 @@ public class SpringDataElasticSearchTest {
         {
             Book book = makeBook("hello");
             book = bookRepository.save(book);
-            id = book.getId();
+            id = book.id;
         }
 
         Book book = bookRepository.findOne(id);
-        assertEquals(id, book.getId());
-        assertEquals("hello", book.getTitle());
+        assertEquals(id, book.id);
+        assertEquals("hello", book.title);
     }
 
     @Test
@@ -51,15 +49,15 @@ public class SpringDataElasticSearchTest {
         {
             Book book = makeBook("hello");
             book = bookRepository.save(book);
-            id = book.getId();
+            id = book.id;
         }
 
         Book book = bookRepository.findOne(id);
-        book.setTitle("omg");
+        book.title = "omg";
         bookRepository.save(book);
 
         book = bookRepository.findOne(id);
-        assertEquals("omg", book.getTitle());
+        assertEquals("omg", book.title);
     }
 
     @Test
@@ -68,7 +66,7 @@ public class SpringDataElasticSearchTest {
         {
             Book book = makeBook("hello");
             book = bookRepository.save(book);
-            id = book.getId();
+            id = book.id;
         }
 
         bookRepository.delete(id);
@@ -78,7 +76,7 @@ public class SpringDataElasticSearchTest {
 
     private static Book makeBook(String title) {
         Book book = new Book();
-        book.setTitle(title);
+        book.title = title;
         return book;
     }
 
