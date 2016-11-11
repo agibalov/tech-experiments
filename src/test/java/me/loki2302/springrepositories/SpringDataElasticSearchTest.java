@@ -1,14 +1,13 @@
 package me.loki2302.springrepositories;
 
-import me.loki2302.EmbeddedElasticSearch;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
-import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.*;
@@ -17,10 +16,15 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 public class SpringDataElasticSearchTest {
     @Autowired
-    private BookRepository bookRepository;
+    private ElasticsearchIntegrationTestUtils elasticsearchIntegrationTestUtils;
 
     @Autowired
-    private ElasticsearchTemplate elasticsearchTemplate;
+    private BookRepository bookRepository;
+
+    @Before
+    public void init() {
+        elasticsearchIntegrationTestUtils.reset();
+    }
 
     @Test
     public void canCreateABookAndGetAnId() {
@@ -81,16 +85,8 @@ public class SpringDataElasticSearchTest {
     }
 
     @Configuration
-    @EnableElasticsearchRepositories(basePackageClasses = SpringDataElasticSearchTest.class)
+    @EnableAutoConfiguration
+    @ComponentScan
     public static class Config {
-        @Bean
-        public ElasticsearchTemplate elasticsearchTemplate() {
-            return new ElasticsearchTemplate(embeddedElasticSearch().client());
-        }
-
-        @Bean(initMethod = "start", destroyMethod = "stop")
-        public EmbeddedElasticSearch embeddedElasticSearch() {
-            return new EmbeddedElasticSearch();
-        }
     }
 }
