@@ -1,13 +1,13 @@
 package me.loki2302;
 
+import org.apache.commons.io.FileUtils;
 import org.elasticsearch.client.Client;
-import org.elasticsearch.common.io.FileSystemUtils;
-import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.node.Node;
 import org.elasticsearch.node.NodeBuilder;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 public class EmbeddedElasticSearch {
@@ -19,9 +19,10 @@ public class EmbeddedElasticSearch {
             throw new IllegalStateException();
         }
 
-        dataDirectory = UUID.randomUUID().toString();
-        Settings settings = ImmutableSettings.builder()
+        dataDirectory = Paths.get("data", UUID.randomUUID().toString()).toString();
+        Settings settings = Settings.settingsBuilder()
                 .put("http.enabled", false)
+                .put("path.home", System.getProperty("user.dir"))
                 .put("path.data", dataDirectory)
                 .build();
 
@@ -39,7 +40,11 @@ public class EmbeddedElasticSearch {
         node.close();
         node = null;
 
-        FileSystemUtils.deleteRecursively(new File(dataDirectory));
+        try {
+            FileUtils.deleteDirectory(Paths.get(dataDirectory).toFile());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         dataDirectory = null;
     }
 

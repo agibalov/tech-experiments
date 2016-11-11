@@ -2,7 +2,10 @@ package me.loki2302;
 
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.xcontent.XContentFactory;
+import org.elasticsearch.index.query.MoreLikeThisQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.junit.Test;
+import org.springframework.boot.autoconfigure.condition.ConditionMessage;
 
 import java.io.IOException;
 
@@ -35,11 +38,16 @@ public class MoreLikeThisTest extends ElasticSearchTest {
                 .setRefresh(true)
                 .execute().actionGet();
 
-        SearchResponse searchResponse = client.prepareMoreLikeThis("devices", "device", "1")
-                .setField("name")
-                .setMinTermFreq(1)
-                .setMinDocFreq(1)
-                .execute().actionGet();
+        MoreLikeThisQueryBuilder moreLikeThisQueryBuilder = QueryBuilders.moreLikeThisQuery()
+                .like(new MoreLikeThisQueryBuilder.Item("devices", "device", "1"))
+                .minTermFreq(1)
+                .minDocFreq(1);
+
+        SearchResponse searchResponse = client.prepareSearch("devices")
+                .setTypes("device")
+                .setQuery(moreLikeThisQueryBuilder)
+                .execute()
+                .actionGet();
 
         assertEquals(1, searchResponse.getHits().totalHits());
         assertEquals("2", searchResponse.getHits().getAt(0).getId());

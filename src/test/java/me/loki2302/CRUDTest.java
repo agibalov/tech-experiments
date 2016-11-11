@@ -185,8 +185,7 @@ public class CRUDTest extends ElasticSearchTest {
 
             fail();
         } catch (VersionConflictEngineException e) {
-            assertEquals(2, e.getCurrentVersion());
-            assertEquals(1, e.getProvidedVersion());
+            assertTrue(e.getDetailedMessage().contains("version conflict, current [2], provided [1]"));
         }
     }
 
