@@ -1,9 +1,12 @@
 package me.loki2302;
 
 import org.elasticsearch.action.suggest.SuggestResponse;
+import org.elasticsearch.client.Client;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.search.suggest.Suggest;
 import org.elasticsearch.search.suggest.SuggestBuilders;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -12,7 +15,17 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 // Completion suggester only looks for records which start with the search text
-public class CompletionSuggesterTest extends ElasticSearchTest {
+public class CompletionSuggesterTest {
+    @Rule
+    public final ElasticSearchRule elasticSearchRule = new ElasticSearchRule();
+
+    private Client client;
+
+    @Before
+    public void init() throws IOException {
+        client = elasticSearchRule.client;
+    }
+
     @Test
     public void canGetCompletionSuggestions() throws IOException {
         // TODO: can it be not so ugly?

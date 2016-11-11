@@ -1,17 +1,29 @@
 package me.loki2302;
 
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.Client;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.index.query.MoreLikeThisQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.springframework.boot.autoconfigure.condition.ConditionMessage;
 
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
-public class MoreLikeThisTest extends ElasticSearchTest {
+public class MoreLikeThisTest {
+    @Rule
+    public final ElasticSearchRule elasticSearchRule = new ElasticSearchRule();
+
+    private Client client;
+
+    @Before
+    public void init() throws IOException {
+        client = elasticSearchRule.client;
+    }
+
     @Test
     public void canUseMoreLikeThis() throws IOException {
         client.prepareIndex("devices", "device", "1")

@@ -3,8 +3,11 @@ package me.loki2302;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.client.Client;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.index.engine.VersionConflictEngineException;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -13,7 +16,17 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
-public class CRUDTest extends ElasticSearchTest {
+public class CRUDTest {
+    @Rule
+    public final ElasticSearchRule elasticSearchRule = new ElasticSearchRule();
+
+    private Client client;
+
+    @Before
+    public void init() throws IOException {
+        client = elasticSearchRule.client;
+    }
+
     @Test
     public void canCreateAnEmployee() throws IOException {
         IndexResponse indexResponse = client.prepareIndex("megacorp", "employee", "1")

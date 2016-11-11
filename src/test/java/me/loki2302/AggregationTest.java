@@ -1,11 +1,13 @@
 package me.loki2302;
 
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.Client;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.terms.StringTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.metrics.avg.Avg;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -13,9 +15,15 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class AggregationTest extends ElasticSearchTest {
+public class AggregationTest {
+    @Rule
+    public final ElasticSearchRule elasticSearchRule = new ElasticSearchRule();
+
+    private Client client;
+
     @Before
-    public void populate() throws IOException {
+    public void init() throws IOException {
+        client = elasticSearchRule.client;
         EmployeesDataset.populate(client);
     }
 

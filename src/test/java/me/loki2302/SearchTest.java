@@ -1,19 +1,27 @@
 package me.loki2302;
 
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
-public class SearchTest extends ElasticSearchTest {
+public class SearchTest {
     // TODO: extend the tests, add more specific checks
 
+    @Rule
+    public final ElasticSearchRule elasticSearchRule = new ElasticSearchRule();
+
+    private Client client;
+
     @Before
-    public void populate() throws IOException {
+    public void init() throws IOException {
+        client = elasticSearchRule.client;
         EmployeesDataset.populate(client);
     }
 

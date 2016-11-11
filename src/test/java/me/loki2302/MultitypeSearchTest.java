@@ -5,15 +5,22 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
-public class MultitypeSearchTest extends ElasticSearchTest {
+public class MultitypeSearchTest {
+    @Rule
+    public final ElasticSearchRule elasticSearchRule = new ElasticSearchRule();
+
+    private Client client;
+
     @Before
-    public void populate() throws IOException {
+    public void init() throws IOException {
+        client = elasticSearchRule.client;
         NotesAndEventsDataset.populate(client);
     }
 
