@@ -1,4 +1,4 @@
-package me.loki2302.springrepositories;
+package me.loki2302.spring;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

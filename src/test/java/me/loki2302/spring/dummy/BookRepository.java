@@ -1,4 +1,4 @@
-package me.loki2302.springrepositories;
+package me.loki2302.spring.dummy;
 
 import org.springframework.data.elasticsearch.repository.ElasticsearchCrudRepository;
 

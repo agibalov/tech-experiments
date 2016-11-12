@@ -1,11 +1,13 @@
-package me.loki2302.springrepositories;
+package me.loki2302.spring.dummy;
 
+import me.loki2302.spring.ElasticsearchIntegrationTestUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -88,5 +90,9 @@ public class SpringDataElasticSearchTest {
     @EnableAutoConfiguration
     @ComponentScan
     public static class Config {
+        @Bean
+        public ElasticsearchIntegrationTestUtils elasticsearchIntegrationTestUtils() {
+            return new ElasticsearchIntegrationTestUtils();
+        }
     }
 }

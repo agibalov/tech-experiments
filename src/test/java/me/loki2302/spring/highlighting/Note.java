@@ -1,11 +1,11 @@
-package me.loki2302.springrepositories;
+package me.loki2302.spring.highlighting;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
-@Document(indexName = "books", type = "book")
-public class Book {
+@Document(indexName = "notes", type = "note")
+public class Note {
     @Id
     public String id;
-    public String title;
+    public String text;
 }
