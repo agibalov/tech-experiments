@@ -1,6 +1,6 @@
 package me.loki2302.spring.highlighting;
 
-import org.springframework.data.elasticsearch.repository.ElasticsearchCrudRepository;
+import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
-public interface NoteRepository extends ElasticsearchCrudRepository<Note, String> {
+public interface NoteRepository extends ElasticsearchRepository<Note, String> {
 }
