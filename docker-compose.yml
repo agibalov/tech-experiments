@@ -1,0 +1,35 @@
+version: "2"
+
+services:
+  elasticsearch:
+    image: elasticsearch:5.1.1
+    networks:
+      test:
+        ipv4_address: 172.25.0.10
+
+  logstash:
+    image: logstash:5.1.1
+    volumes:
+      - ./logstash-conf:/logstash-conf
+    command: -f /logstash-conf/logstash.conf
+    networks:
+      test:
+        ipv4_address: 172.25.0.11
+
+  kibana:
+    image: kibana:5.1.1
+    environment:
+      ELASTICSEARCH_URL: http://172.25.0.10:9200
+    networks:
+      test:
+        ipv4_address: 172.25.0.12
+
+  app:
+    build: ./dummy-app
+    networks:
+      test:
+        ipv4_address: 172.25.0.13
+
+networks:
+  test:
+    external: true
