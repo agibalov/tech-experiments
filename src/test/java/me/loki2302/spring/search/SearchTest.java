@@ -126,6 +126,28 @@ public class SearchTest {
         assertEquals(2, searchResponse.getHits().totalHits());
     }
 
+    @Test
+    public void canUseQueryStringQuery() {
+        if(true) {
+            NativeSearchQuery nativeSearchQuery = new NativeSearchQueryBuilder()
+                    .withQuery(QueryBuilders.queryStringQuery("interests:music"))
+                    .build();
+
+            SearchResponse searchResponse = elasticsearchOperations.query(nativeSearchQuery, response -> response);
+            assertEquals(2, searchResponse.getHits().totalHits());
+        }
+
+        if(true) {
+            NativeSearchQuery nativeSearchQuery = new NativeSearchQueryBuilder()
+                    // !!! case matters: "a AND b" is OK, while "a and b" is not
+                    .withQuery(QueryBuilders.queryStringQuery("interests:music AND age:>30"))
+                    .build();
+
+            SearchResponse searchResponse = elasticsearchOperations.query(nativeSearchQuery, response -> response);
+            assertEquals(1, searchResponse.getHits().totalHits());
+        }
+    }
+
     @Configuration
     @EnableAutoConfiguration
     @ComponentScan
