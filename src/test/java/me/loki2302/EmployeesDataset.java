@@ -5,6 +5,10 @@ import org.elasticsearch.common.xcontent.XContentFactory;
 
 import java.io.IOException;
 
+/**
+ * @see me.loki2302.spring.search.EmployeesDataset2
+ */
+@Deprecated
 public class EmployeesDataset {
     public static void populate(Client client) throws IOException {
         client.prepareIndex("megacorp", "employee", "1")
