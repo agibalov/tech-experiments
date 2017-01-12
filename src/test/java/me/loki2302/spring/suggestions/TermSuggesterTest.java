@@ -1,55 +1,48 @@
-package me.loki2302;
+package me.loki2302.spring.suggestions;
 
+import me.loki2302.spring.ElasticsearchIntegrationTestUtils;
 import org.elasticsearch.action.suggest.SuggestResponse;
-import org.elasticsearch.client.Client;
-import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.search.suggest.Suggest;
 import org.elasticsearch.search.suggest.SuggestBuilders;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
+@SpringBootTest
+@RunWith(SpringRunner.class)
 public class TermSuggesterTest {
-    @Rule
-    public final ElasticSearchRule elasticSearchRule = new ElasticSearchRule();
+    @Autowired
+    private ElasticsearchIntegrationTestUtils elasticsearchIntegrationTestUtils;
 
-    private Client client;
+    @Autowired
+    private ElasticsearchTemplate elasticsearchTemplate;
+
+    @Autowired
+    private DeviceRepository deviceRepository;
 
     @Before
     public void init() throws IOException {
-        client = elasticSearchRule.client;
+        elasticsearchIntegrationTestUtils.reset();
     }
 
     @Test
     public void canGetTermSuggestions() throws IOException {
-        client.prepareIndex("devices", "device", "1")
-                .setSource(XContentFactory.jsonBuilder()
-                        .startObject()
-                        .field("name", "Apple iPhone")
-                        .endObject())
-                .setRefresh(true)
-                .execute().actionGet();
-
-        client.prepareIndex("devices", "device", "2")
-                .setSource(XContentFactory.jsonBuilder()
-                        .startObject()
-                        .field("name", "Apple iPad")
-                        .endObject())
-                .setRefresh(true)
-                .execute().actionGet();
-
-        client.prepareIndex("devices", "device", "3")
-                .setSource(XContentFactory.jsonBuilder()
-                        .startObject()
-                        .field("name", "HTC Tattoo")
-                        .endObject())
-                .setRefresh(true)
-                .execute().actionGet();
+        deviceRepository.save(device("1", "Apple iPhone"));
+        deviceRepository.save(device("2", "Apple iPad"));
+        deviceRepository.save(device("3", "HTC Tattoo"));
 
         checkSuggestions("a", new String[]{});
         checkSuggestions("ap", new String[]{});
@@ -68,12 +61,17 @@ public class TermSuggesterTest {
         checkSuggestions("tattu", new String[]{"tattoo"});
     }
 
+    private static Device device(String id, String name) {
+        Device device = new Device();
+        device.id = id;
+        device.name = name;
+        return device;
+    }
+
     private void checkSuggestions(String searchText, String[] expectedOptions) {
-        SuggestResponse suggestResponse = client.prepareSuggest("devices")
-                .addSuggestion(SuggestBuilders.termSuggestion("nameSuggest")
-                        .field("name")
-                        .text(searchText))
-                .execute().actionGet();
+        SuggestResponse suggestResponse = elasticsearchTemplate.suggest(SuggestBuilders.termSuggestion("nameSuggest")
+                .field("name")
+                .text(searchText));
 
         Suggest.Suggestion suggestion = suggestResponse.getSuggest().getSuggestion("nameSuggest");
         List<Suggest.Suggestion.Entry> entries = suggestion.getEntries();
@@ -89,6 +87,16 @@ public class TermSuggesterTest {
             String expectedOption = expectedOptions[i];
             String actualOption = options.get(i).getText().string();
             assertEquals(expectedOption, actualOption);
+        }
+    }
+
+    @Configuration
+    @EnableAutoConfiguration
+    @ComponentScan
+    public static class Config {
+        @Bean
+        public ElasticsearchIntegrationTestUtils elasticsearchIntegrationTestUtils() {
+            return new ElasticsearchIntegrationTestUtils();
         }
     }
 }
