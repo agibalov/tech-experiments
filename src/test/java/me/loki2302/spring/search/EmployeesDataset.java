@@ -3,7 +3,7 @@ package me.loki2302.spring.search;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class EmployeesDataset2 {
+public class EmployeesDataset {
     public static void populate(EmployeeRepository employeeRepository) throws IOException {
         if(true) {
             Employee employee = new Employee();

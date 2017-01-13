@@ -36,7 +36,7 @@ public class SearchTest {
     @Before
     public void init() throws IOException {
         elasticsearchIntegrationTestUtils.reset();
-        EmployeesDataset2.populate(employeeRepository);
+        EmployeesDataset.populate(employeeRepository);
     }
 
     @Test
