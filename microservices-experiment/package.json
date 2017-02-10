@@ -1,0 +1,17 @@
+{
+  "name": "microservices-experiment",
+  "version": "1.0.0",
+  "description": "* `add-service` has the only endpoint `/add/{a}/{b}`. It adds 2 numbers. * `sub-service` has the only endpoint `/sub/{a}/{b}`. It subtracts 2 numbers. * `calculator-service` has 2 endpoints `/add/{a}/{b}` and `/sub/{a}/{b}`. It delegates 2 `add-service` and `sub-service`. * `integration-test` is a test-only project that talks to all 3 services and checks if they work as expected.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "pm2 start services.yml",
+    "stop": "pm2 kill",
+    "monitor": "pm2 monit"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "pm2": "^2.4.0"
+  }
+}

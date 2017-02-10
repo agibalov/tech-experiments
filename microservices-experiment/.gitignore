@@ -4,3 +4,4 @@ build
 *.iml
 reports
 .gradle-cache
+node_modules
