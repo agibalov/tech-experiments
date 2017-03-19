@@ -1,0 +1,11 @@
+---
+- hosts: dummies
+  tasks:
+  - name: Copy configuration
+    template: src=nginx.conf dest=/etc/nginx/nginx.conf
+  - name: Copy content
+    copy: src=public/ dest=/stuff
+  - name: Install Nginx
+    apt: pkg=nginx state=installed update_cache=true
+  - name: Start Nginx
+    service: name=nginx state=started enabled=yes
