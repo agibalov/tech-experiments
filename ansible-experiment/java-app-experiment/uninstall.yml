@@ -1,0 +1,11 @@
+---
+- hosts: servers
+  tasks:
+  - name: Stop app
+    service: name=myapp state=stopped enabled=no
+  - name: Delete app service
+    file: state=absent path=/etc/systemd/system/myapp.service
+  - name: Delete app package
+    file: state=absent path=/var/myapp
+  - name: Uninstall Java
+    apt: pkg=openjdk-8-jdk state=absent update_cache=true

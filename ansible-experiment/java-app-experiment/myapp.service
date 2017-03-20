@@ -1,0 +1,11 @@
+[Unit]
+Description=myapp
+After=syslog.target
+
+[Service]
+User=root
+ExecStart=/var/myapp/java-app-experiment-1.0-SNAPSHOT.war
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target
