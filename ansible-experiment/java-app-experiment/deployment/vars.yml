@@ -2,3 +2,6 @@ app_name: myapp
 systemd_service_filename: "{{app_name}}.service"
 destination_app_directory_path: /var/{{app_name}}
 port: 80
+db: mydb
+dbuser: mydbuser
+dbpassword: mydbpassword
