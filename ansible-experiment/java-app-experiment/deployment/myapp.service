@@ -1,10 +1,10 @@
 [Unit]
-Description=myapp
+Description={{app_name}}
 After=syslog.target
 
 [Service]
 User=root
-ExecStart=/var/myapp/java-app-experiment-1.0-SNAPSHOT.war
+ExecStart=/var/{{app_name}}/{{app_name}}.war
 SuccessExitStatus=143
 
 [Install]

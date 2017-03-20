@@ -1,0 +1,31 @@
+---
+- hosts: servers
+  vars_files:
+    - vars.yml
+  vars:
+    source_war_path: ../build/libs/java-app-experiment-1.0-SNAPSHOT.war
+    destination_war_path: "{{destination_app_directory_path}}/{{app_name}}.war"
+    destination_conf_path: "{{destination_app_directory_path}}/{{app_name}}.conf"
+  tasks:
+  - name: Fetch Java version
+    shell: java -version 2>&1 | grep version | awk '{print $3}' | sed 's/"//g'
+    register: java_version
+  - assert:
+      that:
+        - java_version.stdout | version_compare('1.8', '>=')
+  - name: Check if app service installed
+    stat: path=/etc/systemd/system/{{systemd_service_filename}}
+    register: service_status
+  - name: Stop app service
+    service: name={{app_name}} state=stopped enabled=no
+    when: service_status.stat.exists
+  - name: Create app directory
+    file: path={{destination_app_directory_path}} state=directory
+  - name: Copy app package
+    copy: src={{source_war_path}} dest={{destination_war_path}} mode=u+x
+  - name: Copy app config
+    template: src={{app_name}}.conf dest={{destination_conf_path}}
+  - name: Register app service
+    template: src={{systemd_service_filename}} dest=/etc/systemd/system
+  - name: Start app service
+    service: name={{app_name}} state=started enabled=yes

@@ -1,0 +1,7 @@
+---
+- hosts: servers
+  vars_files:
+    - vars.yml
+  tasks:
+  - name: Uninstall Java
+    apt: pkg=openjdk-8-jdk state=absent update_cache=yes autoremove=yes
