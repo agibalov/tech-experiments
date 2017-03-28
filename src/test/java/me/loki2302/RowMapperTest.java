@@ -36,7 +36,7 @@ public class RowMapperTest {
         assertEquals("hello there", note.getContent());
     }
 
-    @Table(keyspace = "dummy", name = "notes")
+    @Table(name = "notes")
     public static class Note {
         @PartitionKey
         @Column(name = "note_id")
