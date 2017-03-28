@@ -1,4 +1,4 @@
 cassandra:
-  image: cassandra:2.1.5
+  image: cassandra:2.1.17
   ports:
     - "9042:9042"
