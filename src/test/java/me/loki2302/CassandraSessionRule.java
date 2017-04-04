@@ -13,7 +13,8 @@ public class CassandraSessionRule extends ExternalResource {
     @Override
     protected void before() throws Throwable {
         cluster = Cluster.builder()
-                .addContactPoint("127.0.0.1")
+                .addContactPoint("172.26.0.11")
+                .addContactPoint("172.26.0.22")
                 .build();
 
         session = cluster.connect();

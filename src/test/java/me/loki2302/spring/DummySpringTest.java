@@ -60,6 +60,13 @@ public class DummySpringTest {
     public static class Config extends AbstractClusterConfiguration {
         private final static String KEYSPACE_NAME = "mydummykeyspace1";
 
+        // how do I make it ready contact points from application.properties
+
+        @Override
+        protected String getContactPoints() {
+            return "172.26.0.11,172.26.0.22";
+        }
+
         @Override
         protected List<CreateKeyspaceSpecification> getKeyspaceCreations() {
             CreateKeyspaceSpecification specification = CreateKeyspaceSpecification.createKeyspace(KEYSPACE_NAME)
