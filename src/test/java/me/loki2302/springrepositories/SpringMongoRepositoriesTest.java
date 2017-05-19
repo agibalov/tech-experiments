@@ -26,11 +26,11 @@ public class SpringMongoRepositoriesTest extends AbstractMongoTest {
 
     @Test
     public void canInsertAndGetPerson() {
-        String id = personRepository.save(makePerson("loki2302")).getId();
+        String id = personRepository.save(makePerson("loki2302")).id;
         assertNotNull(id);
 
         Person p = personRepository.findOne(id);
-        assertEquals("loki2302", p.getName());
+        assertEquals("loki2302", p.name);
     }
 
     @Test
@@ -55,12 +55,12 @@ public class SpringMongoRepositoriesTest extends AbstractMongoTest {
                 makePerson("john"),
                 makePerson("andrey")));
 
-        assertEquals("loki2302", personRepository.findByName("loki2302").get(0).getName());
+        assertEquals("loki2302", personRepository.findByName("loki2302").get(0).name);
     }
 
     private static Person makePerson(String name) {
         Person person = new Person();
-        person.setName(name);
+        person.name = name;
         return person;
     }
 

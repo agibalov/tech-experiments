@@ -32,23 +32,23 @@ public class SpringMongoRepositoriesRelationsTest extends AbstractMongoTest {
         {
             User user = userRepository.save(makeUser("loki2302"));
             Post post = postRepository.save(makePost("hello", user));
-            postId = post.getId();
+            postId = post.id;
         }
 
         Post post = postRepository.findOne(postId);
-        assertEquals("loki2302", post.getUser().getName());
+        assertEquals("loki2302", post.user.name);
     }
 
     private static User makeUser(String name) {
         User user = new User();
-        user.setName(name);
+        user.name = name;
         return user;
     }
 
     private static Post makePost(String text, User user) {
         Post post = new Post();
-        post.setText(text);
-        post.setUser(user);
+        post.text = text;
+        post.user = user;
         return post;
     }
 
