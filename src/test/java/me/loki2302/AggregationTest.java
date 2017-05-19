@@ -1,45 +1,47 @@
 package me.loki2302;
 
-import com.mongodb.*;
+import com.mongodb.client.AggregateIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
 import org.junit.Test;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static org.junit.Assert.assertEquals;
 
 public class AggregationTest extends AbstractMongoTest {
     @Test
     public void canAggregate() {
-        DB db = mongoClient.getDB(MONGO_DB);
-        DBCollection goods = db.getCollection("goods");
-        goods.insert(makeGood("beer", 10));
-        goods.insert(makeGood("vodka", 15));
-        goods.insert(makeGood("coffee", 100));
+        MongoDatabase db = mongoClient.getDatabase(MONGO_DB);
+        MongoCollection<Document> goods = db.getCollection("goods");
+        goods.insertOne(makeGood("beer", 10));
+        goods.insertOne(makeGood("vodka", 15));
+        goods.insertOne(makeGood("coffee", 100));
 
-        DBObject groupFields = new BasicDBObject();
+        Document groupFields = new Document();
         groupFields.put("_id", 0);
-        groupFields.put("average", new BasicDBObject("$avg", "$price"));
-        groupFields.put("min", new BasicDBObject("$min", "$price"));
-        groupFields.put("max", new BasicDBObject("$max", "$price"));
-        DBObject group = new BasicDBObject("$group", groupFields);
+        groupFields.put("average", new Document("$avg", "$price"));
+        groupFields.put("min", new Document("$min", "$price"));
+        groupFields.put("max", new Document("$max", "$price"));
+        Document group = new Document("$group", groupFields);
 
-        AggregationOutput output = goods.aggregate(group);
-        Iterable<DBObject> it = output.results();
-        List<DBObject> results = new ArrayList<DBObject>();
-        for(DBObject result : it) {
-            results.add(result);
-        }
+        AggregateIterable<Document> output = goods.aggregate(Collections.singletonList(group));
+        List<Document> results = StreamSupport.stream(output.spliterator(), false)
+                .collect(Collectors.toList());
 
         assertEquals(1, results.size());
-        DBObject result = results.get(0);
+        Document result = results.get(0);
         assertEquals(41.666, (double)result.get("average"), 1.0);
         assertEquals(10.0, (double)result.get("min"), 0.01);
         assertEquals(100.0, (double)result.get("max"), 0.01);
     }
 
-    private static DBObject makeGood(String name, double price) {
-        BasicDBObject good = new BasicDBObject();
+    private static Document makeGood(String name, double price) {
+        Document good = new Document();
         good.put("name", name);
         good.put("price", price);
         return good;

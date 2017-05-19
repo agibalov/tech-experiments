@@ -1,28 +1,24 @@
 package me.loki2302;
 
-import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.IntegrationTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.net.UnknownHostException;
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
-@ContextConfiguration(classes = SpringMongoTemplateTest.Config.class)
-@IntegrationTest
+@SpringBootTest
 @RunWith(SpringJUnit4ClassRunner.class)
 public class SpringMongoTemplateTest extends AbstractMongoTest {
     @Autowired
@@ -67,13 +63,13 @@ public class SpringMongoTemplateTest extends AbstractMongoTest {
     @Configuration
     public static class Config {
         @Bean
-        public Mongo mongo() throws UnknownHostException {
-            return new Mongo(MONGO_HOST, MONGO_PORT);
+        public MongoClient mongoClient() throws UnknownHostException {
+            return new MongoClient(MONGO_HOST, MONGO_PORT);
         }
 
         @Bean
         public MongoOperations mongoOperations() throws UnknownHostException {
-            return new MongoTemplate(new SimpleMongoDbFactory(mongo(), MONGO_DB));
+            return new MongoTemplate(new SimpleMongoDbFactory(mongoClient(), MONGO_DB));
         }
     }
 

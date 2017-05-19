@@ -26,7 +26,7 @@ public abstract class AbstractMongoTest {
     protected MongoClient mongoClient;
 
     @BeforeClass
-    public static void startMongo() throws UnknownHostException, IOException {
+    public static void startMongo() throws IOException {
         IMongodConfig mongodConfig = new MongodConfigBuilder()
                 .version(Version.Main.PRODUCTION)
                 .net(new Net(MONGO_PORT, Network.localhostIsIPv6()))
