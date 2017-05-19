@@ -1,6 +1,5 @@
 package me.loki2302;
 
-import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
@@ -8,9 +7,8 @@ import org.junit.Test;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
+import static me.loki2302.IterableUtils.listFromIterable;
 import static org.junit.Assert.assertEquals;
 
 public class AggregationTest extends AbstractMongoTest {
@@ -29,9 +27,7 @@ public class AggregationTest extends AbstractMongoTest {
         groupFields.put("max", new Document("$max", "$price"));
         Document group = new Document("$group", groupFields);
 
-        AggregateIterable<Document> output = goods.aggregate(Collections.singletonList(group));
-        List<Document> results = StreamSupport.stream(output.spliterator(), false)
-                .collect(Collectors.toList());
+        List<Document> results = listFromIterable(goods.aggregate(Collections.singletonList(group)));
 
         assertEquals(1, results.size());
         Document result = results.get(0);

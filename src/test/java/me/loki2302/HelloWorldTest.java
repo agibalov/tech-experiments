@@ -9,36 +9,34 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
+import static me.loki2302.IterableUtils.listFromIterable;
+import static me.loki2302.IterableUtils.setFromIterable;
+import static me.loki2302.IterableUtils.streamFromIterable;
 import static org.junit.Assert.*;
 
 public class HelloWorldTest extends AbstractMongoTest {
     @Test
     public void canCreateDatabase() {
-        List<String> databaseNames = StreamSupport.stream(mongoClient.listDatabaseNames().spliterator(), false)
-                .collect(Collectors.toList());
+        Set<String> databaseNames = setFromIterable(mongoClient.listDatabaseNames());
         assertFalse(databaseNames.contains(MONGO_DB));
         
         MongoDatabase db = mongoClient.getDatabase(MONGO_DB);
         db.getCollection("x").insertOne(new Document("x", 1));
         
-        databaseNames = StreamSupport.stream(mongoClient.listDatabaseNames().spliterator(), false)
-                .collect(Collectors.toList());
+        databaseNames = setFromIterable(mongoClient.listDatabaseNames());
         assertTrue(databaseNames.contains(MONGO_DB));
     }
     
     @Test
     public void canCreateCollection() {
         MongoDatabase db = mongoClient.getDatabase(MONGO_DB);
-        Set<String> collectionNames = StreamSupport.stream(db.listCollectionNames().spliterator(), false)
-                .collect(Collectors.toSet());
+        Set<String> collectionNames = setFromIterable(db.listCollectionNames());
         assertFalse(collectionNames.contains("x"));
         
         db.getCollection("x").insertOne(new Document("x", 1));
                 
-        collectionNames = StreamSupport.stream(db.listCollectionNames().spliterator(), false)
-                .collect(Collectors.toSet());
+        collectionNames = setFromIterable(db.listCollectionNames());
         assertTrue(collectionNames.contains("x"));
     }
     
@@ -58,8 +56,7 @@ public class HelloWorldTest extends AbstractMongoTest {
         Document person = new Document("name", "loki2302").append("age", 33);
         people.insertOne(person);
         
-        Document retrievedPerson = StreamSupport.stream(people.find().spliterator(), false)
-                .collect(Collectors.toList()).get(0);
+        Document retrievedPerson = listFromIterable(people.find()).get(0);
         assertEquals("loki2302", retrievedPerson.get("name"));
         assertEquals(33, retrievedPerson.get("age"));
     }
@@ -75,8 +72,7 @@ public class HelloWorldTest extends AbstractMongoTest {
                 new Document("$set", new Document("name", "2302loki").append("age", 22)));
         assertEquals(1, people.count());
 
-        Document updatedPerson = StreamSupport.stream(people.find().spliterator(), false)
-                .collect(Collectors.toList()).get(0);
+        Document updatedPerson = listFromIterable(people.find()).get(0);
         assertEquals("2302loki", updatedPerson.get("name"));
         assertEquals(22, updatedPerson.get("age"));
     }
@@ -89,7 +85,7 @@ public class HelloWorldTest extends AbstractMongoTest {
         people.insertOne(new Document("name", "loki2302_2").append("age", 22));
         people.insertOne(new Document("name", "loki2302_3").append("age", 33));
 
-        List<String> names = StreamSupport.stream(people.find(new Document("age", 33)).spliterator(), false)
+        List<String> names = streamFromIterable(people.find(new Document("age", 33)))
                 .map(p -> (String)p.get("name"))
                 .collect(Collectors.toList());
         
@@ -106,7 +102,7 @@ public class HelloWorldTest extends AbstractMongoTest {
         people.insertOne(new Document("name", "loki2302_2").append("age", 33).append("sex", "m"));
         people.insertOne(new Document("name", "loki2302_3").append("age", 33).append("sex", "f"));
 
-        List<String> names = StreamSupport.stream(people.find(new Document("age", 33).append("sex", "m")).spliterator(), false)
+        List<String> names = streamFromIterable(people.find(new Document("age", 33).append("sex", "m")))
                 .map(p -> (String)p.get("name"))
                 .collect(Collectors.toList());
 
@@ -123,7 +119,7 @@ public class HelloWorldTest extends AbstractMongoTest {
         people.insertOne(new Document("name", "john"));
         people.insertOne(new Document("name", "mocking"));
 
-        List<String> names = StreamSupport.stream(people.find(new Document("name", Pattern.compile("ki"))).spliterator(), false)
+        List<String> names = streamFromIterable(people.find(new Document("name", Pattern.compile("ki"))))
                 .map(p -> (String)p.get("name"))
                 .collect(Collectors.toList());
 
@@ -142,5 +138,5 @@ public class HelloWorldTest extends AbstractMongoTest {
         assertEquals(0, people.count());
     }
 
-    // todo: use index
+    // TODO: use index
 }

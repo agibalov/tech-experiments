@@ -16,6 +16,8 @@ task wrapper(type: Wrapper) {
 	gradleVersion = "3.5"
 }
 
+sourceCompatibility = 1.8
+
 test {
 	testLogging {
 		showStandardStreams = true
