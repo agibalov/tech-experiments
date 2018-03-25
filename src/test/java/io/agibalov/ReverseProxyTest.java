@@ -26,6 +26,7 @@ public class ReverseProxyTest {
         RestTemplate restTemplate = new RestTemplate();
         String result = restTemplate.getForObject("http://localhost", String.class);
         assertEquals("hello", result);
-        verify(getRequestedFor(urlEqualTo("/")));
+
+        wireMockRule.verify(getRequestedFor(urlEqualTo("/")));
     }
 }
