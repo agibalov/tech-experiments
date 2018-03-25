@@ -6,7 +6,7 @@ http {
     listen 80;
 
     location / {
-      return 200 'hello there!';
+      proxy_pass http://localhost:8080;
     }
   }
 }

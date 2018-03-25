@@ -15,10 +15,7 @@ public class HelloWorldTest {
     @Test
     public void shouldRespondWithHelloWorld() {
         RestTemplate restTemplate = new RestTemplate();
-
         String result = restTemplate.getForObject("http://localhost", String.class);
-        System.out.printf("%s\n", result);
-
         assertEquals("hello there!", result);
     }
 }
