@@ -25,7 +25,7 @@ public class LoadBalancingTest {
     public final WireMockRule wireMockRule2 = new WireMockRule(8082);
 
     @Test
-    public void shouldProxyToLocalhost8080() {
+    public void shouldProxyToLocalhost8081And8082() {
         wireMockRule1.stubFor(get(urlEqualTo("/")).willReturn(aResponse()
                 .withStatus(200)
                 .withBody("hello1")));
