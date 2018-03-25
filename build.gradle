@@ -14,4 +14,5 @@ dependencies {
     testCompile group: 'com.github.tomakehurst', name: 'wiremock', version: '2.15.0'
     testCompile group: 'org.testcontainers', name: 'testcontainers', version: '1.6.0'
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.0.0.RELEASE'
+    testCompile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.5'
 }
