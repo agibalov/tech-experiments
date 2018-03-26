@@ -1,0 +1,15 @@
+events {
+}
+
+http {
+  proxy_cache_path /tmp/nginx-cache levels=1:2 keys_zone=my_cache:1m max_size=2m use_temp_path=off;
+
+  server {
+    listen 80;
+
+    location / {
+      proxy_cache my_cache;
+      proxy_pass http://localhost:8080;
+    }
+  }
+}
