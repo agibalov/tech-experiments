@@ -3,7 +3,8 @@ import * as Docker from 'dockerode';
 import * as makeNano from 'nano';
 import { MaybeDocument, ServerScope } from 'nano';
 import { Container } from 'dockerode';
-import { DockerService } from './docker-service';
+import { CouchDBContainerDescription, DockerService } from './docker-service';
+import { destroyDatabaseIfExists } from './couchdb-utils';
 
 describe('CouchDB', () => {
     const docker = new Docker();
@@ -16,25 +17,8 @@ describe('CouchDB', () => {
     let nano: ServerScope;
 
     before(async () => {
-        container = await dockerService.start({
-            name: 'dummy-couchdb1',
-            Image: 'couchdb:2.2.0',
-            Tty: true,
-            Env: [
-                `COUCHDB_USER=${username}`,
-                `COUCHDB_PASSWORD=${password}`
-            ],
-            ExposedPorts: {
-                '5984/tcp': {}
-            },
-            HostConfig: {
-                PortBindings: {
-                    '5984/tcp': [
-                        { HostPort: '5984' }
-                    ]
-                }
-            }
-        });
+        container = await dockerService.start(new CouchDBContainerDescription(username, password));
+        nano = makeNano(`http://${username}:${password}@localhost:5984`);
     });
 
     after(async () => {
@@ -42,25 +26,7 @@ describe('CouchDB', () => {
     });
 
     beforeEach(async () => {
-        nano = makeNano(`http://${username}:${password}@localhost:5984`);
-        for(let i = 0; i < 20; ++i) {
-            try {
-                await nano.db.list();
-            } catch(e) {
-                console.log(`${i} error`, e);
-                await new Promise(resolve => setTimeout(resolve, 5000));
-            }
-        }
-
-        try {
-            await nano.db.destroy('dummy');
-        } catch(e) {
-            if(e.statusCode === 404) {
-                // ok
-            } else {
-                throw e;
-            }
-        }
+        await destroyDatabaseIfExists(nano, 'dummy');
         await nano.db.create('dummy');
     });
 
