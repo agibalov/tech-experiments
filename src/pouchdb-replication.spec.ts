@@ -6,8 +6,9 @@ import { Container } from 'dockerode';
 import { CouchDBContainerDescription, DockerService } from './docker-service';
 import { destroyDatabaseIfExists } from './couchdb-utils';
 import * as PouchDB from 'pouchdb';
+import * as PouchDBAdapterMemory from 'pouchdb-adapter-memory';
 
-describe('PouchDB HTTP adapter', () => {
+describe('PouchDB replication', () => {
     const docker = new Docker();
     const dockerService = new DockerService(docker);
 
@@ -20,6 +21,7 @@ describe('PouchDB HTTP adapter', () => {
     before(async () => {
         container = await dockerService.start(new CouchDBContainerDescription(username, password));
         nano = makeNano(`http://${username}:${password}@localhost:5984`);
+        PouchDB.plugin(PouchDBAdapterMemory);
     });
 
     after(async () => {
@@ -31,20 +33,36 @@ describe('PouchDB HTTP adapter', () => {
         await nano.db.create('dummy');
     });
 
-    it('should work', async () => {
-        const db = new PouchDB<Todo>(`http://${username}:${password}@localhost:5984/dummy`);
-        const putResponse = await db.put({
-            _id: 'one',
-            text: 'hi there!'
-        });
-        expect(putResponse.ok).equal(true);
-        expect(putResponse.id).equal('one');
-        expect(putResponse.rev).not.null;
+    it('sync should work', async () => {
+        const memDb = new PouchDB<Todo>('dummy1', { adapter: 'memory' });
+        const httpDb = new PouchDB<Todo>(`http://${username}:${password}@localhost:5984/dummy`);
 
-        const getResponse = await db.get('one');
-        expect(getResponse._id).equal('one');
-        expect(getResponse._rev).not.null;
-        expect(getResponse.text).equal('hi there!');
+        {
+            await memDb.put({
+                _id: 'one',
+                text: 'hi there!'
+            });
+
+            await PouchDB.sync(memDb, httpDb);
+        }
+
+        {
+            const todoOne = await httpDb.get('one');
+            expect(todoOne.text).equal('hi there!');
+
+            await httpDb.put({
+                _id: 'one',
+                _rev: todoOne._rev,
+                text: 'updated text'
+            });
+
+            await PouchDB.sync(memDb, httpDb);
+        }
+
+        {
+            const todoOne = await memDb.get('one');
+            expect(todoOne.text).equal('updated text');
+        }
     });
 });
 
