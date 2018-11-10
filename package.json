@@ -14,6 +14,7 @@
     "mocha": "^5.2.0",
     "nano": "^7.1.0",
     "pouchdb": "^6.4.3",
+    "pouchdb-adapter-http": "^6.4.3",
     "pouchdb-adapter-memory": "^6.4.3",
     "ts-node": "^7.0.1",
     "typescript": "^3.1.6"

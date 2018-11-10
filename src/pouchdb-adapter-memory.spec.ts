@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import * as PouchDB from 'pouchdb';
 import * as PouchDBAdapterMemory from 'pouchdb-adapter-memory';
 
-describe('PouchDB', () => {
+describe('PouchDB Memory adapter', () => {
     before(() => {
         PouchDB.plugin(PouchDBAdapterMemory);
     });
