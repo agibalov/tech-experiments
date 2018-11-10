@@ -29,39 +29,93 @@ describe('PouchDB replication', () => {
     });
 
     beforeEach(async () => {
-        await destroyDatabaseIfExists(nano, 'dummy');
-        await nano.db.create('dummy');
+        // http://docs.couchdb.org/en/stable/install/setup.html#single-node-setup
+        for(let name of ['dummy', '_users', '_replicator', '_global_changes']) {
+            await destroyDatabaseIfExists(nano, name);
+            await nano.db.create(name);
+        }
     });
 
-    it('sync should work', async () => {
-        const memDb = new PouchDB<Todo>('dummy1', { adapter: 'memory' });
-        const httpDb = new PouchDB<Todo>(`http://${username}:${password}@localhost:5984/dummy`);
+    it('non-live sync should work', async () => {
+        const localDb = new PouchDB<Todo>('dummy1', { adapter: 'memory' });
+        const remoteDb = new PouchDB<Todo>(`http://${username}:${password}@localhost:5984/dummy`);
 
         {
-            await memDb.put({
+            await localDb.put({
                 _id: 'one',
                 text: 'hi there!'
             });
 
-            await PouchDB.sync(memDb, httpDb);
+            await PouchDB.sync(localDb, remoteDb);
         }
 
         {
-            const todoOne = await httpDb.get('one');
+            const todoOne = await remoteDb.get('one');
             expect(todoOne.text).equal('hi there!');
 
-            await httpDb.put({
+            await remoteDb.put({
                 _id: 'one',
                 _rev: todoOne._rev,
                 text: 'updated text'
             });
 
-            await PouchDB.sync(memDb, httpDb);
+            await PouchDB.sync(localDb, remoteDb);
         }
 
         {
-            const todoOne = await memDb.get('one');
+            const todoOne = await localDb.get('one');
             expect(todoOne.text).equal('updated text');
+        }
+    });
+
+    it('live sync should work', async () => {
+        const localDb = new PouchDB<Todo>('dummy2', { adapter: 'memory' });
+        const remoteDb = new PouchDB<Todo>(`http://${username}:${password}@localhost:5984/dummy`);
+
+        const replication = PouchDB.sync(localDb, remoteDb, {
+            live: true
+        }).on('change', info => {
+            console.log('CHANGE!', JSON.stringify(info, null, 2));
+        }).on('paused', err => {
+            console.log('PAUSED!', JSON.stringify(err, null, 2));
+        }).on('active', () => {
+            console.log('ACTIVE!');
+        }).on('denied', err => {
+            console.log('DENIED!', JSON.stringify(err, null, 2));
+        }).on('complete', info => {
+            console.log('COMPLETE!', JSON.stringify(info, null, 2));
+        }).on('error', err => {
+            console.log('ERROR!', JSON.stringify(err, null, 2));
+        });
+        try {
+            {
+                await localDb.put({
+                    _id: 'one',
+                    text: 'hi there!'
+                });
+
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+
+            {
+                const todoOne = await remoteDb.get('one');
+                expect(todoOne.text).equal('hi there!');
+
+                await remoteDb.put({
+                    _id: 'one',
+                    _rev: todoOne._rev,
+                    text: 'updated text'
+                });
+
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+
+            {
+                const todoOne = await localDb.get('one');
+                expect(todoOne.text).equal('updated text');
+            }
+        } finally {
+            replication.cancel();
         }
     });
 });
