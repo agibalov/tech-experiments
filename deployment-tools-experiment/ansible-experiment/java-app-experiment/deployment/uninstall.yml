@@ -1,0 +1,21 @@
+---
+- hosts: servers
+  become: yes
+  become_user: postgres
+  vars_files:
+    - vars.yml
+  tasks:
+  - name: Delete database user
+    postgresql_user: name={{dbuser}} db={{db}} priv=ALL state=absent
+  - name: Delete database
+    postgresql_db: name={{db}} state=absent
+- hosts: servers
+  vars_files:
+    - vars.yml
+  tasks:
+  - name: Uninstall packages
+    apt: name={{item}} state=absent autoremove=yes
+    with_items:
+      - openjdk-8-jdk
+      - python-psycopg2
+      - postgresql

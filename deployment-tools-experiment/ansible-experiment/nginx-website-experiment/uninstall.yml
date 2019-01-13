@@ -1,0 +1,9 @@
+---
+- hosts: dummies
+  tasks:
+  - name: Stop Nginx
+    service: name=nginx state=stopped enabled=no
+  - name: Uninstall Nginx
+    apt: pkg=nginx state=absent purge=yes force=yes
+  - name: Delete content
+    file: state=absent path=/stuff

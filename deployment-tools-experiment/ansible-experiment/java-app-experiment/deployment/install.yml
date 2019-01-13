@@ -1,0 +1,21 @@
+---
+- hosts: servers
+  vars_files:
+    - vars.yml
+  tasks:
+  - name: Install packages
+    apt: name={{item}} state=present
+    with_items:
+      - openjdk-8-jdk
+      - python-psycopg2
+      - postgresql
+- hosts: servers
+  become: yes
+  become_user: postgres
+  vars_files:
+    - vars.yml
+  tasks:
+  - name: Create database
+    postgresql_db: name={{db}} state=present
+  - name: Create database user
+    postgresql_user: name={{dbuser}} password={{dbpassword}} db={{db}} priv=ALL state=present

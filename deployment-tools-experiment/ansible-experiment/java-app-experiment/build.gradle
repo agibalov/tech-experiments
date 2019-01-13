@@ -1,0 +1,37 @@
+plugins {
+    id 'org.springframework.boot' version '1.5.2.RELEASE'
+}
+
+group 'me.loki2302'
+version '1.0-SNAPSHOT'
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.4'
+    distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
+}
+
+apply plugin: 'java'
+apply plugin: 'war'
+
+sourceCompatibility = 1.8
+
+bootRepackage {
+    mainClass = 'me.loki2302.App'
+}
+
+springBoot {
+    executable = true
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.5.2.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '1.5.2.RELEASE'
+    compile group: 'org.postgresql', name: 'postgresql', version: '9.4.1212'
+    // compile group: 'com.h2database', name: 'h2', version: '1.4.194'
+    providedRuntime "org.springframework.boot:spring-boot-starter-tomcat"
+}

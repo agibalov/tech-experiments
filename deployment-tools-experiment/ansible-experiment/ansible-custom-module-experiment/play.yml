@@ -1,0 +1,8 @@
+- hosts: localhost
+  tasks:
+  - name: Some dummy task
+    dummy:
+      a: 2
+      b: 3
+    register: result
+  - debug: var=result

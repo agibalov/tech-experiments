@@ -1,0 +1,11 @@
+---
+- hosts: servers
+  vars_files:
+    - vars.yml
+  tasks:
+  - name: Stop app
+    service: name={{app_name}} state=stopped enabled=no
+  - name: Delete app service
+    file: state=absent path=/etc/systemd/system/{{systemd_service_filename}}
+  - name: Delete app package
+    file: state=absent path={{destination_app_directory_path}}

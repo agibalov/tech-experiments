@@ -1,0 +1,5 @@
+.idea
+.terraform
+1.txt
+terraform.tfstate
+terraform.tfstate.backup
