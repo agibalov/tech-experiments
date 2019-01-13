@@ -1,0 +1,21 @@
+apps:
+- name: add-service
+  interpreter: none
+  script: java
+  args: -jar ./add-service/build/libs/add-service.jar
+  env:
+    server.port: 8081
+- name: sub-service
+  interpreter: none
+  script: java
+  args: -jar ./sub-service/build/libs/sub-service.jar
+  env:
+    server.port: 8082
+- name: calculator-service
+  interpreter: none
+  script: java
+  args: -jar ./calculator-service/build/libs/calculator-service.jar
+  env:
+    server.port: 8083
+    CALC_ADD_SERVICE_URL: http://localhost:8081
+    CALC_SUB_SERVICE_URL: http://localhost:8082

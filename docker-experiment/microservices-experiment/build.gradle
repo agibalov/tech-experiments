@@ -1,0 +1,43 @@
+group 'me.loki2302'
+version '1.0-SNAPSHOT'
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '2.14'
+  distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.4.0.RELEASE'
+    }
+}
+
+configure([project(':add-service'), project(':sub-service'), project(':calculator-service')]) {
+    apply plugin: 'spring-boot' // why is it also applied to integration-test?
+
+    dependencies {
+        compile 'org.springframework.boot:spring-boot-starter-web'
+    }
+}
+
+project(':integration-test') {
+    apply plugin: 'java'
+}
+
+subprojects {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        testCompile group: 'junit', name: 'junit', version: '4.11'
+        testCompile 'org.springframework.boot:spring-boot-starter:1.4.0.RELEASE'
+        testCompile 'org.springframework.boot:spring-boot-starter-test:1.4.0.RELEASE'
+        testCompile 'org.springframework:spring-web:4.3.2.RELEASE'
+        testCompile 'com.fasterxml.jackson.core:jackson-databind:2.8.1'
+    }
+}
