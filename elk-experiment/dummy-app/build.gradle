@@ -1,0 +1,26 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.4.3.RELEASE'
+    }
+}
+
+group 'me.loki2302'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'org.springframework.boot'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '4.8'
+}
