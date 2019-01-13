@@ -1,0 +1,7 @@
+build
+.idea
+.gradle
+*.iml
+cassandra1data
+cassandra2data
+cassandra3data
