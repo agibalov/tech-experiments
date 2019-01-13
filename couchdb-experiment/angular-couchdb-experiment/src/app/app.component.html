@@ -1,0 +1,24 @@
+<div class="container">
+  <div class="buttons">
+    <button type="button" class="button" (click)="handleCreateTask()">Create task</button>
+    <button type="button" class="button is-light" (click)="goOnline()" *ngIf="!isOnline">Go online</button>
+    <button type="button" class="button is-dark" (click)="goOffline()" *ngIf="isOnline">Go offline</button>
+  </div>
+  <p>Task count: {{tasks.length}}</p>
+  <form [formGroup]="formGroup" (ngSubmit)="handleCreateTask()">
+    <div class="field has-addons">
+      <div class="control">
+        <input type="text" class="input" formControlName="text" placeholder="Put text here">
+      </div>
+      <div class="control">
+        <button type="submit" class="button" [attr.disabled]="formGroup.invalid ? '' : null">Create</button>
+      </div>
+    </div>
+  </form>
+  <ul>
+    <li *ngFor="let task of tasks">
+      id={{task.id}} text={{task.text}} status={{task.status}}
+      <button type="button" class="button" (click)="handleDeleteTask(task.id)">Delete</button>
+    </li>
+  </ul>
+</div>
