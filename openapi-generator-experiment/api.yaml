@@ -1,0 +1,40 @@
+openapi: 3.0.0
+
+info:
+  title: Hello World
+  version: '1.0'
+
+paths:
+  /add_numbers:
+    post:
+      operationId: addNumbers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                a:
+                  type: number
+                b:
+                  type: number
+      responses:
+        '200':
+          $ref: '#/components/responses/AddNumbersResultResponse'
+
+components:
+  schemas:
+    AddNumbersResult:
+      x-fancy: hello there
+      type: object
+      properties:
+        sum:
+          type: number
+  responses:
+    AddNumbersResultResponse:
+      description: A result.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AddNumbersResult'

@@ -1,0 +1,5 @@
+{
+  "modelSuffix": "DTO",
+  "fileNaming": "kebab-case",
+  "npmName": "some-npm-name"
+}
