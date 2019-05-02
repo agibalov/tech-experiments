@@ -1,0 +1,4 @@
+.local
+logs
+airflow-webserver.pid
+airflow.db
