@@ -1,0 +1,21 @@
+"This _represents_ a book."
+type Book {
+    """
+    A book **title**.
+    """
+    title: String!
+
+    "A book author."
+    author: String!
+}
+
+type Query {
+    "Get all books."
+    books: [Book]
+
+    "Get one book by id."
+    book(
+        "The book ID"
+        bookId: Int!
+    ): Book
+}
