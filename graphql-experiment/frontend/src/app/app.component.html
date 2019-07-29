@@ -1,0 +1,5 @@
+<div class="container">
+  <ul *ngIf="books">
+    <li *ngFor="let book of books">title={{book.title}} author={{book.author}}</li>
+  </ul>
+</div>
