@@ -1,0 +1,41 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: myns
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: myns
+  name: hello-world
+spec:
+  selector:
+    matchLabels:
+      app: node-hello-app
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: node-hello-app
+    spec:
+      containers:
+        - name: hello-world
+          image: gcr.io/google-samples/node-hello:1.0
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: myns
+  name: node-hello-service
+spec:
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  selector:
+    app: node-hello-app
