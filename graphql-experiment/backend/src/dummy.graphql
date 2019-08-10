@@ -1,21 +1,24 @@
-"This _represents_ a book."
-type Book {
+"This _represents_ a todo"
+type Todo {
     """
-    A book **title**.
+    A todo **ID**.
     """
-    title: String!
-
-    "A book author."
-    author: String!
+    id: String!
+    text: String!
 }
 
 type Query {
-    "Get all books."
-    books: [Book]
+    "Get all todos"
+    todos: [Todo]
 
-    "Get one book by id."
-    book(
-        "The book ID"
-        bookId: Int!
-    ): Book
+    "Get one todo by ID"
+    todo(
+        "The todo ID"
+        id: String!
+    ): Todo
+}
+
+type Mutation {
+    putTodo(id: String!, text: String!): Todo
+    deleteTodo(id: String!): Todo
 }

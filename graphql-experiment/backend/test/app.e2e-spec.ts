@@ -36,41 +36,37 @@ describe('AppController (e2e)', () => {
                 .send({
                     operationName: null,
                     query: `{
-                      books {
-                        title
-                        author
+                      todos {
+                        id
+                        text
                       }
                     }`,
                     variables: {}
                 });
 
             expect(response.status).toBe(200);
-            expect(response.body).toEqual({
-                data: {
-                    books: [
-                        { author: 'Author 1', title: 'Book #1' },
-                        { author: 'Author 2', title: 'Book #2' },
-                        { author: 'Author 3', title: 'Book #3' }
-                    ]
-                }
+            expect(response.body.data).toEqual({
+                todos: [
+                    { id: '1', text: 'Get some coffee' },
+                    { id: '2', text: 'Get some milk '}
+                ]
             });
         });
 
         it('should work via Apollo client', async () => {
             const response = await apolloClient.query({
                 query: gql`{
-                    books {
-                        title
-                        author
+                    todos {
+                        id
+                        text
                     }
                 }`,
                 variables: {}
             });
             expect(response.data).toEqual({
-                books: [
-                    { author: 'Author 1', title: 'Book #1' },
-                    { author: 'Author 2', title: 'Book #2' },
-                    { author: 'Author 3', title: 'Book #3' }
+                todos: [
+                    { id: '1', text: 'Get some coffee' },
+                    { id: '2', text: 'Get some milk '}
                 ]
             });
         });
