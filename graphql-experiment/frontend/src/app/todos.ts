@@ -1,4 +1,4 @@
-import { Mutation, Query } from 'apollo-angular';
+import { Mutation, Query, Subscription } from 'apollo-angular';
 import gql from 'graphql-tag';
 import { Injectable } from '@angular/core';
 
@@ -45,6 +45,17 @@ export class DeleteTodoMutation extends Mutation<Todo, DeleteTodoVariables> {
   document = gql`
     mutation deleteTodo($id: String!) {
       deleteTodo(id: $id) { id text }
+    }
+  `;
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class TodoAddedSubscription extends Subscription<{ todoAdded: Todo }> {
+  document = gql`
+    subscription todoAdded {
+      todoAdded { id text }
     }
   `;
 }

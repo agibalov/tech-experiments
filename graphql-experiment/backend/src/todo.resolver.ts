@@ -1,5 +1,7 @@
-import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
+import { Resolver, Query, Args, Mutation, Subscription } from '@nestjs/graphql';
 import { Todo } from './graphql';
+import { PubSub } from 'graphql-subscriptions';
+import { Inject } from '@nestjs/common';
 
 @Resolver('Todos')
 export class TodoResolver {
@@ -7,6 +9,9 @@ export class TodoResolver {
         { id: '1', text: 'Get some coffee' },
         { id: '2', text: 'Get some milk '}
     ];
+
+    constructor(@Inject('PUB_SUB') private readonly pubSub: PubSub) {
+    }
 
     @Query('todos')
     async getAllTodos(): Promise<Todo[]> {
@@ -33,6 +38,9 @@ export class TodoResolver {
         if (todo === undefined) {
             todo = { id, text };
             this.todos.push(todo);
+            await this.pubSub.publish('todoAdded', {
+                todoAdded: todo
+            });
         } else {
             todo.text = text;
         }
@@ -45,5 +53,10 @@ export class TodoResolver {
 
         this.todos = this.todos.filter(t => t.id !== id);
         return null;
+    }
+
+    @Subscription('todoAdded')
+    todoAdded() {
+        return this.pubSub.asyncIterator<Todo>('todoAdded');
     }
 }

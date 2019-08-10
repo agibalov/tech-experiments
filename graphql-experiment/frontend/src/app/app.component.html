@@ -11,6 +11,10 @@
     </div>
   </form>
   <hr>
+  <ng-container *ngIf="mostRecentTodo !== null">
+    <p>Most recent: id={{mostRecentTodo.id}} text={{mostRecentTodo.text}} (try with 2 browser windows)</p>
+    <hr>
+  </ng-container>
   <ul *ngIf="todos">
     <li *ngFor="let todo of todos">id={{todo.id}} text={{todo.text}}
       <button type="button" class="button is-small is-danger" (click)="deleteTodo(todo.id)">Delete</button>

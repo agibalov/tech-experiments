@@ -22,3 +22,7 @@ type Mutation {
     putTodo(id: String!, text: String!): Todo
     deleteTodo(id: String!): Todo
 }
+
+type Subscription {
+    todoAdded: Todo
+}

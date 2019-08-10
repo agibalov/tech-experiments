@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AllTodosQuery, DeleteTodoMutation, PutTodoMutation, Todo } from './todos';
+import { AllTodosQuery, DeleteTodoMutation, PutTodoMutation, Todo, TodoAddedSubscription } from './todos';
 
 @Component({
   selector: 'app-root',
@@ -9,8 +9,8 @@ import { AllTodosQuery, DeleteTodoMutation, PutTodoMutation, Todo } from './todo
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  sum: number;
   todos: Todo[];
+  mostRecentTodo: Todo = null;
 
   readonly newTodoForm = new FormGroup({
     text: new FormControl('', Validators.required)
@@ -20,12 +20,17 @@ export class AppComponent implements OnInit {
     private readonly apollo: Apollo,
     private readonly allTodosQuery: AllTodosQuery,
     private readonly putTodoMutation: PutTodoMutation,
-    private readonly deleteTodoMutation: DeleteTodoMutation) {
+    private readonly deleteTodoMutation: DeleteTodoMutation,
+    private readonly todoAddedSubscription: TodoAddedSubscription) {
   }
 
   ngOnInit(): void {
     this.allTodosQuery.watch().valueChanges.subscribe(result => {
       this.todos = result.data.todos;
+    });
+
+    this.todoAddedSubscription.subscribe().subscribe(result => {
+      this.mostRecentTodo = result.data.todoAdded;
     });
   }
 

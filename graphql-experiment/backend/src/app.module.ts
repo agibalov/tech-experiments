@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { TodoResolver } from './todo.resolver';
+import { PubSub } from 'graphql-subscriptions';
 
 @Module({
     imports: [
@@ -11,13 +12,18 @@ import { TodoResolver } from './todo.resolver';
             typePaths: ['./**/*.graphql'],
             definitions: {
                 path: join(process.cwd(), 'src/graphql.ts')
-            }
+            },
+            installSubscriptionHandlers: true
         })
     ],
     controllers: [AppController],
     providers: [
         AppService,
-        TodoResolver
+        TodoResolver,
+        {
+            provide: 'PUB_SUB',
+            useValue: new PubSub()
+        }
     ],
 })
 export class AppModule {
