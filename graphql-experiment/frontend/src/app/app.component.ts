@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AllTodosQuery, DeleteTodoMutation, PutTodoMutation, Todo, TodoAddedSubscription } from './todos';
 import { Subscription } from 'rxjs';
+import { AllTodosGQL, CreateTodoGQL, DeleteTodoGQL, Todo, TodoAddedGQL } from '../graphql';
 
 @Component({
   selector: 'app-root',
@@ -21,19 +21,19 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly apollo: Apollo,
-    private readonly allTodosQuery: AllTodosQuery,
-    private readonly putTodoMutation: PutTodoMutation,
-    private readonly deleteTodoMutation: DeleteTodoMutation,
-    private readonly todoAddedSubscription: TodoAddedSubscription) {
+    private readonly allTodosGql: AllTodosGQL,
+    private readonly createTodoGql: CreateTodoGQL,
+    private readonly deleteTodoGql: DeleteTodoGQL,
+    private readonly todoAddedGql: TodoAddedGQL) {
   }
 
   ngOnInit(): void {
-    this.allTodosQueryObservableSubscription = this.allTodosQuery.watch().valueChanges
+    this.allTodosQueryObservableSubscription = this.allTodosGql.watch().valueChanges
       .subscribe(result => {
         this.todos = result.data.todos;
       });
 
-    this.todoAddedSubscriptionObservableSubscription = this.todoAddedSubscription.subscribe()
+    this.todoAddedSubscriptionObservableSubscription = this.todoAddedGql.subscribe()
       .subscribe(result => {
         this.mostRecentTodo = result.data.todoAdded;
       });
@@ -48,12 +48,12 @@ export class AppComponent implements OnInit, OnDestroy {
     const formValue: { text: string } = this.newTodoForm.getRawValue();
     this.newTodoForm.reset();
 
-    this.putTodoMutation.mutate({
+    this.createTodoGql.mutate({
       id: `${new Date().toISOString()}`,
       text: formValue.text
     }, {
       refetchQueries: [{
-        query: this.allTodosQuery.document
+        query: this.allTodosGql.document
       }]
     }).subscribe(result => {
       console.log('result', result);
@@ -61,11 +61,11 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   deleteTodo(id: string) {
-    this.deleteTodoMutation.mutate({
+    this.deleteTodoGql.mutate({
       id
     }, {
       refetchQueries: [{
-        query: this.allTodosQuery.document
+        query: this.allTodosGql.document
       }]
     }).subscribe(result => {
       console.log('result', result);

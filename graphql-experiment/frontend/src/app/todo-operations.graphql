@@ -1,0 +1,15 @@
+query allTodos {
+  todos { id text }
+}
+
+mutation createTodo($id: String!, $text: String!) {
+  putTodo(id: $id, text: $text) { id text }
+}
+
+mutation deleteTodo($id: String!) {
+  deleteTodo(id: $id) { id text }
+}
+
+subscription todoAdded {
+  todoAdded { id text }
+}

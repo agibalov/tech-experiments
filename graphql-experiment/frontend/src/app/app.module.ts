@@ -6,10 +6,10 @@ import { HttpLink, HttpLinkModule } from 'apollo-angular-link-http';
 import { Apollo, ApolloModule } from 'apollo-angular';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AllTodosQuery, DeleteTodoMutation, PutTodoMutation, TodoAddedSubscription } from './todos';
 import { split } from 'apollo-link';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
+import { AllTodosGQL, CreateTodoGQL, DeleteTodoGQL, TodoAddedGQL } from '../graphql';
 
 @NgModule({
   declarations: [
@@ -24,10 +24,10 @@ import { getMainDefinition } from 'apollo-utilities';
     ReactiveFormsModule
   ],
   providers: [
-    AllTodosQuery,
-    PutTodoMutation,
-    DeleteTodoMutation,
-    TodoAddedSubscription
+    AllTodosGQL,
+    CreateTodoGQL,
+    DeleteTodoGQL,
+    TodoAddedGQL
   ],
   bootstrap: [AppComponent]
 })
