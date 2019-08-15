@@ -1,0 +1,12 @@
+overwrite: true
+schema: shared/todos.graphql
+documents: frontend/src/app/*.graphql
+generates:
+  frontend/src/app/graphql.ts:
+    - add: /* tslint:disable */
+    - typescript
+    - typescript-operations
+    - typescript-apollo-angular
+  backend/src/graphql.ts:
+    - add: /* tslint:disable */
+    - typescript

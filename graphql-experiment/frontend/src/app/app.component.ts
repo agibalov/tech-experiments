@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { AllTodosGQL, CreateTodoGQL, DeleteTodoGQL, Todo, TodoAddedGQL } from '../graphql';
+import { AllTodosGQL, CreateTodoGQL, DeleteTodoGQL, Todo, TodoAddedGQL } from './graphql';
 
 @Component({
   selector: 'app-root',

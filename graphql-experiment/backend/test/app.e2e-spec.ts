@@ -7,68 +7,68 @@ import { GraphQLModule } from '@nestjs/graphql';
 import gql from 'graphql-tag';
 
 describe('AppController (e2e)', () => {
-    let app: INestApplication;
-    let apolloClient: ApolloServerTestClient;
+  let app: INestApplication;
+  let apolloClient: ApolloServerTestClient;
 
-    beforeEach(async () => {
-        const moduleFixture: TestingModule = await Test.createTestingModule({
-            imports: [AppModule],
-        }).compile();
+  beforeEach(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
 
-        app = moduleFixture.createNestApplication();
-        await app.init();
+    app = moduleFixture.createNestApplication();
+    await app.init();
 
-        const module = moduleFixture.get<GraphQLModule>(GraphQLModule);
-        apolloClient = createTestClient((module as any).apolloServer);
-    });
+    const module = moduleFixture.get<GraphQLModule>(GraphQLModule);
+    apolloClient = createTestClient((module as any).apolloServer);
+  });
 
-    it('/ (GET)', () => {
-        return request(app.getHttpServer())
-            .get('/')
-            .expect(200)
-            .expect('Hello World!');
-    });
+  it('GET /dummy', () => {
+    return request(app.getHttpServer())
+      .get('/dummy')
+      .expect(200)
+      .expect('Hello World!');
+  });
 
-    describe('GraphQL API', () => {
-        it('should work via raw HTTP', async () => {
-            const response = await request(app.getHttpServer())
-                .post('/graphql')
-                .send({
-                    operationName: null,
-                    query: `{
-                      todos {
-                        id
-                        text
-                      }
-                    }`,
-                    variables: {}
-                });
-
-            expect(response.status).toBe(200);
-            expect(response.body.data).toEqual({
-                todos: [
-                    { id: '1', text: 'Get some coffee' },
-                    { id: '2', text: 'Get some milk '}
-                ]
-            });
-        });
-
-        it('should work via Apollo client', async () => {
-            const response = await apolloClient.query({
-                query: gql`{
+  describe('GraphQL API', () => {
+    it('should work via raw HTTP', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/graphql')
+        .send({
+          operationName: null,
+          query: `{
                     todos {
-                        id
-                        text
+                      id
+                      text
                     }
-                }`,
-                variables: {}
-            });
-            expect(response.data).toEqual({
-                todos: [
-                    { id: '1', text: 'Get some coffee' },
-                    { id: '2', text: 'Get some milk '}
-                ]
-            });
+                  }`,
+          variables: {}
         });
+
+      expect(response.status).toBe(200);
+      expect(response.body.data).toEqual({
+        todos: [
+          {id: '1', text: 'Get some coffee'},
+          {id: '2', text: 'Get some milk'}
+        ]
+      });
     });
+
+    it('should work via Apollo client', async () => {
+      const response = await apolloClient.query({
+          query: gql`{
+              todos {
+                  id
+                  text
+              }
+          }`,
+        variables: {}
+      });
+      expect(response.data).toEqual({
+        todos: [
+          {id: '1', text: 'Get some coffee'},
+          {id: '2', text: 'Get some milk'}
+        ]
+      });
+    });
+  });
 });

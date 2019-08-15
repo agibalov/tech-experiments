@@ -9,7 +9,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { split } from 'apollo-link';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
-import { AllTodosGQL, CreateTodoGQL, DeleteTodoGQL, TodoAddedGQL } from '../graphql';
+import { AllTodosGQL, CreateTodoGQL, DeleteTodoGQL, TodoAddedGQL } from './graphql';
+import { OperationDefinitionNode } from 'graphql';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,7 @@ export class AppModule {
 
     const link = split(
       ({ query }) => {
-        const { kind, operation } = getMainDefinition(query);
+        const { kind, operation } = getMainDefinition(query) as OperationDefinitionNode;
         return kind === 'OperationDefinition' && operation === 'subscription';
       },
       webSocketLink,
