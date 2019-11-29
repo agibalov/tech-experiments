@@ -92,7 +92,6 @@ public class LocksTest {
                 @Override
                 public void run() {
                     try {
-                        //jdbcTemplateB.execute("delete from aaa where id = 1");
                         jdbcTemplateB.execute("update aaa set id = 2 where id = 1");
                     } catch (Throwable t) {
                         jdbcTemplateBExceptionExchanger.exchange(t);
@@ -102,7 +101,6 @@ public class LocksTest {
             thread.start();
             Thread.sleep(1000);
 
-            //jdbcTemplateA.execute("delete from aaa where id = 1");
             jdbcTemplateA.execute("update aaa set id = 3 where id = 1");
 
             Throwable jdbcTemplateBException = jdbcTemplateBExceptionExchanger.exchange(null);
