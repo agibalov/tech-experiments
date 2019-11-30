@@ -37,19 +37,19 @@ export class AppComponent implements OnInit, OnDestroy {
 
     allTodosQueryRef.subscribeToMore({
       document: this.todoChangedGql.document,
-      updateQuery: (prev, options) => {
+      updateQuery: (previousQueryResult, options) => {
         const todoChanged = options.subscriptionData.data.todoChanged;
         if (todoChanged.kind === TodoEventKind.Put) {
           return {
-            ...prev,
-            todos: [...prev.todos.filter(t => t.id !== todoChanged.todo.id), todoChanged.todo]
+            ...previousQueryResult,
+            todos: [...previousQueryResult.todos.filter(t => t.id !== todoChanged.todo.id), todoChanged.todo]
           };
         }
 
         if (todoChanged.kind === TodoEventKind.Delete) {
           return {
-            ...prev,
-            todos: prev.todos.filter(t => t.id !== todoChanged.todo.id)
+            ...previousQueryResult,
+            todos: previousQueryResult.todos.filter(t => t.id !== todoChanged.todo.id)
           };
         }
 
