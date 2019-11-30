@@ -6,10 +6,10 @@ import { HttpLink, HttpLinkModule } from 'apollo-angular-link-http';
 import { Apollo, ApolloModule } from 'apollo-angular';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { split } from 'apollo-link';
+import { concat, NextLink, Operation, split } from 'apollo-link';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
-import { AllTodosGQL, CreateTodoGQL, DeleteTodoGQL, TodoAddedGQL } from './graphql';
+import { AllTodosGQL, CreateTodoGQL, DeleteTodoGQL, TodoChangedGQL } from './graphql';
 import { OperationDefinitionNode } from 'graphql';
 
 @NgModule({
@@ -28,7 +28,7 @@ import { OperationDefinitionNode } from 'graphql';
     AllTodosGQL,
     CreateTodoGQL,
     DeleteTodoGQL,
-    TodoAddedGQL
+    TodoChangedGQL
   ],
   bootstrap: [AppComponent]
 })
@@ -45,13 +45,18 @@ export class AppModule {
       }
     });
 
+    const loggingHttpLink = concat((operation: Operation, forward?: NextLink) => {
+      console.log('LOG', operation);
+      return forward(operation);
+    }, httpLinkHandler);
+
     const link = split(
       ({ query }) => {
         const { kind, operation } = getMainDefinition(query) as OperationDefinitionNode;
         return kind === 'OperationDefinition' && operation === 'subscription';
       },
       webSocketLink,
-      httpLinkHandler);
+      loggingHttpLink);
 
     apollo.create({
       link,

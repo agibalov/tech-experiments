@@ -1,5 +1,5 @@
 import { Resolver, Query, Args, Mutation, Subscription } from '@nestjs/graphql';
-import { Todo } from './graphql';
+import { Todo, TodoEvent, TodoEventKind } from './graphql';
 import { PubSub } from 'graphql-subscriptions';
 import { Inject } from '@nestjs/common';
 
@@ -13,14 +13,21 @@ export class TodoResolver {
   constructor(@Inject('PUB_SUB') private readonly pubSub: PubSub) {
   }
 
+  private static async sleep() {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+  }
+
   @Query('todos')
   async getAllTodos(): Promise<Todo[]> {
+    await TodoResolver.sleep();
     return this.todos;
   }
 
   @Query('todo')
-  async getBook(
+  async getTodo(
     @Args('id') id: string): Promise<Todo> {
+
+    await TodoResolver.sleep();
 
     const todo = this.todos.find(t => t.id === id);
     if (todo === undefined) {
@@ -34,12 +41,17 @@ export class TodoResolver {
     @Args('id') id: string,
     @Args('text') text: string): Promise<Todo> {
 
+    await TodoResolver.sleep();
+
     let todo = this.todos.find(t => t.id === id);
     if (todo === undefined) {
       todo = {id, text};
       this.todos.push(todo);
-      await this.pubSub.publish('todoAdded', {
-        todoAdded: todo
+      await this.pubSub.publish('todoChanged', {
+        todoChanged: {
+          kind: TodoEventKind.Put,
+          todo
+        }
       });
     } else {
       todo.text = text;
@@ -51,12 +63,27 @@ export class TodoResolver {
   async deleteTodo(
     @Args('id') id: string): Promise<Todo> {
 
+    await TodoResolver.sleep();
+
+    const todo = this.todos.find(t => t.id === id);
+    if (todo === undefined) {
+      return null;
+    }
+
     this.todos = this.todos.filter(t => t.id !== id);
-    return null;
+
+    await this.pubSub.publish('todoChanged', {
+      todoChanged: {
+        kind: TodoEventKind.Delete,
+        todo
+      }
+    });
+
+    return todo;
   }
 
-  @Subscription('todoAdded')
-  todoAdded() {
-    return this.pubSub.asyncIterator<Todo>('todoAdded');
+  @Subscription('todoChanged')
+  todoChanged() {
+    return this.pubSub.asyncIterator<TodoEvent>('todoChanged');
   }
 }

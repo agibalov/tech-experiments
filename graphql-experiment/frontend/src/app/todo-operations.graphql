@@ -10,6 +10,6 @@ mutation deleteTodo($id: String!) {
   deleteTodo(id: $id) { id text }
 }
 
-subscription todoAdded {
-  todoAdded { id text }
+subscription todoChanged {
+  todoChanged { kind todo { id text } }
 }
