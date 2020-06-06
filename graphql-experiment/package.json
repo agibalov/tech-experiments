@@ -38,7 +38,7 @@
     "apollo-client": "^2.6.4",
     "apollo-link": "^1.2.12",
     "apollo-link-ws": "^1.0.18",
-    "apollo-server-express": "2.7.2",
+    "apollo-server-express": "2.14.2",
     "bulma": "^0.7.5",
     "graphql": "^14.4.2",
     "jest": "^24.8.0",
