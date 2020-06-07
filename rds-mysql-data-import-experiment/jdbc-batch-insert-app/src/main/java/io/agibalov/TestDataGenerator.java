@@ -4,11 +4,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TestDataGenerator {
+    private final int numberOfSchools;
+    private final int numberOfClasses;
+    private final int numberOfStudents;
+
+    public TestDataGenerator(int numberOfSchools, int numberOfClasses, int numberOfStudents) {
+        this.numberOfSchools = numberOfSchools;
+        this.numberOfClasses = numberOfClasses;
+        this.numberOfStudents = numberOfStudents;
+    }
+
     public void generate(TestDataWriter testDataWriter) {
         int schoolCount = 0;
         int classCount = 0;
         int studentCount = 0;
-        for (int schoolIndex = 1; schoolIndex <= 10; ++schoolIndex) {
+        for (int schoolIndex = 1; schoolIndex <= numberOfSchools; ++schoolIndex) {
             String schoolId = String.format("school%d", schoolCount);
             Map<String, Object> schoolRow = new HashMap<>();
             schoolRow.put("id", schoolId);
@@ -16,7 +26,7 @@ public class TestDataGenerator {
             testDataWriter.write(TableName.Schools, schoolRow);
             ++schoolCount;
 
-            for (int classIndex = 1; classIndex <= 10; ++classIndex) {
+            for (int classIndex = 1; classIndex <= numberOfClasses; ++classIndex) {
                 String classId = String.format("class%d", classCount);
                 Map<String, Object> classRow = new HashMap<>();
                 classRow.put("id", classId);
@@ -25,7 +35,7 @@ public class TestDataGenerator {
                 testDataWriter.write(TableName.Classes, classRow);
                 ++classCount;
 
-                for (int studentIndex = 1; studentIndex <= 10; ++studentIndex) {
+                for (int studentIndex = 1; studentIndex <= numberOfStudents; ++studentIndex) {
                     String studentId = String.format("student%d", studentCount);
                     Map<String, Object> studentRow = new HashMap<>();
                     studentRow.put("id", studentId);

@@ -39,7 +39,7 @@ public class App {
                 jdbcTemplate.update(deleteSqlStatement, Collections.emptyMap());
             }
 
-            TestDataGenerator testDataGenerator = new TestDataGenerator();
+            TestDataGenerator testDataGenerator = new TestDataGenerator(20, 20, 20);
             long globalStartTime = System.currentTimeMillis();
             int totalRows = 0;
             for (Activity activity : Arrays.asList(schoolsActivity, classesActivity, studentsActivity)) {
