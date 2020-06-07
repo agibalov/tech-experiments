@@ -1,2 +1,3 @@
 rootProject.name = 'rds-mysql-data-import-experiment'
+include 'jdbc-batch-insert-app'
 

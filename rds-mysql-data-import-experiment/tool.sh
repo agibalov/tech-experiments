@@ -112,7 +112,7 @@ elif [[ "${command}" == "run" ]]; then
   MYSQL_USERNAME=${mysqlUsername} \
   MYSQL_PASSWORD=${mysqlPassword} \
   MYSQL_DATABASE=${dbName} \
-  ./gradlew clean bootRun
+  ./gradlew clean jdbc-batch-insert-app:bootRun
 
 elif [[ "${command}" == "" ]]; then
   echo "No command specified"
