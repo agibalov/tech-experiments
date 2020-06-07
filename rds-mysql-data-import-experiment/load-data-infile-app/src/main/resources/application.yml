@@ -1,3 +1,8 @@
+app:
+  schools: 10
+  classes: 10
+  students: 10
+
 spring:
   datasource:
     username: ${MYSQL_USERNAME}

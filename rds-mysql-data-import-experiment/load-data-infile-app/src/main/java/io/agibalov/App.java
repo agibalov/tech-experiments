@@ -7,8 +7,8 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,8 +19,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 @SpringBootApplication
 @Slf4j
@@ -30,16 +28,16 @@ public class App {
     }
 
     @Bean
-    public CommandLineRunner commandLineRunner(NamedParameterJdbcTemplate jdbcTemplate) {
+    public CommandLineRunner commandLineRunner(
+            @Value("${app.schools}") int numberOfSchools,
+            @Value("${app.classes}") int numberOfClasses,
+            @Value("${app.students}") int numberOfStudents,
+            NamedParameterJdbcTemplate jdbcTemplate) {
         return args -> {
             for (Activity activity : Arrays.asList(studentsActivity, classesActivity, schoolsActivity)) {
                 String deleteSqlStatement = activity.getDeleteSqlStatement();
                 jdbcTemplate.update(deleteSqlStatement, Collections.emptyMap());
             }
-
-            final int numberOfSchools = 50;
-            final int numberOfClasses = 50;
-            final int numberOfStudents = 50;
 
             long startTime = System.currentTimeMillis();
 
@@ -59,12 +57,12 @@ public class App {
                     testDataGenerator.generate(csvFileTestDataWriter);
                 }
 
-                jdbcTemplate.update("load data local infile :csvFileName\n" +
-                                "    into table Schools\n" +
+                jdbcTemplate.update(String.format("load data local infile :csvFileName\n" +
+                                "    into table %s\n" +
                                 "    fields terminated by ',' optionally enclosed by '\"' escaped by '\\\\'\n" +
                                 "    lines terminated by '\\n' starting by ''\n" +
                                 "    ignore 1 rows" +
-                                ";",
+                                ";", activity.getSqlTableName()),
                         new MapSqlParameterSource()
                                 .addValue("csvFileName", csvFile.getAbsolutePath()));
             }
@@ -107,7 +105,7 @@ public class App {
     }
 
     @Builder
-    @Value
+    @Data
     private static class Activity {
         private TableName tableName;
         private String sqlTableName;

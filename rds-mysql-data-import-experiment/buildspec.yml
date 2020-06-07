@@ -10,6 +10,24 @@ phases:
   build:
     commands:
       - cd rds-mysql-data-import-experiment
-      - envTag=${ENV_TAG} app=jdbc-batch-insert-app ./tool.sh run
-      - envTag=${ENV_TAG} app=stored-procedure-app ./tool.sh run
-      - envTag=${ENV_TAG} app=load-data-infile-app ./tool.sh run
+      - >
+        APP_SCHOOLS=20 \
+        APP_CLASSES=20 \
+        APP_STUDENTS=20 \
+        envTag=${ENV_TAG} \
+        app=jdbc-batch-insert-app \
+        ./tool.sh run
+      - >
+        APP_SCHOOLS=20 \
+        APP_CLASSES=20 \
+        APP_STUDENTS=20 \
+        envTag=${ENV_TAG} \
+        app=stored-procedure-app \
+        ./tool.sh run
+      - >
+        APP_SCHOOLS=20 \
+        APP_CLASSES=20 \
+        APP_STUDENTS=20 \
+        envTag=${ENV_TAG} \
+        app=load-data-infile-app \
+        ./tool.sh run

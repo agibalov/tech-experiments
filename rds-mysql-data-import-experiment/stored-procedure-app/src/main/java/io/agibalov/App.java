@@ -1,6 +1,7 @@
 package io.agibalov;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,15 +19,15 @@ public class App {
     }
 
     @Bean
-    public CommandLineRunner commandLineRunner(NamedParameterJdbcTemplate jdbcTemplate) {
+    public CommandLineRunner commandLineRunner(
+            @Value("${app.schools}") int numberOfSchools,
+            @Value("${app.classes}") int numberOfClasses,
+            @Value("${app.students}") int numberOfStudents,
+            NamedParameterJdbcTemplate jdbcTemplate) {
         return args -> {
             jdbcTemplate.update("delete from Students", Collections.emptyMap());
             jdbcTemplate.update("delete from Classes", Collections.emptyMap());
             jdbcTemplate.update("delete from Schools", Collections.emptyMap());
-
-            final int numberOfSchools = 50;
-            final int numberOfClasses = 50;
-            final int numberOfStudents = 50;
 
             long startTime = System.currentTimeMillis();
             jdbcTemplate.update(

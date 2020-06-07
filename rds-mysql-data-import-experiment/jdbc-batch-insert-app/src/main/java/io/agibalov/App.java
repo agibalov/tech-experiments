@@ -2,8 +2,9 @@ package io.agibalov;
 
 import lombok.Builder;
 import lombok.Cleanup;
-import lombok.Value;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,7 +25,11 @@ public class App {
     }
 
     @Bean
-    public CommandLineRunner commandLineRunner(DataSource primaryDataSource) {
+    public CommandLineRunner commandLineRunner(
+            @Value("${app.schools}") int numberOfSchools,
+            @Value("${app.classes}") int numberOfClasses,
+            @Value("${app.students}") int numberOfStudents,
+            DataSource primaryDataSource) {
         return args -> {
             @Cleanup Connection connection = primaryDataSource.getConnection();
             connection.setAutoCommit(false);
@@ -39,7 +44,8 @@ public class App {
                 jdbcTemplate.update(deleteSqlStatement, Collections.emptyMap());
             }
 
-            TestDataGenerator testDataGenerator = new TestDataGenerator(20, 20, 20);
+            TestDataGenerator testDataGenerator = new TestDataGenerator(
+                    numberOfSchools, numberOfClasses, numberOfStudents);
             long globalStartTime = System.currentTimeMillis();
             int totalRows = 0;
             for (Activity activity : Arrays.asList(schoolsActivity, classesActivity, studentsActivity)) {
@@ -75,7 +81,7 @@ public class App {
     }
 
     @Builder
-    @Value
+    @Data
     private static class Activity {
         private TableName tableName;
         private String deleteSqlStatement;
