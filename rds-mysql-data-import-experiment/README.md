@@ -10,6 +10,6 @@ Approaches compared are:
 
 # How to deploy and run
 
-* `envTag=dev ./tool.sh deploy` to deploy.
+* `envTag=dev branch=master ./tool.sh deploy` to deploy.
 * `envTag=dev ./tool.sh run` to run (create the database, apply migrations and run the app)
 * `envTag=dev ./tool.sh undeploy` to undeploy.
