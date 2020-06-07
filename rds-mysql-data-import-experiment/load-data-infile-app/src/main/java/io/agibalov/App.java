@@ -41,10 +41,10 @@ public class App {
 
             long startTime = System.currentTimeMillis();
 
-            TestDataGenerator testDataGenerator = new TestDataGenerator(numberOfSchools, numberOfClasses, numberOfStudents);
+            TestDataGenerator testDataGenerator = new TestDataGenerator(
+                    numberOfSchools, numberOfClasses, numberOfStudents);
 
             for (Activity activity : Arrays.asList(schoolsActivity, classesActivity, studentsActivity)) {
-                long activityStartTime = System.currentTimeMillis();
                 CsvMapper csvMapper = new CsvMapper();
                 CsvSchema schema = csvMapper.schemaFor(activity.getCsvSchemaClass())
                         .withNullValue("")
@@ -56,9 +56,6 @@ public class App {
                             activity.getTableName(), sequenceWriter);
                     testDataGenerator.generate(csvFileTestDataWriter);
                 }
-                log.info("{} generate CSV time: {}",
-                        activity.getTableName(),
-                        (System.currentTimeMillis() - activityStartTime) / 1000.f);
 
                 jdbcTemplate.update(String.format("load data local infile :csvFileName\n" +
                                 "    into table %s\n" +
@@ -82,7 +79,6 @@ public class App {
     }
 
     @Data
-    @Builder
     @JsonPropertyOrder({"id", "name"})
     public static class School {
         private String id;
@@ -90,7 +86,6 @@ public class App {
     }
 
     @Data
-    @Builder
     @JsonPropertyOrder({"id", "schoolId", "name"})
     public static class Klass {
         private String id;
@@ -99,7 +94,6 @@ public class App {
     }
 
     @Data
-    @Builder
     @JsonPropertyOrder({"id", "classId", "name"})
     public static class Student {
         private String id;
