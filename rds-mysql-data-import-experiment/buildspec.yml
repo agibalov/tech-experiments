@@ -31,3 +31,17 @@ phases:
         envTag=${ENV_TAG}
         app=load-data-infile-app
         ./tool.sh run
+      - >
+        APP_SCHOOLS=100
+        APP_CLASSES=100
+        APP_STUDENTS=100
+        envTag=${ENV_TAG}
+        app=stored-procedure-app
+        ./tool.sh run
+      - >
+        APP_SCHOOLS=100
+        APP_CLASSES=100
+        APP_STUDENTS=100
+        envTag=${ENV_TAG}
+        app=load-data-infile-app
+        ./tool.sh run
