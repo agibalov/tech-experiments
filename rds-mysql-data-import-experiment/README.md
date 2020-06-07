@@ -11,7 +11,10 @@ Approaches compared are:
 # How to deploy and run
 
 * `envTag=dev branch=master ./tool.sh deploy` to deploy.
-* `envTag=dev app=jdbc-batch-insert-app ./tool.sh run` to try the "JDBC batch insert" approach.
-* `envTag=dev app=stored-procedure-app ./tool.sh run` to try the "Stored procedure" approach.
-* `envTag=dev app=load-data-infile-app ./tool.sh run` to try the "Load data infile" approach.
+* `envTag=dev app=<APP> ./tool.sh run` to try one of the approaches:
+  * `jdbc-batch-insert-app` for "JDBC batch inserts" approach
+  * `stored-procedure-app` to try the "Stored procedure" approach.
+  * `load-data-infile-app` to try the "Load data infile" approach.
+  
+  Optionally specify `APP_SCHOOLS`, `APP_CLASSES` and `APP_STUDENTS` (`APP_SCHOOLS=100 APP_CLASSES=200 envTag=dev ./tool.sh run`)
 * `envTag=dev ./tool.sh undeploy` to undeploy.
