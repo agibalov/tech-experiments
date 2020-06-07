@@ -12,3 +12,4 @@ phases:
       - cd rds-mysql-data-import-experiment
       - envTag=${ENV_TAG} app=jdbc-batch-insert-app ./tool.sh run
       - envTag=${ENV_TAG} app=stored-procedure-app ./tool.sh run
+      - envTag=${ENV_TAG} app=load-data-infile-app ./tool.sh run

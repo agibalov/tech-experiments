@@ -12,6 +12,7 @@ dependencies {
     testImplementation 'junit:junit'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'mysql:mysql-connector-java:8.0.20'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv'
     implementation project(':shared')
 
     compileOnly 'org.projectlombok:lombok'

@@ -6,11 +6,12 @@ Approaches compared are:
 
 * [JDBC batch inserts](jdbc-batch-insert-app)
 * [Mysql stored procedure: insert in a loop](stored-procedure-app)
-* Mysql "load data infile"
+* [Mysql "load data infile"](load-data-infile-app)
 
 # How to deploy and run
 
 * `envTag=dev branch=master ./tool.sh deploy` to deploy.
 * `envTag=dev app=jdbc-batch-insert-app ./tool.sh run` to try the "JDBC batch insert" approach.
 * `envTag=dev app=stored-procedure-app ./tool.sh run` to try the "Stored procedure" approach.
+* `envTag=dev app=load-data-infile-app ./tool.sh run` to try the "Load data infile" approach.
 * `envTag=dev ./tool.sh undeploy` to undeploy.
