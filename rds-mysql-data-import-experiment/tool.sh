@@ -90,6 +90,7 @@ elif [[ "${command}" == "undeploy" ]]; then
 
 elif [[ "${command}" == "run" ]]; then
   envTag=${envTag:?not set or empty}
+  app=${app:?not set or empty}
   stackName=$(get_stack_name ${envTag})
 
   mysqlHost=$(get_stack_output ${stackName} "DbInstanceHost")
@@ -112,7 +113,7 @@ elif [[ "${command}" == "run" ]]; then
   MYSQL_USERNAME=${mysqlUsername} \
   MYSQL_PASSWORD=${mysqlPassword} \
   MYSQL_DATABASE=${dbName} \
-  ./gradlew clean jdbc-batch-insert-app:bootRun
+  ./gradlew clean ${app}:bootRun
 
 elif [[ "${command}" == "" ]]; then
   echo "No command specified"

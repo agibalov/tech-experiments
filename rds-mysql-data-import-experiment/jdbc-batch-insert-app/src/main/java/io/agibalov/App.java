@@ -40,6 +40,8 @@ public class App {
             }
 
             TestDataGenerator testDataGenerator = new TestDataGenerator();
+            long globalStartTime = System.currentTimeMillis();
+            int totalRows = 0;
             for (Activity activity : Arrays.asList(schoolsActivity, classesActivity, studentsActivity)) {
                 log.info("Populating {}", activity.getTableName());
 
@@ -55,6 +57,7 @@ public class App {
 
                 float elapsedTime = (System.currentTimeMillis() - startTime) / 1000.f;
                 float rowsPerSecond = testDataWriter.getRowCount() / elapsedTime;
+                totalRows += testDataWriter.getRowCount();
 
                 log.info("{}: {} rows in {} seconds ({} rows per second)",
                         activity.getTableName(),
@@ -62,6 +65,12 @@ public class App {
                         String.format("%.3f", elapsedTime),
                         String.format("%.0f", rowsPerSecond));
             }
+
+            float globalElapsedTime = (System.currentTimeMillis() - globalStartTime) / 1000.f;
+            log.info("Finished in {}. Total {} rows, {} rows per second",
+                    String.format("%.3f", globalElapsedTime),
+                    totalRows,
+                    String.format("%.0f", totalRows / globalElapsedTime));
         };
     }
 

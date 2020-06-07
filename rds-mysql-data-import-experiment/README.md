@@ -4,12 +4,13 @@ Looking for the fastest way to populate the RDS Mysql database with lots of synt
 
 Approaches compared are:
 
-* JDBC batch inserts
-* Mysql stored procedure: insert in a loop
+* [JDBC batch inserts](jdbc-batch-insert-app)
+* [Mysql stored procedure: insert in a loop](stored-procedure-app)
 * Mysql "load data infile"
 
 # How to deploy and run
 
 * `envTag=dev branch=master ./tool.sh deploy` to deploy.
-* `envTag=dev ./tool.sh run` to run (create the database, apply migrations and run the app)
+* `envTag=dev app=jdbc-batch-insert-app ./tool.sh run` to try the "JDBC batch insert" approach.
+* `envTag=dev app=stored-procedure-app ./tool.sh run` to try the "Stored procedure" approach.
 * `envTag=dev ./tool.sh undeploy` to undeploy.

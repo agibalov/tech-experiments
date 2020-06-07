@@ -10,6 +10,5 @@ phases:
   build:
     commands:
       - cd rds-mysql-data-import-experiment
-      - pwd
-      - ls
-      - envTag=${ENV_TAG} ./tool.sh run
+      - envTag=${ENV_TAG} app=jdbc-batch-insert-app ./tool.sh run
+      - envTag=${ENV_TAG} app=stored-procedure-app ./tool.sh run
