@@ -1,6 +1,7 @@
 package io.agibalov;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SequenceWriter;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
@@ -19,6 +20,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @SpringBootApplication
 @Slf4j
@@ -75,6 +78,17 @@ public class App {
                     String.format("%.3f", elapsedTime),
                     totalRows,
                     String.format("%.0f", totalRows / elapsedTime));
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            Map<String, Object> result = new HashMap<>();
+            result.put("marker", "result");
+            result.put("testRunId", "123");
+            result.put("numberOfSchools", numberOfSchools);
+            result.put("numberOfClasses", numberOfClasses);
+            result.put("numberOfStudents", numberOfStudents);
+            result.put("numberOfRows", totalRows);
+            result.put("time", elapsedTime);
+            log.info("{}", objectMapper.writeValueAsString(result));
         };
     }
 
