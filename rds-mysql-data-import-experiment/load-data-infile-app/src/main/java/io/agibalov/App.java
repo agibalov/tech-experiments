@@ -44,9 +44,9 @@ public class App {
             TestDataGenerator testDataGenerator = new TestDataGenerator(numberOfSchools, numberOfClasses, numberOfStudents);
 
             for (Activity activity : Arrays.asList(schoolsActivity, classesActivity, studentsActivity)) {
+                long activityStartTime = System.currentTimeMillis();
                 CsvMapper csvMapper = new CsvMapper();
                 CsvSchema schema = csvMapper.schemaFor(activity.getCsvSchemaClass())
-                        .withColumnReordering(true)
                         .withNullValue("")
                         .withHeader();
                 ObjectWriter objectWriter = csvMapper.writer(schema);
@@ -56,6 +56,9 @@ public class App {
                             activity.getTableName(), sequenceWriter);
                     testDataGenerator.generate(csvFileTestDataWriter);
                 }
+                log.info("{} generate CSV time: {}",
+                        activity.getTableName(),
+                        (System.currentTimeMillis() - activityStartTime) / 1000.f);
 
                 jdbcTemplate.update(String.format("load data local infile :csvFileName\n" +
                                 "    into table %s\n" +
