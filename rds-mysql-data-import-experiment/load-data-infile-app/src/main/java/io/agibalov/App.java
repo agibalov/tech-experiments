@@ -35,6 +35,7 @@ public class App {
             @Value("${app.schools}") int numberOfSchools,
             @Value("${app.classes}") int numberOfClasses,
             @Value("${app.students}") int numberOfStudents,
+            @Value("${app.test-run-id}") String testRunId,
             NamedParameterJdbcTemplate jdbcTemplate) {
         return args -> {
             for (Activity activity : Arrays.asList(studentsActivity, classesActivity, schoolsActivity)) {
@@ -79,16 +80,17 @@ public class App {
                     totalRows,
                     String.format("%.0f", totalRows / elapsedTime));
 
+            // TODO: {$.marker = result}
             ObjectMapper objectMapper = new ObjectMapper();
             Map<String, Object> result = new HashMap<>();
             result.put("marker", "result");
-            result.put("testRunId", "123");
+            result.put("testRunId", testRunId);
             result.put("numberOfSchools", numberOfSchools);
             result.put("numberOfClasses", numberOfClasses);
             result.put("numberOfStudents", numberOfStudents);
             result.put("numberOfRows", totalRows);
             result.put("time", elapsedTime);
-            log.info("{}", objectMapper.writeValueAsString(result));
+            System.out.println(objectMapper.writeValueAsString(result));
         };
     }
 

@@ -2,6 +2,7 @@ app:
   schools: 10
   classes: 10
   students: 10
+  test-run-id: dummy
 
 spring:
   datasource:
