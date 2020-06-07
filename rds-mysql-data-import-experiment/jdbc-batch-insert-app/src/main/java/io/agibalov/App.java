@@ -51,7 +51,7 @@ public class App {
                         activity.getTableName(),
                         activity.getInsertSqlStatement(),
                         jdbcTemplate,
-                        100); // TODO: use bigger batch size when running in AWS
+                        1000);
                 testDataGenerator.generate(testDataWriter);
                 testDataWriter.flush();
 

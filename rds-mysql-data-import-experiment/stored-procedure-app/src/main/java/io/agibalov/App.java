@@ -24,9 +24,9 @@ public class App {
             jdbcTemplate.update("delete from Classes", Collections.emptyMap());
             jdbcTemplate.update("delete from Schools", Collections.emptyMap());
 
-            final int numberOfSchools = 20;
-            final int numberOfClasses = 20;
-            final int numberOfStudents = 20;
+            final int numberOfSchools = 50;
+            final int numberOfClasses = 50;
+            final int numberOfStudents = 50;
 
             long startTime = System.currentTimeMillis();
             jdbcTemplate.update(

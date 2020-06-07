@@ -14,7 +14,9 @@ begin
     declare studentCount int default 0;
     declare studentId varchar(64);
 
-    while schoolIndex <= numberOfSchools do
+    start transaction;
+
+    while schoolIndex < numberOfSchools do
         set schoolId = concat('school', schoolCount);
         insert into Schools(id, name)
         values (schoolId, concat('School ', schoolCount));
@@ -22,7 +24,7 @@ begin
         set schoolCount = schoolCount + 1;
 
         set classIndex = 0;
-        while classIndex <= numberOfClasses do
+        while classIndex < numberOfClasses do
             set classId = concat('class', classCount);
             insert into Classes(id, schoolId, name)
             values (classId, schoolId, concat('Class ', classCount));
@@ -30,7 +32,7 @@ begin
             set classCount = classCount + 1;
 
             set studentIndex = 0;
-            while studentIndex <= numberOfStudents do
+            while studentIndex < numberOfStudents do
                 set studentId = concat('student', studentCount);
                 insert into Students(id, classId, name)
                 values (studentId, classId, concat('Student ', studentCount));
@@ -39,4 +41,6 @@ begin
             end while;
         end while;
     end while;
+
+    commit;
 end;
