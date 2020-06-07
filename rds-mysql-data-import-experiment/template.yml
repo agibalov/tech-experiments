@@ -3,6 +3,8 @@ AWSTemplateFormatVersion: '2010-09-09'
 Parameters:
   EnvTag:
     Type: String
+  BranchName:
+    Type: String
   DbUsername:
     Type: String
     Default: master
@@ -115,3 +117,52 @@ Resources:
       SubnetIds:
         - !Ref Az1PublicSubnet
         - !Ref Az2PublicSubnet
+
+  ProjectLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      RetentionInDays: 1
+
+  ProjectServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          Effect: Allow
+          Principal:
+            Service: codebuild.amazonaws.com
+          Action: sts:AssumeRole
+      Policies:
+        - PolicyName: AllowEverything
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action: '*'
+                Resource: '*'
+
+  Project:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/standard:3.0
+        Type: LINUX_CONTAINER
+        PrivilegedMode: true
+        EnvironmentVariables:
+          - Name: ENV_TAG
+            Value: !Ref EnvTag
+      ServiceRole: !GetAtt ProjectServiceRole.Arn
+      Source:
+        Type: GITHUB
+        Location: https://github.com/agibalov/tech-experiments.git
+        BuildSpec: rds-mysql-data-import-experiment/performance-spec.yml
+      SourceVersion: !Ref BranchName
+      TimeoutInMinutes: 60
+      LogsConfig:
+        CloudWatchLogs:
+          Status: ENABLED
+          GroupName: !Ref ProjectLogGroup
+      Artifacts:
+        Type: NO_ARTIFACTS

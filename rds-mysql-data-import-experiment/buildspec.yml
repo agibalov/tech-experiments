@@ -1,0 +1,14 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: openjdk11
+    commands:
+      - apt-get update && apt-get install -y uuid-runtime mysql-client
+
+  build:
+    commands:
+      - pwd
+      - ls
+      - envTag=${ENV_TAG} ./tool.sh run

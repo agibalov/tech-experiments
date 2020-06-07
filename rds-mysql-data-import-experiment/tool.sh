@@ -72,6 +72,7 @@ db_tool() {
 
 if [[ "${command}" == "deploy" ]]; then
   envTag=${envTag:?not set or empty}
+  branch=${branch:?not set or empty}
   stackName=$(get_stack_name ${envTag})
   aws cloudformation deploy \
     --template-file template.yml \
@@ -79,7 +80,8 @@ if [[ "${command}" == "deploy" ]]; then
     --capabilities CAPABILITY_NAMED_IAM \
     --region ${Region} \
     --parameter-overrides \
-    EnvTag=${envTag}
+    EnvTag=${envTag} \
+    BranchName=${branch}
 
 elif [[ "${command}" == "undeploy" ]]; then
   envTag=${envTag:?not set or empty}
