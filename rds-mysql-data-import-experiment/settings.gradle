@@ -1,0 +1,6 @@
+rootProject.name = 'rds-mysql-data-import-experiment'
+include 'jdbc-batch-insert-app'
+include 'stored-procedure-app'
+include 'load-data-infile-app'
+include 'shared'
+

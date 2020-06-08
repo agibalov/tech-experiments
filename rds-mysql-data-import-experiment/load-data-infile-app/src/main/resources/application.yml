@@ -1,0 +1,11 @@
+app:
+  schools: 10
+  classes: 10
+  students: 10
+  test-run-id: dummy
+
+spring:
+  datasource:
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}?allowLoadLocalInfile=true

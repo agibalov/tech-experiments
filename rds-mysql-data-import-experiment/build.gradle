@@ -1,0 +1,13 @@
+buildscript {
+    dependencies {
+        classpath 'mysql:mysql-connector-java:8.0.20'
+    }
+}
+
+plugins {
+    id 'org.flywaydb.flyway' version '6.4.3'
+}
+
+repositories {
+    mavenCentral()
+}

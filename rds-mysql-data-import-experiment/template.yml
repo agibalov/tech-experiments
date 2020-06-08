@@ -1,0 +1,170 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+  EnvTag:
+    Type: String
+  BranchName:
+    Type: String
+  DbUsername:
+    Type: String
+    Default: master
+  DbPassword:
+    Type: String
+    Default: 8d5q5s8zRR0FZEM47aI0
+
+Outputs:
+  DbInstanceHost:
+    Value: !GetAtt DbInstance.Endpoint.Address
+  DbInstancePort:
+    Value: !GetAtt DbInstance.Endpoint.Port
+  DbUsername:
+    Value: !Ref DbUsername
+  DbPassword:
+    Value: !Ref DbPassword
+  LogGroupName:
+    Value: !Ref ProjectLogGroup
+
+Resources:
+  Vpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.1.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+
+  Az1PublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref Vpc
+      CidrBlock: 10.1.0.0/24
+      AvailabilityZone: !Select [ 0, !GetAZs ]
+      MapPublicIpOnLaunch: true
+
+  Az2PublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref Vpc
+      CidrBlock: 10.1.1.0/24
+      AvailabilityZone: !Select [ 1, !GetAZs ]
+      MapPublicIpOnLaunch: true
+
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+
+  VpcGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref Vpc
+      InternetGatewayId: !Ref InternetGateway
+
+  RouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref Vpc
+
+  PublicRouteViaIgwRoute:
+    Type: AWS::EC2::Route
+    DependsOn: VpcGatewayAttachment
+    Properties:
+      RouteTableId: !Ref RouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+  Az1PublicSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref Az1PublicSubnet
+      RouteTableId: !Ref RouteTable
+
+  Az2PublicSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref Az2PublicSubnet
+      RouteTableId: !Ref RouteTable
+
+  DbInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      Engine: mysql
+      EngineVersion: 8.0.19
+      AllowMajorVersionUpgrade: true
+      DBInstanceClass: db.t3.micro
+      AllocatedStorage: 5
+      MasterUsername: !Ref DbUsername
+      MasterUserPassword: !Ref DbPassword
+      PubliclyAccessible: true
+      DBSubnetGroupName: !Ref DbSubnetGroup
+      VPCSecurityGroups:
+        - !Ref DbSecurityGroup
+      BackupRetentionPeriod: 0
+      DeleteAutomatedBackups: true
+    DeletionPolicy: Delete
+
+  DbSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref Vpc
+      GroupDescription: Mysql public access
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          CidrIp: 0.0.0.0/0
+
+  DbSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: DB subnet group
+      DBSubnetGroupName: !Sub "${EnvTag}-DbSubnetGroup"
+      SubnetIds:
+        - !Ref Az1PublicSubnet
+        - !Ref Az2PublicSubnet
+
+  ProjectLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      RetentionInDays: 1
+
+  ProjectServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          Effect: Allow
+          Principal:
+            Service: codebuild.amazonaws.com
+          Action: sts:AssumeRole
+      Policies:
+        - PolicyName: AllowEverything
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action: '*'
+                Resource: '*'
+
+  Project:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/standard:3.0
+        Type: LINUX_CONTAINER
+        PrivilegedMode: false
+        EnvironmentVariables:
+          - Name: ENV_TAG
+            Value: !Ref EnvTag
+      ServiceRole: !GetAtt ProjectServiceRole.Arn
+      Source:
+        Type: GITHUB
+        Location: https://github.com/agibalov/tech-experiments.git
+        BuildSpec: rds-mysql-data-import-experiment/buildspec.yml
+      SourceVersion: !Ref BranchName
+      TimeoutInMinutes: 360
+      LogsConfig:
+        CloudWatchLogs:
+          Status: ENABLED
+          GroupName: !Ref ProjectLogGroup
+      Artifacts:
+        Type: NO_ARTIFACTS
