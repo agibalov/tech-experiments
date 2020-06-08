@@ -11,38 +11,20 @@ phases:
     commands:
       - cd rds-mysql-data-import-experiment
       - export APP_TESTRUNID=$(uuidgen | tail -c 8)
-      - >
-        APP_SCHOOLS=20
-        APP_CLASSES=20
-        APP_STUDENTS=20
-        envTag=${ENV_TAG}
-        app=jdbc-batch-insert-app
-        ./tool.sh run
-      - >
-        APP_SCHOOLS=20
-        APP_CLASSES=20
-        APP_STUDENTS=20
-        envTag=${ENV_TAG}
-        app=stored-procedure-app
-        ./tool.sh run
-      - >
-        APP_SCHOOLS=20
-        APP_CLASSES=20
-        APP_STUDENTS=20
-        envTag=${ENV_TAG}
-        app=load-data-infile-app
-        ./tool.sh run
-      - >
-        APP_SCHOOLS=100
-        APP_CLASSES=100
-        APP_STUDENTS=100
-        envTag=${ENV_TAG}
-        app=stored-procedure-app
-        ./tool.sh run
-      - >
-        APP_SCHOOLS=100
-        APP_CLASSES=100
-        APP_STUDENTS=100
-        envTag=${ENV_TAG}
-        app=load-data-infile-app
-        ./tool.sh run
+      - N=20
+      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=jdbc-batch-insert-app ./tool.sh run
+      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=stored-procedure-app ./tool.sh run
+      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=load-data-infile-app ./tool.sh run
+      - N=40
+      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=jdbc-batch-insert-app ./tool.sh run
+      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=stored-procedure-app ./tool.sh run
+      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=load-data-infile-app ./tool.sh run
+      - N=100
+      #- APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=jdbc-batch-insert-app ./tool.sh run
+      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=stored-procedure-app ./tool.sh run
+      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=load-data-infile-app ./tool.sh run
+      - N=200
+      #- APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=jdbc-batch-insert-app ./tool.sh run
+      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=stored-procedure-app ./tool.sh run
+      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=load-data-infile-app ./tool.sh run
+      - echo "testRunId is ${APP_TESTRUNID}"

@@ -10,7 +10,7 @@ Approaches compared are:
 
 # How to deploy and run
 
-* `envTag=dev branch=master ./tool.sh deploy` to deploy.
+* `envTag=dev branch=master ./tool.sh deploy` to deploy. After it, go to the CodeBuild project and run it manually. In the very end of build log there will be a test run ID. Use this ID to get the results: `envTag=dev testRunId=123 ./tool.sh results` 
 * `envTag=dev app=<APP> ./tool.sh run` to try one of the approaches:
   * `jdbc-batch-insert-app` for "JDBC batch inserts" approach
   * `stored-procedure-app` to try the "Stored procedure" approach.

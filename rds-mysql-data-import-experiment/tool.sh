@@ -115,6 +115,19 @@ elif [[ "${command}" == "run" ]]; then
   MYSQL_DATABASE=${dbName} \
   ./gradlew clean ${app}:bootRun
 
+elif [[ "${command}" == "results" ]]; then
+  envTag=${envTag:?not set or empty}
+  testRunId=${testRunId:?not set or empty}
+  stackName=$(get_stack_name ${envTag})
+
+  logGroupName=$(get_stack_output ${stackName} "LogGroupName")
+  aws logs filter-log-events \
+    --log-group-name ${logGroupName} \
+    --filter-pattern '{$.testRunId = '${testRunId}'}' \
+    --query 'events[].message' \
+    --output text \
+    --region ${Region}
+
 elif [[ "${command}" == "" ]]; then
   echo "No command specified"
 else

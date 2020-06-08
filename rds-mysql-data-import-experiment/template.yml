@@ -21,6 +21,8 @@ Outputs:
     Value: !Ref DbUsername
   DbPassword:
     Value: !Ref DbPassword
+  LogGroupName:
+    Value: !Ref ProjectLogGroup
 
 Resources:
   Vpc:
