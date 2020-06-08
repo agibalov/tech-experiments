@@ -98,7 +98,7 @@ elif [[ "${command}" == "run" ]]; then
   mysqlUsername=$(get_stack_output ${stackName} "DbUsername")
   mysqlPassword=$(get_stack_output ${stackName} "DbPassword")
 
-  dbName=db1
+  dbName=$(uuidgen | tail -c 8)
 
   command=create-db \
   dbName=${dbName} \
@@ -114,6 +114,14 @@ elif [[ "${command}" == "run" ]]; then
   MYSQL_PASSWORD=${mysqlPassword} \
   MYSQL_DATABASE=${dbName} \
   ./gradlew clean ${app}:bootRun
+
+  command=destroy-db \
+  dbName=${dbName} \
+  host=${mysqlHost} \
+  port=${mysqlPort} \
+  user=${mysqlUsername} \
+  password=${mysqlPassword} \
+  db_tool
 
 elif [[ "${command}" == "results" ]]; then
   envTag=${envTag:?not set or empty}
