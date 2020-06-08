@@ -8,6 +8,7 @@ import java.util.Map;
 public class CsvFileTestDataWriter implements TestDataWriter {
     private final TableName targetTableName;
     private final SequenceWriter sequenceWriter;
+    private int rowCount = 0;
 
     public CsvFileTestDataWriter(TableName targetTableName, SequenceWriter sequenceWriter) {
         this.targetTableName = targetTableName;
@@ -22,5 +23,10 @@ public class CsvFileTestDataWriter implements TestDataWriter {
         }
 
         sequenceWriter.write(row);
+        ++rowCount;
+    }
+
+    public int getRowCount() {
+        return rowCount;
     }
 }

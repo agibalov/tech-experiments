@@ -161,7 +161,7 @@ Resources:
         Location: https://github.com/agibalov/tech-experiments.git
         BuildSpec: rds-mysql-data-import-experiment/buildspec.yml
       SourceVersion: !Ref BranchName
-      TimeoutInMinutes: 60
+      TimeoutInMinutes: 360
       LogsConfig:
         CloudWatchLogs:
           Status: ENABLED

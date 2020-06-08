@@ -48,17 +48,24 @@ public class App {
             TestDataGenerator testDataGenerator = new TestDataGenerator(
                     numberOfSchools, numberOfClasses, numberOfStudents);
 
+            int totalRows = 0;
             for (Activity activity : Arrays.asList(schoolsActivity, classesActivity, studentsActivity)) {
+                log.info("Populating {}", activity.getTableName());
+
+                long activityStartTime = System.currentTimeMillis();
+
                 CsvMapper csvMapper = new CsvMapper();
                 CsvSchema schema = csvMapper.schemaFor(activity.getCsvSchemaClass())
                         .withNullValue("")
                         .withHeader();
                 ObjectWriter objectWriter = csvMapper.writer(schema);
                 File csvFile = new File(activity.getCsvFileName());
+                int rowCount;
                 try (SequenceWriter sequenceWriter = objectWriter.writeValues(csvFile)) {
                     CsvFileTestDataWriter csvFileTestDataWriter = new CsvFileTestDataWriter(
                             activity.getTableName(), sequenceWriter);
                     testDataGenerator.generate(csvFileTestDataWriter);
+                    rowCount = csvFileTestDataWriter.getRowCount();
                 }
 
                 jdbcTemplate.update(String.format("load data local infile :csvFileName\n" +
@@ -69,12 +76,19 @@ public class App {
                                 ";", activity.getSqlTableName()),
                         new MapSqlParameterSource()
                                 .addValue("csvFileName", csvFile.getAbsolutePath()));
+
+                float activityElapsedTime = (System.currentTimeMillis() - activityStartTime) / 1000.f;
+                float rowsPerSecond = rowCount / activityElapsedTime;
+                totalRows += rowCount;
+
+                log.info("{}: {} rows in {} seconds ({} rows per second)",
+                        activity.getTableName(),
+                        rowCount,
+                        String.format("%.3f", activityElapsedTime),
+                        String.format("%.0f", rowsPerSecond));
             }
 
             float elapsedTime = (System.currentTimeMillis() - startTime) / 1000.f;
-            int totalRows = numberOfSchools +
-                    numberOfSchools * numberOfClasses +
-                    numberOfSchools * numberOfClasses * numberOfStudents;
             log.info("Finished in {}. Total {} rows, {} rows per second",
                     String.format("%.3f", elapsedTime),
                     totalRows,
