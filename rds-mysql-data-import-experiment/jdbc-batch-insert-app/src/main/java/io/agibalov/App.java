@@ -1,5 +1,6 @@
 package io.agibalov;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Builder;
 import lombok.Cleanup;
 import lombok.Data;
@@ -29,6 +30,7 @@ public class App {
             @Value("${app.schools}") int numberOfSchools,
             @Value("${app.classes}") int numberOfClasses,
             @Value("${app.students}") int numberOfStudents,
+            @Value("${app.test-run-id}") String testRunId,
             DataSource primaryDataSource) {
         return args -> {
             @Cleanup Connection connection = primaryDataSource.getConnection();
@@ -46,12 +48,12 @@ public class App {
 
             TestDataGenerator testDataGenerator = new TestDataGenerator(
                     numberOfSchools, numberOfClasses, numberOfStudents);
-            long globalStartTime = System.currentTimeMillis();
+            long startTime = System.currentTimeMillis();
             int totalRows = 0;
             for (Activity activity : Arrays.asList(schoolsActivity, classesActivity, studentsActivity)) {
                 log.info("Populating {}", activity.getTableName());
 
-                long startTime = System.currentTimeMillis();
+                long activityStartTime = System.currentTimeMillis();
 
                 JdbcTemplateBatchUpdateTestDataWriter testDataWriter = new JdbcTemplateBatchUpdateTestDataWriter(
                         activity.getTableName(),
@@ -61,22 +63,33 @@ public class App {
                 testDataGenerator.generate(testDataWriter);
                 testDataWriter.flush();
 
-                float elapsedTime = (System.currentTimeMillis() - startTime) / 1000.f;
-                float rowsPerSecond = testDataWriter.getRowCount() / elapsedTime;
+                float activityElapsedTime = (System.currentTimeMillis() - activityStartTime) / 1000.f;
+                float rowsPerSecond = testDataWriter.getRowCount() / activityElapsedTime;
                 totalRows += testDataWriter.getRowCount();
 
                 log.info("{}: {} rows in {} seconds ({} rows per second)",
                         activity.getTableName(),
                         testDataWriter.getRowCount(),
-                        String.format("%.3f", elapsedTime),
+                        String.format("%.3f", activityElapsedTime),
                         String.format("%.0f", rowsPerSecond));
             }
 
-            float globalElapsedTime = (System.currentTimeMillis() - globalStartTime) / 1000.f;
+            float elapsedTime = (System.currentTimeMillis() - startTime) / 1000.f;
             log.info("Finished in {}. Total {} rows, {} rows per second",
-                    String.format("%.3f", globalElapsedTime),
+                    String.format("%.3f", elapsedTime),
                     totalRows,
-                    String.format("%.0f", totalRows / globalElapsedTime));
+                    String.format("%.0f", totalRows / elapsedTime));
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            System.out.println(objectMapper.writeValueAsString(TestResult.builder()
+                    .testRunId(testRunId)
+                    .approach("jdbc-batch-insert")
+                    .numberOfSchools(numberOfSchools)
+                    .numberOfClasses(numberOfClasses)
+                    .numberOfStudents(numberOfStudents)
+                    .numberOfRows(totalRows)
+                    .time(elapsedTime)
+                    .build()));
         };
     }
 

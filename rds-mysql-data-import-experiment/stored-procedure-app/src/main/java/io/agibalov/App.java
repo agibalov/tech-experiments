@@ -1,5 +1,6 @@
 package io.agibalov;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -23,6 +24,7 @@ public class App {
             @Value("${app.schools}") int numberOfSchools,
             @Value("${app.classes}") int numberOfClasses,
             @Value("${app.students}") int numberOfStudents,
+            @Value("${app.test-run-id}") String testRunId,
             NamedParameterJdbcTemplate jdbcTemplate) {
         return args -> {
             jdbcTemplate.update("delete from Students", Collections.emptyMap());
@@ -44,6 +46,17 @@ public class App {
                     String.format("%.3f", elapsedTime),
                     totalRows,
                     String.format("%.0f", totalRows / elapsedTime));
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            System.out.println(objectMapper.writeValueAsString(TestResult.builder()
+                    .testRunId(testRunId)
+                    .approach("stored-procedure")
+                    .numberOfSchools(numberOfSchools)
+                    .numberOfClasses(numberOfClasses)
+                    .numberOfStudents(numberOfStudents)
+                    .numberOfRows(totalRows)
+                    .time(elapsedTime)
+                    .build()));
         };
     }
 }

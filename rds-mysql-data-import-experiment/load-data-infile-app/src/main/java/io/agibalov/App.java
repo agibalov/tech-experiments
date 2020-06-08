@@ -80,17 +80,16 @@ public class App {
                     totalRows,
                     String.format("%.0f", totalRows / elapsedTime));
 
-            // TODO: {$.marker = result}
             ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, Object> result = new HashMap<>();
-            result.put("marker", "result");
-            result.put("testRunId", testRunId);
-            result.put("numberOfSchools", numberOfSchools);
-            result.put("numberOfClasses", numberOfClasses);
-            result.put("numberOfStudents", numberOfStudents);
-            result.put("numberOfRows", totalRows);
-            result.put("time", elapsedTime);
-            System.out.println(objectMapper.writeValueAsString(result));
+            System.out.println(objectMapper.writeValueAsString(TestResult.builder()
+                    .testRunId(testRunId)
+                    .approach("load-data-infile")
+                    .numberOfSchools(numberOfSchools)
+                    .numberOfClasses(numberOfClasses)
+                    .numberOfStudents(numberOfStudents)
+                    .numberOfRows(totalRows)
+                    .time(elapsedTime)
+                    .build()));
         };
     }
 

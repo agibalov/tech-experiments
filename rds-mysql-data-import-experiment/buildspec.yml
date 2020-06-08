@@ -10,6 +10,7 @@ phases:
   build:
     commands:
       - cd rds-mysql-data-import-experiment
+      - export APP_TESTRUNID=$(uuidgen | tail -c 8)
       - >
         APP_SCHOOLS=20
         APP_CLASSES=20
