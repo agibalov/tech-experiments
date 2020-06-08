@@ -19,29 +19,29 @@ phases:
       - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=jdbc-batch-insert-app ./tool.sh run
       - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=stored-procedure-app ./tool.sh run
       - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=load-data-infile-app ./tool.sh run
-#      - N=40
-#      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=jdbc-batch-insert-app ./tool.sh run
-#      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=stored-procedure-app ./tool.sh run
-#      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=load-data-infile-app ./tool.sh run
-#      - N=50
-#      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=stored-procedure-app ./tool.sh run
-#      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=load-data-infile-app ./tool.sh run
-#      - N=63
-#      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=stored-procedure-app ./tool.sh run
-#      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=load-data-infile-app ./tool.sh run
-#      - N=79
-#      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=stored-procedure-app ./tool.sh run
-#      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=load-data-infile-app ./tool.sh run
-#      - N=99
-#      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=stored-procedure-app ./tool.sh run
-#      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=load-data-infile-app ./tool.sh run
-#      - N=126
-#      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=stored-procedure-app ./tool.sh run
-#      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=load-data-infile-app ./tool.sh run
-#      - N=159
-#      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=stored-procedure-app ./tool.sh run
-#      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=load-data-infile-app ./tool.sh run
-#      - N=200
-#      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=stored-procedure-app ./tool.sh run
-#      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=load-data-infile-app ./tool.sh run
+      - N=40
+      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=jdbc-batch-insert-app ./tool.sh run
+      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=stored-procedure-app ./tool.sh run
+      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=load-data-infile-app ./tool.sh run
+      - N=50
+      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=stored-procedure-app ./tool.sh run
+      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=load-data-infile-app ./tool.sh run
+      - N=63
+      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=stored-procedure-app ./tool.sh run
+      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=load-data-infile-app ./tool.sh run
+      - N=79
+      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=stored-procedure-app ./tool.sh run
+      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=load-data-infile-app ./tool.sh run
+      - N=99
+      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=stored-procedure-app ./tool.sh run
+      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=load-data-infile-app ./tool.sh run
+      - N=126
+      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=stored-procedure-app ./tool.sh run
+      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=load-data-infile-app ./tool.sh run
+      - N=159
+      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=stored-procedure-app ./tool.sh run
+      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=load-data-infile-app ./tool.sh run
+      - N=200
+      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=stored-procedure-app ./tool.sh run
+      - APP_SCHOOLS=${N} APP_CLASSES=${N} APP_STUDENTS=${N} envTag=${ENV_TAG} app=load-data-infile-app ./tool.sh run
       - echo "testRunId is ${APP_TESTRUNID}"
