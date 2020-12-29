@@ -8,6 +8,8 @@ services:
       KEYCLOAK_PASSWORD: admin
     ports:
       - 8081:8080
+    volumes:
+      - ./my-theme:/opt/jboss/keycloak/themes/my-theme
 
   smtp:
     image: reachfive/fake-smtp-server:latest

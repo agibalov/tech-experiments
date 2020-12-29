@@ -1,6 +1,7 @@
 resource "keycloak_realm" "realm" {
   realm = "dummy2"
   registration_allowed = true
+  verify_email = true
   reset_password_allowed = true
   sso_session_max_lifespan = "3m"
 
@@ -10,6 +11,9 @@ resource "keycloak_realm" "realm" {
     from = "example@example.com"
     from_display_name = "The App"
   }
+
+  login_theme = "my-theme"
+  email_theme = "my-theme"
 }
 
 resource "keycloak_openid_client" "app" {

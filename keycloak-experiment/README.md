@@ -52,5 +52,4 @@
 ### TODO
 
 1. Figure out how to embed sign in, register, etc pages to the app itself
-2. Figure out how to build a custom theme (UI, email subjects, etc)
-3. Figure out how to use with Mysql (create DB, etc)
+2. Figure out how to use with Mysql (create DB, etc)
