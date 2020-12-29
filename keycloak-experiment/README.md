@@ -23,6 +23,7 @@
 * Click "Refresh" to force ID token refresh.
 * Click "Sign Out" to sign out - the app will send you to the Sign In page.
 * Or just wait 3 minutes for SSO session to expire - the app will send you to the Sign In page.
+* You can try to register or reset your password. The fake mail server is at http://localhost:8082
 
 ## Notes
 
@@ -31,7 +32,6 @@
 ### TODO
 
 1. Figure out how to sign in with Google
-2. Figure out how to configure email messages (maybe use some dummy SMTP server that just logs the stuff)   
-3. Figure out how to embed sign in, register, etc pages to the app itself
-4. Figure out how to build a custom theme
-5. Figure out how to use with Mysql (create DB, etc)
+2. Figure out how to embed sign in, register, etc pages to the app itself
+3. Figure out how to build a custom theme (UI, email subjects, etc)
+4. Figure out how to use with Mysql (create DB, etc)

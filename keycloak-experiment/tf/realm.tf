@@ -1,7 +1,15 @@
 resource "keycloak_realm" "realm" {
   realm = "dummy2"
   registration_allowed = true
+  reset_password_allowed = true
   sso_session_max_lifespan = "3m"
+
+  smtp_server {
+    host = "smtp"
+    port = 1025
+    from = "example@example.com"
+    from_display_name = "The App"
+  }
 }
 
 resource "keycloak_openid_client" "app" {
