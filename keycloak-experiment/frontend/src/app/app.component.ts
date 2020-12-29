@@ -16,9 +16,6 @@ export class AppComponent {
       console.log(new Date().toISOString(), e);
 
       if (e.type === 'logout') {
-        // TODO: if this gets triggered by explicit log out, there's a navigation
-        //  if this gets triggered by session_end, there's no redirect :-/
-
         this.router.navigate(['/sign-in']);
       }
     });
