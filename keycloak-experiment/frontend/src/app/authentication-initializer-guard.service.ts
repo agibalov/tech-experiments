@@ -11,7 +11,7 @@ export class AuthenticationInitializerGuard implements CanActivate {
 
     async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
       this.oauthService.configure({
-        issuer: 'http://localhost:8081/auth/realms/Dummy',
+        issuer: 'http://localhost:8081/auth/realms/dummy2',
         redirectUri: window.location.origin + '/sign-in',
         clientId: 'app',
         responseType: 'code',
