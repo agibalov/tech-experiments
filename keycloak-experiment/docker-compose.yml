@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:12.0.1
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+    ports:
+      - 8081:8080
