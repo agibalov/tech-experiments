@@ -47,9 +47,3 @@
 13. Name: `Keycloak`
 14. Authorized redirect URIs: add `http://localhost:8081/auth/realms/dummy2/broker/google/endpoint`
 15. It will show you the Client ID and the Client Secret
-16. Go to `realm.tf` and put these instead of placeholders
-
-### TODO
-
-1. Figure out how to embed sign in, register, etc pages to the app itself
-2. Figure out how to use with Mysql (create DB, etc)
