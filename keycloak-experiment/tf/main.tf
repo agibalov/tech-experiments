@@ -1,8 +1,3 @@
-variable "keycloak_url" {
-  type = string
-  default = "http://localhost:8081"
-}
-
 terraform {
   required_providers {
     keycloak = {

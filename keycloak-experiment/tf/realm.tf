@@ -36,3 +36,9 @@ resource "keycloak_user" "user" {
     value = "qwerty123"
   }
 }
+
+resource "keycloak_oidc_google_identity_provider" "google" {
+  realm = keycloak_realm.realm.id
+  client_id = var.google_client_id
+  client_secret = var.google_client_secret
+}
