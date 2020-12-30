@@ -45,4 +45,5 @@ resource "keycloak_oidc_google_identity_provider" "google" {
   realm = keycloak_realm.realm.id
   client_id = var.google_client_id
   client_secret = var.google_client_secret
+  trust_email = true
 }
