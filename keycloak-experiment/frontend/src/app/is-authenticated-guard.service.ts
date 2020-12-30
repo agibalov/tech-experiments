@@ -13,8 +13,7 @@ export class IsAuthenticatedGuard implements CanActivate {
 
   async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
     console.log('is authenticated', this.oauthService.getIdToken());
-    if (this.oauthService.getIdToken() !== null) {
-      // TODO: check session?
+    if (this.oauthService.hasValidIdToken()) {
       return true;
     }
     this.router.navigateByUrl('/sign-in');
