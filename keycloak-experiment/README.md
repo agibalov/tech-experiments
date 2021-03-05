@@ -10,8 +10,8 @@
 
 ## How to run
 
-* (optional) One of the things this hello world demonstrates is "Sign In with Google". If you want to try this, you need to create a Google app first - see "How to create a Google app" below. Once you get the client ID and the client secret, do `export TF_VAR_google_client_id=<id>` and `export TF_VAR_google_client_secret=<secret>` to provide them to Terraform. If you don't do this, it will just use the dummy values.
 * `docker-compose up`
+* (optional) One of the things this hello world demonstrates is "Sign In with Google". If you want to try this, you need to create a Google app first - see "How to create a Google app" below. Once you get the client ID and the client secret, do `export TF_VAR_google_client_id=<id>` and `export TF_VAR_google_client_secret=<secret>` to provide them to Terraform. If you don't do this, it will just use the dummy values.  
 * `./tool.sh init && ./tool.sh deploy`
 * `cd backend && ./gradlew clean bootRun`
 * `cd frontend && yarn && yarn start`
@@ -28,7 +28,7 @@
 
 ## Notes
 
-* The realm's "SSO Session Max" is the amount of time for users to stay authenticated with Keycloak. The "silent refresh" relies on this. If you set this to 3 minutes, silent refresh will only be able to get fresh tokens during the period of 3 minutes. So looks like this needs to be set to 1 month or something like this. The default is only 10 hours.
+* The realm's "SSO Session Max" is the amount of time for users to stay authenticated with Keycloak. The "silent refresh" relies on this. If you set this to 3 minutes, silent refresh will only be able to get fresh tokens during the period of 3 minutes (the app will log you out after it). At least set this to 1 month or something like this. The default is only 10 hours. 
 
 ## How to create a Google app
 

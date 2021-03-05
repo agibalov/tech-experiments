@@ -4,13 +4,11 @@ import { SignInPageComponent } from './sign-in-page/sign-in-page.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { IsAuthenticatedGuard } from './is-authenticated-guard.service';
 import { IsNotAuthenticatedGuard } from './is-not-authenticated-guard.service';
-import { AuthenticationInitializerGuard } from './authentication-initializer-guard.service';
 
 
 const routes: Routes = [
   {
     path: '',
-    canActivate: [ AuthenticationInitializerGuard ],
     children: [
       {
         path: '',
