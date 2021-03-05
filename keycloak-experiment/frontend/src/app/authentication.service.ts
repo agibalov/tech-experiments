@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AuthenticationService {
-  private initializingPromise: Promise<void> = null;
+  private initializedPromise: Promise<void> = null;
 
   constructor(
     private readonly oauthService: OAuthService,
@@ -43,10 +43,10 @@ export class AuthenticationService {
   }
 
   private async ensureInitialized() {
-    if (this.initializingPromise === null) {
-      this.initializingPromise = this.initialize();
+    if (this.initializedPromise === null) {
+      this.initializedPromise = this.initialize();
     }
-    await this.initializingPromise;
+    await this.initializedPromise;
   }
 
   public async isAuthenticated() {
