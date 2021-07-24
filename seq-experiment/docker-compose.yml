@@ -1,0 +1,12 @@
+version: "3.3"
+
+services:
+  seq:
+    image: datalust/seq:2020.1
+    environment:
+      ACCEPT_EULA: Y
+    volumes:
+      - ./.data/seq:/data
+    ports:
+      - 180:80
+      - 15341:5341

@@ -1,0 +1,29 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp>
+                    <fieldName>@t</fieldName>
+                </timestamp>
+                <message>
+                    <fieldName>@m</fieldName>
+                </message>
+                <logLevel>
+                    <fieldName>@l</fieldName>
+                </logLevel>
+                <stackTrace>
+                    <fieldName>@x</fieldName>
+                </stackTrace>
+                <loggerName />
+                <arguments />
+                <mdc />
+            </providers>
+        </encoder>
+    </appender>
+
+    <logger name="io.agibalov" level="debug" />
+
+    <root level="info">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
