@@ -1,0 +1,41 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d %-5level [%thread] %logger{0}: %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="SEQ" class="io.agibalov.SeqAppender">
+        <seqBaseUrl>http://localhost:15341</seqBaseUrl>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp>
+                    <fieldName>@t</fieldName>
+                </timestamp>
+                <message>
+                    <fieldName>@m</fieldName>
+                </message>
+                <pattern>
+                    <pattern>
+                        { "message": "%message" }
+                    </pattern>
+                </pattern>
+                <logLevel>
+                    <fieldName>@l</fieldName>
+                </logLevel>
+                <stackTrace>
+                    <fieldName>@x</fieldName>
+                </stackTrace>
+                <loggerName />
+                <arguments />
+                <mdc />
+            </providers>
+        </encoder>
+    </appender>
+
+    <logger name="io.agibalov" level="debug" />
+
+    <root level="info">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="SEQ" />
+    </root>
+</configuration>
