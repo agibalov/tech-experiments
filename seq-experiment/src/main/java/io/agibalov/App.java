@@ -45,7 +45,7 @@ public class App {
 
         @GetMapping("/crash")
         public ResponseEntity crash() {
-            log.info("about to crash...");
+            log.info("this\nis\na\nmultiline\nlog\nmessage... And we're about to crash!");
             throw new RuntimeException("Something bad!");
         }
 

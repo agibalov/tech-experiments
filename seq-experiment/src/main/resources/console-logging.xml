@@ -8,6 +8,11 @@
                 <message>
                     <fieldName>@m</fieldName>
                 </message>
+                <pattern>
+                    <pattern>
+                        { "message": "%message" }
+                    </pattern>
+                </pattern>
                 <logLevel>
                     <fieldName>@l</fieldName>
                 </logLevel>

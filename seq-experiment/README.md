@@ -49,3 +49,7 @@ seqcli ingest \
   --invalid-data=ignore \
   --json
 ```
+
+## Notes
+
+1. Seq UI doesn't show log messages using monospace font even when expanding the log records, that's why I have log message text in both `@m` and `message`.
