@@ -3,6 +3,7 @@ plugins {
     id 'org.springframework.boot' version '2.5.3'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'io.gatling.gradle' version '3.6.1'
+    id 'org.flywaydb.flyway' version '7.12.0'
 }
 
 group 'io.agibalov'
@@ -13,6 +14,9 @@ repositories {
 }
 
 dependencies {
+    implementation 'mysql:mysql-connector-java'
+    implementation 'org.postgresql:postgresql'
+
     gatling 'org.springframework.boot:spring-boot-starter-jdbc'
     gatling 'mysql:mysql-connector-java'
     gatling 'org.postgresql:postgresql'

@@ -16,5 +16,7 @@ Mysql will be available at localhost:3308. See `docker-compose.yml` for credenti
 
 ## TODO
 
+* `./tool.sh migrate-mysql`
 * `./tool.sh test-mysql`
+* `./tool.sh migrate-postgres`
 * `./tool.sh test-postgres`
