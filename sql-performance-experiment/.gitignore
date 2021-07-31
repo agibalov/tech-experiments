@@ -1,0 +1,5 @@
+.data
+.gradle
+build
+*.iml
+.idea

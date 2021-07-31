@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  mysql:
+    image: mysql:8.0.25
+    volumes:
+      - ./.data/mysql:/var/lib/mysql
+    ports:
+      - 3308:3306
+    command: --local-infile
+    environment:
+      MYSQL_ROOT_PASSWORD: qwerty
+      MYSQL_DATABASE: db1
+      MYSQL_USER: user1
+      MYSQL_PASSWORD: password1
+
+  postgres:
+    image: postgres:13.3
+    volumes:
+      - ./.data/postgres:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: qwerty
+      POSTGRES_USER: user1
+      POSTGRES_DB: db1
