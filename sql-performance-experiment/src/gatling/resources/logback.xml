@@ -6,8 +6,8 @@
         </encoder>
     </appender>
 
-    <!-- Uncomment to print requests and responses -->
-    <!-- <logger name="io.gatling.http.engine.response" level="trace" /> -->
+    <!-- Uncomment to enable SQL logging -->
+    <!-- <logger name="io.agibalov.sql" level="trace" /> -->
 
     <root level="info">
         <appender-ref ref="CONSOLE" />

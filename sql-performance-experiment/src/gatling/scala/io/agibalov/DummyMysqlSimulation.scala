@@ -5,14 +5,14 @@ import io.gatling.core.Predef._
 
 class DummyMysqlSimulation extends Simulation {
   val scn = scenario("10 users one plus one scenario")
-    .repeat(100) {
-      exec(sql("One plus one").executeSql(
+    .repeat(1000) {
+      exec(sql("Count all users").executeSql(
         """
-          |select 1+1
+          |select count(*) from Users
           |""".stripMargin))
     }
 
-  setUp(scn.inject(atOnceUsers(2)))
+  setUp(scn.inject(atOnceUsers(1)))
     .protocols(sql(this))
     .assertions(
       forAll.successfulRequests.percent.is(100),

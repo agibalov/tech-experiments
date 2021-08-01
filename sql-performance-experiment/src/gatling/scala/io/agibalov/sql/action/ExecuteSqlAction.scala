@@ -26,7 +26,7 @@ class ExecuteSqlAction(protocol: SqlProtocol,
     val rows = jdbcTemplate.queryForMap(sql)
     val end = System.currentTimeMillis
 
-    logger.info(s"${rows.size()} rows: ${rows}")
+    logger.trace(s"${rows.size()} rows: ${rows}")
 
     statsEngine.logResponse(session.scenario, session.groups, name, start, end, OK, None, None)
 

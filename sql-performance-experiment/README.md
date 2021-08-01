@@ -14,9 +14,18 @@ Mysql will be available at localhost:3308. See `docker-compose.yml` for credenti
 * `docker-compose start postgres` to start Postgres.
 * `docker-compose stop postgres` to stop Postgres.
 
-## TODO
+## Mysql
 
-* `./tool.sh migrate-mysql`
-* `./tool.sh test-mysql`
-* `./tool.sh migrate-postgres`
-* `./tool.sh test-postgres`
+* `envSpec=<ENV_SPEC> ./tool.sh deploy-mysql`. `<ENV_SPEC>` is `micro` or `small`.
+* `./tool.sh undeploy-mysql`
+* `env=<ENV> ./tool.sh migrate-mysql`
+* `env=<ENV> ./tool.sh populate-mysql`
+* `env=<ENV> ./tool.sh test-mysql`
+
+## Postgres
+
+* `envSpec=<ENV_SPEC> ./tool.sh deploy-postgres`. `<ENV_SPEC>` is `micro` or `small`.
+* `./tool.sh undeploy-postgres`
+* `env=<ENV> ./tool.sh migrate-postgres`
+* `env=<ENV> ./tool.sh populate-postgres`
+* `env=<ENV> ./tool.sh test-postgres`
