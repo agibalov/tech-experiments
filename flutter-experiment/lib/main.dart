@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'counter.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -15,6 +17,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => const HomePage(),
+          '/counter': (context) => const CounterPage(),
           '/about': (context) => const AboutPage()
         }
     );
@@ -38,6 +41,12 @@ class HomePage extends StatelessWidget {
           Text(
               'hello world',
               style: Theme.of(context).textTheme.caption),
+          TextButton(
+              onPressed: () {
+                debugPrint('Navigating to Counter');
+                Navigator.pushNamed(context, '/counter');
+              },
+              child: const Text('Go to Counter')),
           TextButton(
               onPressed: () {
                 var x = 123;
