@@ -13,16 +13,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'Andrey\'s app',
-        theme: ThemeData(
-            brightness: Brightness.dark
-        ),
+        theme: ThemeData(brightness: Brightness.dark),
         initialRoute: '/',
         routes: {
           '/': (context) => const HomePage(),
           '/counter': (context) => const CounterPage(),
           '/about': (context) => const AboutPage()
-        }
-    );
+        });
   }
 }
 
@@ -32,17 +29,10 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          title: const Text('Home') // TODO: what is const here?
-      ),
-      body: Column(
-        children: [
-          Text(
-              'hello world',
-              style: Theme.of(context).textTheme.bodyText1),
-          Text(
-              'hello world',
-              style: Theme.of(context).textTheme.caption),
+        appBar: AppBar(title: const Text('Home')),
+        body: Column(children: [
+          Text('hello world', style: Theme.of(context).textTheme.bodyText1),
+          Text('hello world', style: Theme.of(context).textTheme.caption),
           TextButton(
               onPressed: () {
                 debugPrint('Navigating to Counter');
@@ -56,9 +46,7 @@ class HomePage extends StatelessWidget {
                 Navigator.pushNamed(context, '/about');
               },
               child: const Text('Go to About'))
-        ]
-      )
-    );
+        ]));
   }
 }
 
@@ -68,13 +56,8 @@ class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            title: const Text('About')
-        ),
-        body: Text(
-            'This is the about page',
-            style: Theme.of(context).textTheme.bodyText1
-        )
-    );
+        appBar: AppBar(title: const Text('About')),
+        body: Text('This is the about page',
+            style: Theme.of(context).textTheme.bodyText1));
   }
 }

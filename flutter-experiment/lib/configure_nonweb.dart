@@ -1,2 +1,1 @@
-void configureApp() {
-}
+void configureApp() {}

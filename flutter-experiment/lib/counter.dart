@@ -27,35 +27,26 @@ class CounterPageState extends State<CounterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            title: const Text('Counter')
-        ),
+        appBar: AppBar(title: const Text('Counter')),
         body: Column(
           children: [
-            Text(
-                'The counter is $_counter',
-                style: Theme.of(context).textTheme.bodyText1
-            ),
-            Row(
-                children: [
-                  TextButton(
-                      onPressed: () {
-                        debugPrint('plus one (currently: $_counter)');
-                        _addOne();
-                      },
-                      child: Text('+1')
-                  ),
-                  TextButton(
-                      onPressed: () {
-                        debugPrint('minus one (currently: $_counter)');
-                        _subtractOne();
-                      },
-                      child: Text('-1')
-                  )
-                ]
-            )
+            Text('The counter is $_counter',
+                style: Theme.of(context).textTheme.bodyText1),
+            Row(children: [
+              TextButton(
+                  onPressed: () {
+                    debugPrint('plus one (currently: $_counter)');
+                    _addOne();
+                  },
+                  child: Text('+1')),
+              TextButton(
+                  onPressed: () {
+                    debugPrint('minus one (currently: $_counter)');
+                    _subtractOne();
+                  },
+                  child: Text('-1'))
+            ])
           ],
-        )
-    );
+        ));
   }
 }
