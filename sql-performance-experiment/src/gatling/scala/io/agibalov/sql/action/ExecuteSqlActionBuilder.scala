@@ -5,8 +5,11 @@ import io.gatling.core.action.Action
 import io.gatling.core.action.builder.ActionBuilder
 import io.gatling.core.protocol.ProtocolComponentsRegistry
 import io.gatling.core.structure.ScenarioContext
+import org.springframework.jdbc.core.namedparam.SqlParameterSource
 
-class ExecuteSqlActionBuilder(queryName: String, sql: String) extends ActionBuilder {
+class ExecuteSqlActionBuilder(queryName: String, sql: String,
+                              sqlParameterSource: SqlParameterSource) extends ActionBuilder {
+
   private def components(protocolComponentsRegistry: ProtocolComponentsRegistry) =
     protocolComponentsRegistry.components(SqlProtocol.SqlProtocolKey)
 
@@ -14,6 +17,7 @@ class ExecuteSqlActionBuilder(queryName: String, sql: String) extends ActionBuil
     import ctx._
     val statsEngine = coreComponents.statsEngine
     val sqlProtocolComponents = components(protocolComponentsRegistry)
-    new ExecuteSqlAction(sqlProtocolComponents.sqlProtocol, queryName, sql, statsEngine, coreComponents, next)
+    new ExecuteSqlAction(sqlProtocolComponents.sqlProtocol, queryName, sql,
+      sqlParameterSource, statsEngine, coreComponents, next)
   }
 }

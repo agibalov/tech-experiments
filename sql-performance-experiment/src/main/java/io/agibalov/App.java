@@ -28,8 +28,8 @@ public class App {
     @Bean
     public DataConfiguration dataConfiguration() {
         return DataConfiguration.builder()
-                .numberOfAccounts(3)
-                .numberOfUsersPerAccount(5)
+                .numberOfAccounts(100)
+                .numberOfUsersPerAccount(200000)
                 .build();
     }
 

@@ -19,12 +19,12 @@ Outputs:
 
 Mappings:
   EnvSpecMap:
-    micro:
-      DbInstanceClass: db.t3.micro
-      DbInstanceStorageType: gp2
-      DbInstanceStorageIops: -1
     small:
       DbInstanceClass: db.t3.small
+      DbInstanceStorageType: io1
+      DbInstanceStorageIops: 3000
+    large:
+      DbInstanceClass: db.m5.large
       DbInstanceStorageType: io1
       DbInstanceStorageIops: 3000
   ConstMap:
@@ -51,7 +51,7 @@ Resources:
           - DbInstanceUseIops
           - !FindInMap [ EnvSpecMap, !Ref EnvSpec, "DbInstanceStorageIops" ]
           - !Ref AWS::NoValue
-      AllocatedStorage: 5000
+      AllocatedStorage: 100
       MasterUsername: !FindInMap [ "ConstMap", "Singleton", "DbUsername" ]
       MasterUserPassword: !FindInMap [ "ConstMap", "Singleton", "DbPassword" ]
       DBName: !FindInMap [ "ConstMap", "Singleton", "DbName" ]

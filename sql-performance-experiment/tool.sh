@@ -87,10 +87,12 @@ elif [[ "${command}" == "migrate-mysql" ]] || \
     ./gradlew clean bootRun
 
   elif [[ "${command}" == "test-mysql" ]]; then
+    simulation=${simulation:?not set or empty}
+
     SPRING_DATASOURCE_USERNAME=${mysqlUsername} \
     SPRING_DATASOURCE_PASSWORD=${mysqlPassword} \
     SPRING_DATASOURCE_URL="${mysqlUrl}" \
-    ./gradlew clean gatlingRun-io.agibalov.DummyMysqlSimulation
+    ./gradlew clean gatlingRun-${simulation}
 
   else
     echo "should never get here"
@@ -147,10 +149,12 @@ elif [[ "${command}" == "migrate-postgres" ]] || \
     ./gradlew clean bootRun
 
   elif [[ "${command}" == "test-postgres" ]]; then
+    simulation=${simulation:?not set or empty}
+
     SPRING_DATASOURCE_USERNAME=${postgresUsername} \
     SPRING_DATASOURCE_PASSWORD=${postgresPassword} \
     SPRING_DATASOURCE_URL="${postgresUrl}" \
-    ./gradlew clean gatlingRun-io.agibalov.DummyPostgresSimulation
+    ./gradlew clean gatlingRun-${simulation}
 
   else
     echo "should never get here"

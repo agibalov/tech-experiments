@@ -19,12 +19,12 @@ Outputs:
 
 Mappings:
   EnvSpecMap:
-    micro:
-      DbInstanceClass: db.t3.micro
-      DbInstanceStorageType: gp2
-      DbInstanceStorageIops: -1
     small:
       DbInstanceClass: db.t3.small
+      DbInstanceStorageType: io1
+      DbInstanceStorageIops: 3000
+    large:
+      DbInstanceClass: db.m5.large
       DbInstanceStorageType: io1
       DbInstanceStorageIops: 3000
   ConstMap:
