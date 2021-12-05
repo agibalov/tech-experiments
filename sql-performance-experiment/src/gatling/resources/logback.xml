@@ -7,7 +7,7 @@
     </appender>
 
     <!-- Uncomment to enable SQL logging -->
-    <logger name="io.agibalov.sql" level="trace" />
+    <!-- <logger name="io.agibalov.sql" level="trace" /> -->
 
     <root level="info">
         <appender-ref ref="CONSOLE" />
