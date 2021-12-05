@@ -83,9 +83,11 @@ As of Dec 5, 2021:
 > mean requests/sec                                     10 (OK=10     KO=-     )
 ```
 
-## Mysql
+## CLI reference
 
-### Local Mysql
+### Mysql
+
+#### Local Mysql
 
 Launch Mysql locally using Docker Compose:
 
@@ -95,26 +97,26 @@ Launch Mysql locally using Docker Compose:
 
 Mysql will be available at `localhost:3308`. See `docker-compose.yml` for credentials.
 
-### AWS RDS Mysql
+#### AWS RDS Mysql
 
 * `envSpec=<ENV_SPEC> ./tool.sh deploy-mysql` to deploy the mysql CloudFormation stack. `<ENV_SPEC>` is `small` or `large`.
 * `./tool.sh undeploy-mysql` to undeploy the mysql CloudFormation stack.
 
-### Applying migrations
+#### Applying migrations
 
 * `env=<ENV> ./tool.sh migrate-mysql` to apply DB migrations. `<ENV>` is `local` or `aws`.
 
-### Populating the database
+#### Populating the database
 
 * `env=<ENV> ./tool.sh populate-mysql` to populate the database. `<ENV>` is `local` or `aws`.
 
-### To run the test
+#### To run the test
 
 * `env=<ENV> simulation=<SIMULATION> ./tool.sh test-mysql`. `<ENV>` is `local` or `aws`. `<SIMULATION>` is a fully qualified class name of Gatling simulation to run.
 
-## Postgres
+### Postgres
 
-### Local Postgres
+#### Local Postgres
 
 Launch Postgres locally using Docker Compose:
 
@@ -124,19 +126,19 @@ Launch Postgres locally using Docker Compose:
 
 Postgres will be available at `localhost:5432`.  See `docker-compose.yml` for credentials.
 
-### AWS RDS Postgres
+#### AWS RDS Postgres
 
 * `envSpec=<ENV_SPEC> ./tool.sh deploy-postgres` to deploy the postgres CloudFormation stack. `<ENV_SPEC>` is `small` or `large`.
 * `./tool.sh undeploy-postgres` to undeploy the postgres CloudFormation stack.
 
-### Applying migrations
+#### Applying migrations
 
 * `env=<ENV> ./tool.sh migrate-postgres` to apply DB migrations. `<ENV>` is `local` or `aws`.
 
-### Populating the database
+#### Populating the database
 
 * `env=<ENV> ./tool.sh populate-postgres` to populate the database. `<ENV>` is `local` or `aws`.
 
-### To run the test
+#### To run the test
 
 * `env=<ENV> simulation=<SIMULATION> ./tool.sh test-postgres`. `<ENV>` is `local` or `aws`. `<SIMULATION>` is a fully qualified class name of Gatling simulation to run.
