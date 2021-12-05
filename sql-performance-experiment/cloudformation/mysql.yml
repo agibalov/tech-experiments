@@ -1,0 +1,140 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+  EnvSpec:
+    Type: String
+
+Outputs:
+  DbJdbcUrl:
+    Value:
+      Fn::Sub:
+        - "jdbc:mysql://${address}:${port}/${db}"
+        - address: !GetAtt DbInstance.Endpoint.Address
+          port: !GetAtt DbInstance.Endpoint.Port
+          db: !FindInMap [ "ConstMap", "Singleton", "DbName" ]
+  DbUsername:
+    Value: !FindInMap [ "ConstMap", "Singleton", "DbUsername" ]
+  DbPassword:
+    Value: !FindInMap [ "ConstMap", "Singleton", "DbPassword" ]
+
+Mappings:
+  EnvSpecMap:
+    small:
+      DbInstanceClass: db.t3.small
+      DbInstanceStorageType: io1
+      DbInstanceStorageIops: 3000
+    large:
+      DbInstanceClass: db.m5.large
+      DbInstanceStorageType: io1
+      DbInstanceStorageIops: 3000
+  ConstMap:
+    Singleton:
+      DbUsername: user
+      DbPassword: VLl4$%r8W2P
+      DbName: db1
+
+Conditions:
+  DbInstanceUseIops: !Not [ !Equals [ !FindInMap [ EnvSpecMap, !Ref EnvSpec, "DbInstanceStorageIops" ], "-1" ] ]
+
+Resources:
+  DbInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      Engine: mysql
+      EngineVersion: 8.0.25
+      AllowMajorVersionUpgrade: true
+      AutoMinorVersionUpgrade: false
+      DBInstanceClass: !FindInMap [ EnvSpecMap, !Ref EnvSpec, "DbInstanceClass" ]
+      StorageType: !FindInMap [ EnvSpecMap, !Ref EnvSpec, "DbInstanceStorageType" ]
+      Iops:
+        Fn::If:
+          - DbInstanceUseIops
+          - !FindInMap [ EnvSpecMap, !Ref EnvSpec, "DbInstanceStorageIops" ]
+          - !Ref AWS::NoValue
+      AllocatedStorage: 100
+      MasterUsername: !FindInMap [ "ConstMap", "Singleton", "DbUsername" ]
+      MasterUserPassword: !FindInMap [ "ConstMap", "Singleton", "DbPassword" ]
+      DBName: !FindInMap [ "ConstMap", "Singleton", "DbName" ]
+      PubliclyAccessible: true
+      BackupRetentionPeriod: 0
+      DBSubnetGroupName: !Ref DbSubnetGroup
+      VPCSecurityGroups:
+        - !Ref DbSecurityGroup
+    DeletionPolicy: Delete
+
+  Vpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.1.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+
+  Az1PublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref Vpc
+      CidrBlock: 10.1.0.0/24
+      AvailabilityZone: !Select [ 0, !GetAZs ]
+      MapPublicIpOnLaunch: true
+
+  Az2PublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref Vpc
+      CidrBlock: 10.1.1.0/24
+      AvailabilityZone: !Select [ 1, !GetAZs ]
+      MapPublicIpOnLaunch: true
+
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+
+  VpcGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref Vpc
+      InternetGatewayId: !Ref InternetGateway
+
+  RouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref Vpc
+
+  PublicRouteViaIgwRoute:
+    Type: AWS::EC2::Route
+    DependsOn: VpcGatewayAttachment
+    Properties:
+      RouteTableId: !Ref RouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+  Az1PublicSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref Az1PublicSubnet
+      RouteTableId: !Ref RouteTable
+
+  Az2PublicSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref Az2PublicSubnet
+      RouteTableId: !Ref RouteTable
+
+  DbSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref Vpc
+      GroupDescription: Mysql public access
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          CidrIp: 0.0.0.0/0
+
+  DbSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: DB subnet group
+      DBSubnetGroupName: !Sub "${AWS::StackName}-DbSubnetGroup"
+      SubnetIds:
+        - !Ref Az1PublicSubnet
+        - !Ref Az2PublicSubnet
