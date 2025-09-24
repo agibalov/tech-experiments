@@ -1,7 +1,7 @@
 import time
 
 
-def test_count_posts_with_benchmark_or_algorithm(db_connection):
+def test_count_posts(db_connection):
     performance_iterations = 100
     expected_search_count = 18
     cursor = db_connection.cursor()
@@ -46,7 +46,7 @@ def test_count_posts_with_benchmark_or_algorithm(db_connection):
     assert like_duration >= fts_duration * 50
 
 
-def test_find_most_recent_posts_with_benchmark_or_algorithm(db_connection):
+def test_find_most_recent_posts(db_connection):
     performance_iterations = 100
     expected_result_count = 5
     cursor = db_connection.cursor()

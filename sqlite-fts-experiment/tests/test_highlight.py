@@ -1,4 +1,4 @@
-def test_highlight_posts_with_benchmark_or_algorithm(db_connection):
+def test_highlight_posts(db_connection):
     expected_result_count = 5
     cursor = db_connection.cursor()
 

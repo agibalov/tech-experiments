@@ -1,48 +1,17 @@
 import time
-from sqlalchemy import create_engine, Column, Integer, String, or_, literal_column
-from sqlalchemy.orm import declarative_base, sessionmaker
-import pytest
-
-Base = declarative_base()
+from sqlalchemy import or_, literal_column
+from tests.sqlalchemy_models import Post, PostFTS, sqlalchemy_session
 
 
-class Post(Base):
-    __tablename__ = 'posts'
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    title = Column(String, nullable=False)
-    content = Column(String, nullable=False)
-    author = Column(String, nullable=False)
-    created_at = Column(String, nullable=False)
-
-
-class PostFTS(Base):
-    __tablename__ = 'posts_fts'
-
-    rowid = Column(Integer, primary_key=True)
-    title = Column(String)
-    content = Column(String)
-    author = Column(String)
-
-
-@pytest.fixture
-def sqlalchemy_session(populated_database):
-    engine = create_engine('sqlite:///test_posts.db')
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    yield session
-    session.close()
-
-
-def test_count_posts_with_benchmark_or_algorithm(sqlalchemy_session):
+def test_count_posts(sqlalchemy_session):
     performance_iterations = 100
     expected_search_count = 18
     session = sqlalchemy_session
 
     start_time = time.time()
     for _ in range(performance_iterations):
-        fts_count = session.query(PostFTS).filter(
-            literal_column("posts_fts").op("MATCH")("benchmark OR algorithm")
+        fts_count = session.query(Post).join(PostFTS, Post.id == PostFTS.rowid).filter(
+            literal_column('posts_fts').op("MATCH")('benchmark OR algorithm')
         ).count()
     fts_duration = time.time() - start_time
 
@@ -71,7 +40,7 @@ def test_count_posts_with_benchmark_or_algorithm(sqlalchemy_session):
     assert like_duration >= fts_duration * 10
 
 
-def test_find_most_recent_posts_with_benchmark_or_algorithm(sqlalchemy_session):
+def test_find_most_recent_posts(sqlalchemy_session):
     performance_iterations = 100
     expected_result_count = 5
     session = sqlalchemy_session
@@ -81,7 +50,7 @@ def test_find_most_recent_posts_with_benchmark_or_algorithm(sqlalchemy_session):
         fts_results = session.query(
             Post.id, Post.title, Post.created_at
         ).join(PostFTS, Post.id == PostFTS.rowid).filter(
-            literal_column("posts_fts").op("MATCH")("benchmark OR algorithm")
+            literal_column('posts_fts').op("MATCH")('benchmark OR algorithm')
         ).order_by(Post.created_at.desc()).limit(5).all()
     fts_duration = time.time() - start_time
 

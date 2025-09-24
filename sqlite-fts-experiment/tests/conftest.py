@@ -5,14 +5,14 @@ import pytest
 from faker import Faker
 
 DB_FILE = 'test_posts.db'
-RANDOM_SEED = 42
 
 
 @pytest.fixture
 def populated_database():
-    random.seed(RANDOM_SEED)
+    random_seed = 42
+    random.seed(random_seed)
     fake = Faker()
-    fake.seed_instance(RANDOM_SEED)
+    fake.seed_instance(random_seed)
 
     if os.path.exists(DB_FILE):
         os.remove(DB_FILE)
