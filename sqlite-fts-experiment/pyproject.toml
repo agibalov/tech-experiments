@@ -8,3 +8,6 @@ dependencies = [
     "pytest>=8.4.2",
     "faker>=28.4.1",
 ]
+
+[tool.pytest.ini_options]
+addopts = "-s -v"
