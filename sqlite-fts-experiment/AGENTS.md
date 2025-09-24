@@ -1,0 +1,2 @@
+- Do not write comments, unless explicitly requested.
+- Avoid hard-coding the same literal multiple times (across functions or within a single function); define it once as a named constant or variable, at the narrowest scope where it is used (function-level if only used in one function, module-level if shared).
