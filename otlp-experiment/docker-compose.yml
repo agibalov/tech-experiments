@@ -1,13 +1,11 @@
-version: "3.9"
-
 services:
   otel-lgtm:
     image: grafana/otel-lgtm:latest
-    container_name: otel-lgtm
     ports:
       - "3000:3000"
       - "4317:4317"
       - "4318:4318"
-    stdin_open: true
-    tty: true
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
     restart: unless-stopped

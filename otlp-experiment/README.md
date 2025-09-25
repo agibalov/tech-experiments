@@ -4,6 +4,6 @@ Learning OpenTelemetry.
 
 ## How to do things
 
-* `docker compose up` to launch LGTM stack. Web console will be available at http://localhost:3000
-* `uv run uvicorn main:app --reload` to launch web app. App will be available at http://localhost:8000
-* `./run.sh` to launch web app, but *in a different way* :-D (TODO: clean up this mess)
+* `npx pm2 start` to start everything.
+* `npx pm2 stop all` to stop everything. Note that this will not delete the `otel-lgtm` container. To delete manually: `docker rm otel-lgtm`.
+* `npx pm2 list` to see what's up.

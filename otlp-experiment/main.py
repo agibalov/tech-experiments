@@ -6,13 +6,6 @@ import logging
 import random
 from fastapi import FastAPI
 
-from instrumentation import instrument_app, setup_instrumentation
-
-APPLY_INSTRUMENTATION_PROGRAMMATICALLY = True
-
-if APPLY_INSTRUMENTATION_PROGRAMMATICALLY:
-    setup_instrumentation()
-
 log = logging.getLogger("demo")
 
 async def do_processing(seconds: int):
@@ -44,14 +37,20 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-if APPLY_INSTRUMENTATION_PROGRAMMATICALLY:
-    instrument_app(app)
-
 @app.get("/")
 def index():
     log.info(f"Handling request for index random={random.randint(1, 100)}")
     sleep(random.random()*2)
     if random.random() > 0.95:
+        raise Exception("Random error!")
+    
+    return {"Hello": "World"}
+
+@app.get("/hello")
+def hello():
+    log.info(f"Handling request for hello random={random.randint(1, 100)}")
+    sleep(random.random()*5)
+    if random.random() > 0.90:
         raise Exception("Random error!")
     
     return {"Hello": "World"}

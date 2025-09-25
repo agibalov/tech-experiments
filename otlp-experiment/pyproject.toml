@@ -14,5 +14,6 @@ dependencies = [
     "opentelemetry-instrumentation-asgi>=0.58b0",
     "opentelemetry-instrumentation-fastapi>=0.58b0",
     "opentelemetry-instrumentation-logging>=0.58b0",
+    "opentelemetry-instrumentation-starlette>=0.58b0",
     "opentelemetry-sdk>=1.37.0",
 ]
