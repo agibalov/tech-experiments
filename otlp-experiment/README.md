@@ -2,6 +2,13 @@
 
 Learning OpenTelemetry.
 
+## Prerequisites
+
+* Docker and Docker Compose working without root.
+* NodeJS
+* Python
+* uv
+
 ## How to do things
 
 * `npx pm2 start` to start everything.
