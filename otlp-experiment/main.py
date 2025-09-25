@@ -37,6 +37,7 @@ async def do_processing(seconds: int):
         except Exception as ex:
             root_span.record_exception(ex)
             root_span.set_status(trace.status.Status(trace.status.StatusCode.ERROR, str(ex)))
+            log.exception("do_processing failed")
             raise
 
 
