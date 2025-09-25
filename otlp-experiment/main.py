@@ -5,10 +5,12 @@ from contextlib import asynccontextmanager
 import logging
 import random
 from fastapi import FastAPI
-from opentelemetry import trace
+from opentelemetry import trace, metrics
 
 log = logging.getLogger("demo")
 tracer = trace.get_tracer(__name__)
+meter = metrics.get_meter("experiment-app")
+request_counter = meter.create_counter("app.my.request.count", unit="1")
 
 async def do_processing(seconds: int):
     with tracer.start_as_current_span("do_processing") as root_span:
@@ -67,6 +69,7 @@ app = FastAPI(lifespan=lifespan)
 @app.get("/")
 def index():
     log.info(f"Handling request for index random={random.randint(1, 100)}")
+    request_counter.add(1, {"my.handler": "index"})
     sleep(random.random()*2)
     if random.random() > 0.95:
         raise Exception("Random error!")
@@ -76,6 +79,7 @@ def index():
 @app.get("/hello")
 def hello():
     log.info(f"Handling request for hello random={random.randint(1, 100)}")
+    request_counter.add(1, {"my.handler": "hello"})
     sleep(random.random()*5)
     if random.random() > 0.90:
         raise Exception("Random error!")
