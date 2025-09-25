@@ -1,4 +1,4 @@
-# otlp-experiment
+# otel-experiment
 
 This is a demo/test stand that I use to learn OpenTelemetry. It consists of:
 
