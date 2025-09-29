@@ -31,3 +31,4 @@ The idea is to launch all this, and then see what's happening in Grafana (otel-l
 
 * `npx pm2 stop all` to stop everything. Note that this will not delete the `otel-lgtm` container. To delete manually: `docker rm otel-lgtm`.
 * `npx pm2 list` to see what's up.
+* `uv run uvicorn main:app --reload` to launch app in dev mode.

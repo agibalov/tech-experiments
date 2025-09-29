@@ -16,4 +16,6 @@ dependencies = [
     "opentelemetry-instrumentation-logging>=0.58b0",
     "opentelemetry-instrumentation-starlette>=0.58b0",
     "opentelemetry-sdk>=1.37.0",
+    "python-json-logger>=3.3.0",
+    "structlog>=25.4.0",
 ]
