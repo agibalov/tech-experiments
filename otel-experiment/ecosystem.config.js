@@ -20,7 +20,6 @@ module.exports = {
                 OTEL_EXPORTER_OTLP_PROTOCOL: "http/protobuf",
                 OTEL_SERVICE_NAME: "experiment-app",
                 OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED: "true",
-                OTEL_PYTHON_LOG_CORRELATION: "true",
                 OTEL_SEMCONV_STABILITY_OPT_IN: "http"
             }
         },

@@ -4,7 +4,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from contextlib import asynccontextmanager
 import random
 from fastapi import FastAPI, Request
-from starlette.middleware.base import BaseHTTPMiddleware
+from fastapi.routing import APIRoute
 from opentelemetry import trace, metrics
 
 from log import init_logging
@@ -69,41 +69,30 @@ async def lifespan(app: FastAPI):
 
     log.info("Shutting down...")
 
-app = FastAPI(lifespan=lifespan)
-
-class RouteBindingMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next):
-        try:
-            # Before handlers run, bind what we know
-            route = None
-            # Starlette sets this later in routing; we’ll fill it after resolution, too.
-            structlog.contextvars.bind_contextvars(
-                http_method=request.method,
-                path=request.url.path,             # raw path
-                client_ip=(request.client.host if request.client else None),
-            )
-
-            # Let routing resolve (so request.scope["route"] is set)
-            log.info("Before call_next")
-            response = await call_next(request)
-
-            # After resolution, add the route template (e.g., "/users/{id}")
+class ContextRoute(APIRoute):
+    def get_route_handler(self):
+        original = super().get_route_handler()
+        async def handler(request: Request):
             r = request.scope.get("route")
-            if r is not None:
-                route = getattr(r, "path", None)   # template path
-                if route:
-                    structlog.contextvars.bind_contextvars(route=route, endpoint=getattr(r, "name", None))
+            structlog.contextvars.bind_contextvars(
+               route=getattr(r, "path", request.url.path),
+               route_name=getattr(r, "name", None),
+               method=request.method,
+               client_ip=request.client.host if request.client else None,
+               user_agent=request.headers.get("user-agent")
+            )
+            log.info("Started handling request")
+            try:
+                return await original(request)
+            finally:
+                log.info("Finished handling request")
+                structlog.contextvars.clear_contextvars()
+        return handler
 
-            log.info("After call_next")
+app = FastAPI(lifespan=lifespan)
+app.router.route_class = ContextRoute
 
-            return response
-        finally:
-            # prevent leakage across requests
-            structlog.contextvars.clear_contextvars()
-
-app.add_middleware(RouteBindingMiddleware)
-
-@app.get("/")
+@app.get("/", name="get_index")
 def index():
     r = random.randint(1, 100)
     log.info("Handling request for index", r=r)
@@ -117,7 +106,7 @@ def index():
 
     return {"Hello": "World"}
 
-@app.get("/hello")
+@app.get("/hello", name="get_hello")
 def hello():
     r = random.randint(1, 100)
     log.info("Handling request for hello", r=r)
