@@ -1,0 +1,35 @@
+version = 1
+revision = 3
+requires-python = ">=3.13"
+
+[[package]]
+name = "networking-experiment"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "pyroute2" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "pyroute2", specifier = ">=0.9.5" }]
+
+[[package]]
+name = "pyroute2"
+version = "0.9.5"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "win-inet-pton", marker = "sys_platform == 'win32'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/1d/b2/1019ddc278549fb7e64a16d7775e0f7d981135f762b8706e583414d655e3/pyroute2-0.9.5.tar.gz", hash = "sha256:a198ccbe545b031b00b10da4b44df33d548db04af944be8107c05a215ba03872", size = 969492, upload-time = "2025-11-02T18:42:49.603Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/bd/66/995c65e7566543e941705f9b1b99ebfd7f9d3ed67c8eb7cb47f30168dc72/pyroute2-0.9.5-py3-none-any.whl", hash = "sha256:e7d485ce8274cbf473e9092fa65585faf8a3df5fe05ecf497cb9c5b1516ba09f", size = 480641, upload-time = "2025-11-02T18:42:45.75Z" },
+]
+
+[[package]]
+name = "win-inet-pton"
+version = "1.1.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/d9/da/0b1487b5835497dea00b00d87c2aca168bb9ca2e2096981690239e23760a/win_inet_pton-1.1.0.tar.gz", hash = "sha256:dd03d942c0d3e2b1cf8bab511844546dfa5f74cb61b241699fa379ad707dea4f", size = 2949, upload-time = "2019-02-19T17:46:23.925Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/be/31/ff772a44aa56319df8afbb0b34f1a856f66f05b9d5f1fed917849e47fdae/win_inet_pton-1.1.0-py2.py3-none-any.whl", hash = "sha256:eaf0193cbe7152ac313598a0da7313fb479f769343c0c16c5308f64887dc885b", size = 4848, upload-time = "2019-02-19T17:46:22.182Z" },
+]

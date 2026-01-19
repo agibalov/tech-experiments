@@ -1,0 +1,15 @@
+# Private recipe for running Python scripts with sudo
+_sudo-run script:
+    uv sync && UV=$(which uv) && sudo $UV run python {{script}}
+
+# TAP experiments
+tap-monitor: (_sudo-run "tap_monitor.py")
+tap-ping-server: (_sudo-run "tap_ping_server.py")
+tun-monitor: (_sudo-run "tun_monitor.py")
+tun-ping-server: (_sudo-run "tun_ping_server.py")
+
+ping:
+    ping 10.123.0.2
+
+# pyroute2 namespace experiment
+pyroute2-hello-world: (_sudo-run "pyroute2_hello_world.py")
