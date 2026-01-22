@@ -11,5 +11,14 @@ tun-ping-server: (_sudo-run "tun_ping_server.py")
 ping:
     ping 10.123.0.2
 
-# pyroute2 namespace experiment
+# pyroute2 namespace experiments
 pyroute2-hello-world: (_sudo-run "pyroute2_hello_world.py")
+isp-failover: (_sudo-run "isp_failover.py")
+
+# ISP failover manual control (requires isp_failover.py to be running)
+isp-a: (_sudo-run "isp_failover.py isp-a")
+isp-b: (_sudo-run "isp_failover.py isp-b")
+
+# Testing
+test-isp-failover:
+    uv sync && UV=$(which uv) && sudo $UV run pytest test_isp_failover.py -v
