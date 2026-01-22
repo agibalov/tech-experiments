@@ -65,7 +65,9 @@ run() {
     sudo ip netns exec $ISP_A_NS sysctl -w net.ipv4.ip_forward=1
     sudo ip netns exec $ISP_A_NS ip route add 10.0.3.0/24 via 10.0.1.2 dev $VETH_ISP_A_ISP
     sudo ip netns exec $ISP_A_NS ip route add default via 10.0.4.1 dev $VETH_ISP_A_INTERNET
-    sudo ip netns exec $ISP_A_NS iptables -t nat -A POSTROUTING -o $VETH_ISP_A_INTERNET -j MASQUERADE
+    sudo ip netns exec $ISP_A_NS nft add table ip nat
+    sudo ip netns exec $ISP_A_NS nft add chain ip nat postrouting { type nat hook postrouting priority 100 \; }
+    sudo ip netns exec $ISP_A_NS nft add rule ip nat postrouting oifname \"$VETH_ISP_A_INTERNET\" masquerade
 
     # Create ISP-B namespace with forwarding
     sudo ip netns add $ISP_B_NS
@@ -80,7 +82,9 @@ run() {
     sudo ip netns exec $ISP_B_NS sysctl -w net.ipv4.ip_forward=1
     sudo ip netns exec $ISP_B_NS ip route add 10.0.3.0/24 via 10.0.2.2 dev $VETH_ISP_B_ISP
     sudo ip netns exec $ISP_B_NS ip route add default via 10.0.4.1 dev $VETH_ISP_B_INTERNET
-    sudo ip netns exec $ISP_B_NS iptables -t nat -A POSTROUTING -o $VETH_ISP_B_INTERNET -j MASQUERADE
+    sudo ip netns exec $ISP_B_NS nft add table ip nat
+    sudo ip netns exec $ISP_B_NS nft add chain ip nat postrouting { type nat hook postrouting priority 100 \; }
+    sudo ip netns exec $ISP_B_NS nft add rule ip nat postrouting oifname \"$VETH_ISP_B_INTERNET\" masquerade
 
     # Create router namespace
     sudo ip netns add $ROUTER_NS
