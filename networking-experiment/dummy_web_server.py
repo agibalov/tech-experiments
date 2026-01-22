@@ -1,23 +1,17 @@
 #!/usr/bin/env python3
-import os
-import sys
 from http.server import HTTPServer, BaseHTTPRequestHandler
-
-MESSAGE = os.environ.get('MESSAGE')
-if MESSAGE is None:
-    print('ERROR: MESSAGE environment variable is not set', file=sys.stderr)
-    sys.exit(1)
 
 
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/':
-            message = MESSAGE
-            print(f"REQUEST! (message={message})")
+            source_ip = self.client_address[0]
+            response = f"Request from: {source_ip}\n"
+            print(f"REQUEST from {source_ip}")
             self.send_response(200)
             self.send_header('Content-Type', 'text/plain')
             self.end_headers()
-            self.wfile.write(message.encode())
+            self.wfile.write(response.encode())
         else:
             self.send_response(404)
             self.end_headers()
