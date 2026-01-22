@@ -63,8 +63,6 @@ run() {
     sudo ip netns exec $ISP_A_NS ip addr add 10.0.4.2/24 dev $VETH_ISP_A_INTERNET
     sudo ip netns exec $ISP_A_NS ip addr add 10.0.1.1/24 dev $VETH_ISP_A_ISP
     sudo ip netns exec $ISP_A_NS sysctl -w net.ipv4.ip_forward=1
-    sudo ip netns exec $ISP_A_NS sysctl -w net.ipv4.conf.all.rp_filter=0
-    sudo ip netns exec $ISP_A_NS sysctl -w net.ipv4.conf.default.rp_filter=0
     sudo ip netns exec $ISP_A_NS ip route add 10.0.3.0/24 via 10.0.1.2 dev $VETH_ISP_A_ISP
     sudo ip netns exec $ISP_A_NS ip route add default via 10.0.4.1 dev $VETH_ISP_A_INTERNET
     sudo ip netns exec $ISP_A_NS iptables -t nat -A POSTROUTING -o $VETH_ISP_A_INTERNET -j MASQUERADE
@@ -80,8 +78,6 @@ run() {
     sudo ip netns exec $ISP_B_NS ip addr add 10.0.4.3/24 dev $VETH_ISP_B_INTERNET
     sudo ip netns exec $ISP_B_NS ip addr add 10.0.2.1/24 dev $VETH_ISP_B_ISP
     sudo ip netns exec $ISP_B_NS sysctl -w net.ipv4.ip_forward=1
-    sudo ip netns exec $ISP_B_NS sysctl -w net.ipv4.conf.all.rp_filter=0
-    sudo ip netns exec $ISP_B_NS sysctl -w net.ipv4.conf.default.rp_filter=0
     sudo ip netns exec $ISP_B_NS ip route add 10.0.3.0/24 via 10.0.2.2 dev $VETH_ISP_B_ISP
     sudo ip netns exec $ISP_B_NS ip route add default via 10.0.4.1 dev $VETH_ISP_B_INTERNET
     sudo ip netns exec $ISP_B_NS iptables -t nat -A POSTROUTING -o $VETH_ISP_B_INTERNET -j MASQUERADE
