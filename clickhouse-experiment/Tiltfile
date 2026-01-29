@@ -38,3 +38,11 @@ local_resource(
     resource_deps=['lightdash-bootstrap'],
     labels=['lightdash'],
 )
+
+# Analytics client - continuously queries ClickHouse
+local_resource(
+    'analytics-client',
+    serve_cmd='cd analytics-client && uv run query_runner.py',
+    deps=['analytics-client/query_runner.py'],
+    labels=['clickhouse'],
+)

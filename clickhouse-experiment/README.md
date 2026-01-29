@@ -17,6 +17,7 @@ This starts Tilt, which:
 3. Imports the pre-configured Superset dashboard
 4. Bootstraps Lightdash (user, organization, project, charts, and dashboard)
 5. Provisions Grafana with ClickHouse datasource and dashboard
+6. Starts analytics-client that continuously queries ClickHouse
 
 Wait for all resources to turn green in Tilt (~2-3 minutes on first run).
 
@@ -61,6 +62,20 @@ Wait for all resources to turn green in Tilt (~2-3 minutes on first run).
 - Top Pages (table)
 - Traffic by Country (table)
 - Big numbers: Total Events, Unique Users
+
+### Analytics Client
+A Python script that queries ClickHouse directly every 5 seconds, demonstrating programmatic access without a BI tool. Outputs page views by day of week:
+
+```
+--- Page Views by Day of Week ---
+  Monday: 264,123
+  Tuesday: 263,891
+  Wednesday: 264,012
+  ...
+---------------------------------
+```
+
+View output in Tilt UI under "analytics-client" resource.
 
 The `events` dbt model includes:
 - Dimensions: event_time, event_type, page_url, device_type, country, browser
