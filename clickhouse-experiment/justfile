@@ -36,7 +36,7 @@ clickhouse-client:
 # Stop all and remove volumes
 clean:
     docker compose down -v
-    docker run --rm -v {{justfile_directory()}}/clickhouse/data:/data alpine rm -rf /data/*
+    docker run --rm -v {{justfile_directory()}}/clickhouse/data:/data alpine sh -c "rm -rf /data/* /data/.*" 2>/dev/null || true
 
 # View logs
 logs:

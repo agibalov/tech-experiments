@@ -5,22 +5,21 @@ Web analytics dashboard with ClickHouse as the data store and Apache Superset fo
 ## Start
 
 ```bash
-docker compose up -d
+just up
 ```
 
-Wait for Superset to initialize (~30 seconds on first run). Check logs:
+This starts Tilt, which:
+1. Starts ClickHouse and Superset containers
+2. Loads ~3.6M synthetic web analytics events (10 years of data)
+3. Imports the pre-configured dashboard
 
-```bash
-docker compose logs superset -f
-```
-
-Look for `=== Bootstrap Complete ===` followed by `Starting gunicorn`.
+Wait for all resources to turn green in Tilt (~1-2 minutes on first run).
 
 ## Access
 
 - **Superset**: http://localhost:8088
 - **Login**: admin / admin
-- **Dashboard**: "Web Analytics Overview" (pre-configured)
+- **Dashboard**: "Web Analytics Overview"
 
 ## What to Expect
 
@@ -30,27 +29,23 @@ The dashboard shows:
 - Traffic by device type (pie chart)
 - Traffic by country (table)
 
-Note: Charts will be empty until you load sample data into ClickHouse.
-
-## Load Sample Data
-
-```bash
-cd data-loader
-pip install -r requirements.txt
-python generate_events.py
-```
-
-This generates ~3.6M synthetic web analytics events (10 years of data).
-
 ## Stop
 
 ```bash
-docker compose down
+just down
 ```
 
 ## Clean (remove all data)
 
 ```bash
-docker compose down -v
-sudo rm -rf clickhouse/data
+just clean
+```
+
+## Other Commands
+
+```bash
+just                    # List all commands
+just clickhouse-client  # Open ClickHouse CLI
+just logs               # View container logs
+just rebuild-superset   # Rebuild Superset image after dashboard changes
 ```

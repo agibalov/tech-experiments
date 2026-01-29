@@ -15,6 +15,7 @@ Usage:
 
 import argparse
 import random
+import time
 import uuid
 from datetime import datetime, timedelta
 from typing import Iterator
@@ -205,14 +206,24 @@ def main():
     print(f"Base events per day: {args.events_per_day}")
     print(f"Connecting to ClickHouse at {args.host}:{args.port}")
 
-    # Connect to ClickHouse
-    client = clickhouse_connect.get_client(
-        host=args.host,
-        port=args.port,
-        username="default",
-        password=args.password,
-        database="analytics",
-    )
+    # Connect to ClickHouse with retry
+    client = None
+    for attempt in range(30):
+        try:
+            client = clickhouse_connect.get_client(
+                host=args.host,
+                port=args.port,
+                username="default",
+                password=args.password,
+                database="analytics",
+            )
+            break
+        except Exception as e:
+            if attempt < 29:
+                print(f"Connection attempt {attempt + 1} failed, retrying in 2s...")
+                time.sleep(2)
+            else:
+                raise e
 
     # Check if table exists and has data
     result = client.query("SELECT count() FROM events")

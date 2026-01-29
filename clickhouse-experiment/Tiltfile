@@ -11,11 +11,3 @@ local_resource(
     resource_deps=['clickhouse'],
     labels=['data'],
 )
-
-# Wait for Superset to start, then run initialization
-local_resource(
-    'superset-init',
-    cmd='docker compose exec -T superset bash /app/bootstrap.sh',
-    resource_deps=['superset'],
-    labels=['setup'],
-)
