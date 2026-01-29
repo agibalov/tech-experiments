@@ -1,0 +1,70 @@
+version: 2
+
+models:
+  - name: events
+    description: "Web analytics events tracking page views, clicks, and sessions"
+    meta:
+      label: "Events"
+    columns:
+      - name: event_time
+        description: "When the event occurred"
+        meta:
+          dimension:
+            type: timestamp
+      - name: event_type
+        description: "Type of event (page_view, click, session_start, session_end)"
+        meta:
+          dimension:
+            type: string
+      - name: user_id
+        description: "Anonymous visitor ID"
+        meta:
+          dimension:
+            type: string
+      - name: session_id
+        description: "Session identifier"
+        meta:
+          dimension:
+            type: string
+      - name: page_url
+        description: "Page URL visited"
+        meta:
+          dimension:
+            type: string
+      - name: referrer
+        description: "Traffic source (google, facebook, direct, etc.)"
+        meta:
+          dimension:
+            type: string
+      - name: device_type
+        description: "Device type (desktop, mobile, tablet)"
+        meta:
+          dimension:
+            type: string
+      - name: country
+        description: "Country code (US, GB, DE, etc.)"
+        meta:
+          dimension:
+            type: string
+      - name: browser
+        description: "Browser name (Chrome, Firefox, Safari, Edge)"
+        meta:
+          dimension:
+            type: string
+    meta:
+      metrics:
+        total_events:
+          type: count
+          sql: ${event_time}
+          label: "Total Events"
+          description: "Total number of events"
+        unique_users:
+          type: count_distinct
+          sql: ${user_id}
+          label: "Unique Users"
+          description: "Number of unique visitors"
+        unique_sessions:
+          type: count_distinct
+          sql: ${session_id}
+          label: "Unique Sessions"
+          description: "Number of unique sessions"

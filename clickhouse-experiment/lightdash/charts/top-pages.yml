@@ -1,0 +1,31 @@
+name: Top Pages
+description: Most visited pages
+tableName: events
+updatedAt: "2026-01-29T16:50:04.242Z"
+metricQuery:
+  exploreName: events
+  dimensions:
+    - events_page_url
+  metrics:
+    - events_total_events
+  filters: {}
+  sorts:
+    - fieldId: events_total_events
+      descending: true
+  limit: 10
+  metricOverrides: {}
+  dimensionOverrides: {}
+  tableCalculations: []
+  additionalMetrics: []
+  customDimensions: []
+chartConfig:
+  type: table
+  config: {}
+slug: top-pages
+tableConfig:
+  columnOrder:
+    - events_page_url
+    - events_total_events
+spaceSlug: shared
+version: 1
+downloadedAt: "2026-01-29T17:04:22.212Z"

@@ -1,0 +1,18 @@
+slice_name: Traffic by Device
+viz_type: pie
+uuid: 33333333-3333-3333-3333-333333333333
+version: "1.0.0"
+dataset_uuid: 22222222-2222-2222-2222-222222222222
+description: Traffic breakdown by device type
+params:
+  viz_type: pie
+  metric: count
+  groupby:
+    - device_type
+  row_limit: 100
+  sort_by_metric: true
+  color_scheme: supersetColors
+  show_legend: true
+  show_labels: true
+  label_type: key_percent
+  number_format: SMART_NUMBER

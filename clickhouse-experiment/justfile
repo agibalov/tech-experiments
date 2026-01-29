@@ -1,0 +1,61 @@
+# ClickHouse + Superset Hello World
+
+default:
+    @just --list
+
+# Start everything with Tilt
+up:
+    tilt up
+
+# Stop Tilt
+down:
+    tilt down
+
+# --- Manual commands (for debugging) ---
+
+# Start only ClickHouse
+clickhouse-up:
+    docker compose up -d clickhouse
+
+# Start only Superset
+superset-up:
+    docker compose up -d superset
+
+# Run Superset initialization (idempotent)
+superset-init:
+    docker compose exec superset bash /app/bootstrap.sh
+
+# Load data into ClickHouse
+load-data:
+    cd data-loader && uv run generate_events.py
+
+# Open ClickHouse CLI
+clickhouse-client:
+    docker compose exec clickhouse clickhouse-client -d analytics
+
+# Stop all and remove volumes
+clean:
+    docker compose down -v
+    docker run --rm -v {{justfile_directory()}}/clickhouse/data:/data alpine sh -c "rm -rf /data/* /data/.*" 2>/dev/null || true
+
+# View logs
+logs:
+    docker compose logs -f
+
+# Rebuild Superset image
+rebuild-superset:
+    docker compose build superset
+
+# --- Lightdash commands ---
+
+# Start only Lightdash
+lightdash-up:
+    docker compose up -d lightdash-db lightdash
+
+# Open Lightdash in browser
+lightdash:
+    xdg-open http://localhost:3000 2>/dev/null || open http://localhost:3000
+
+# View Lightdash logs
+lightdash-logs:
+    docker compose logs -f lightdash

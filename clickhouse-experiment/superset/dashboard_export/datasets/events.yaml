@@ -1,0 +1,96 @@
+table_name: events
+uuid: 22222222-2222-2222-2222-222222222222
+database_uuid: 11111111-1111-1111-1111-111111111111
+version: "1.0.0"
+main_dttm_col: event_time
+description: Web analytics events
+schema: null
+filter_select_enabled: true
+columns:
+  - column_name: event_time
+    verbose_name: Event Time
+    is_dttm: true
+    is_active: true
+    type: DateTime
+    groupby: true
+    filterable: true
+  - column_name: event_type
+    verbose_name: Event Type
+    is_dttm: false
+    is_active: true
+    type: String
+    groupby: true
+    filterable: true
+  - column_name: user_id
+    verbose_name: User ID
+    is_dttm: false
+    is_active: true
+    type: UUID
+    groupby: true
+    filterable: true
+  - column_name: session_id
+    verbose_name: Session ID
+    is_dttm: false
+    is_active: true
+    type: UUID
+    groupby: true
+    filterable: true
+  - column_name: page_url
+    verbose_name: Page URL
+    is_dttm: false
+    is_active: true
+    type: String
+    groupby: true
+    filterable: true
+  - column_name: referrer
+    verbose_name: Referrer
+    is_dttm: false
+    is_active: true
+    type: String
+    groupby: true
+    filterable: true
+  - column_name: device_type
+    verbose_name: Device Type
+    is_dttm: false
+    is_active: true
+    type: String
+    groupby: true
+    filterable: true
+  - column_name: country
+    verbose_name: Country
+    is_dttm: false
+    is_active: true
+    type: String
+    groupby: true
+    filterable: true
+  - column_name: browser
+    verbose_name: Browser
+    is_dttm: false
+    is_active: true
+    type: String
+    groupby: true
+    filterable: true
+  - column_name: day_of_week
+    verbose_name: Day of Week
+    is_dttm: false
+    is_active: true
+    type: String
+    groupby: true
+    filterable: true
+    expression: "CASE toDayOfWeek(event_time) WHEN 1 THEN 'Mon' WHEN 2 THEN 'Tue' WHEN 3 THEN 'Wed' WHEN 4 THEN 'Thu' WHEN 5 THEN 'Fri' WHEN 6 THEN 'Sat' WHEN 7 THEN 'Sun' END"
+metrics:
+  - metric_name: count
+    verbose_name: Count
+    metric_type: count
+    expression: COUNT(*)
+    description: Row count
+  - metric_name: unique_users
+    verbose_name: Unique Users
+    metric_type: count_distinct
+    expression: COUNT(DISTINCT user_id)
+    description: Unique user count
+  - metric_name: unique_sessions
+    verbose_name: Unique Sessions
+    metric_type: count_distinct
+    expression: COUNT(DISTINCT session_id)
+    description: Unique session count

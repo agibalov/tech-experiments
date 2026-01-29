@@ -1,0 +1,43 @@
+name: Daily Events
+description: Events over time by day
+tableName: events
+updatedAt: "2026-01-29T16:50:04.206Z"
+metricQuery:
+  exploreName: events
+  dimensions:
+    - events_event_time_day
+  metrics:
+    - events_total_events
+  filters: {}
+  sorts:
+    - fieldId: events_event_time_day
+      descending: false
+  limit: 500
+  metricOverrides: {}
+  dimensionOverrides: {}
+  tableCalculations: []
+  additionalMetrics: []
+  customDimensions: []
+chartConfig:
+  type: cartesian
+  config:
+    layout:
+      xField: events_event_time_day
+      yField:
+        - events_total_events
+    eChartsConfig:
+      series:
+        - type: line
+          encode:
+            xRef:
+              field: events_event_time_day
+            yRef:
+              field: events_total_events
+slug: daily-events
+tableConfig:
+  columnOrder:
+    - events_event_time_day
+    - events_total_events
+spaceSlug: shared
+version: 1
+downloadedAt: "2026-01-29T17:04:22.212Z"

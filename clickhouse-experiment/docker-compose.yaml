@@ -1,0 +1,142 @@
+services:
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    ports:
+      - "8123:8123"  # HTTP interface
+      - "9000:9000"  # Native interface
+    environment:
+      - CLICKHOUSE_USER=default
+      - CLICKHOUSE_PASSWORD=clickhouse
+    volumes:
+      - ./clickhouse/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./clickhouse/data:/var/lib/clickhouse
+    healthcheck:
+      test: ["CMD", "clickhouse-client", "--password", "clickhouse", "--query", "SELECT 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  superset:
+    build: ./superset
+    ports:
+      - "8088:8088"
+    environment:
+      - SUPERSET_SECRET_KEY=clickhouse-experiment-secret-key-change-in-prod
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASSWORD=admin
+      - ADMIN_EMAIL=admin@example.com
+    command: ["/bin/bash", "-c", "bash /app/bootstrap.sh && /app/docker/entrypoints/run-server.sh"]
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+
+  # MinIO - S3-compatible storage for Lightdash (required for ClickHouse)
+  minio:
+    image: minio/minio:latest
+    ports:
+      - "9002:9000"
+      - "9001:9001"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio-data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Create MinIO bucket for Lightdash
+  minio-init:
+    image: minio/mc:latest
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      sleep 2;
+      until mc alias set myminio http://minio:9000 minioadmin minioadmin; do sleep 1; done;
+      mc mb --ignore-existing myminio/lightdash;
+      exit 0;
+      "
+
+  # Lightdash - dbt-first BI tool
+  lightdash-db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=lightdash
+      - POSTGRES_PASSWORD=lightdash
+      - POSTGRES_DB=lightdash
+    volumes:
+      - lightdash-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lightdash"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  lightdash:
+    image: lightdash/lightdash:latest
+    depends_on:
+      lightdash-db:
+        condition: service_healthy
+      clickhouse:
+        condition: service_healthy
+      minio-init:
+        condition: service_completed_successfully
+    ports:
+      - "3000:8080"
+    environment:
+      - PGHOST=lightdash-db
+      - PGPORT=5432
+      - PGUSER=lightdash
+      - PGPASSWORD=lightdash
+      - PGDATABASE=lightdash
+      - LIGHTDASH_SECRET=not-very-secret-change-in-prod
+      - SITE_URL=http://localhost:3000
+      - ALLOW_MULTIPLE_ORGS=false
+      - DBT_PROJECT_DIR=/usr/app/dbt
+      # S3 storage (MinIO) for ClickHouse query results
+      - S3_REGION=us-east-1
+      - S3_ACCESS_KEY=minioadmin
+      - S3_SECRET_KEY=minioadmin
+      - S3_BUCKET=lightdash
+      - S3_ENDPOINT=http://minio:9000
+      - S3_FORCE_PATH_STYLE=true
+    volumes:
+      - ./dbt-project:/usr/app/dbt
+      - ./lightdash/bootstrap.js:/app/bootstrap.js:ro
+      - ./lightdash:/app/lightdash-content:ro
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/api/v1/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+  # Grafana - observability and dashboards
+  grafana:
+    image: grafana/grafana:latest
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_INSTALL_PLUGINS=grafana-clickhouse-datasource
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/api/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  lightdash-db-data:
+  minio-data:

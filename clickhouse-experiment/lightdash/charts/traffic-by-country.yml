@@ -1,0 +1,31 @@
+name: Traffic by Country
+description: Events by country
+tableName: events
+updatedAt: "2026-01-29T16:50:04.308Z"
+metricQuery:
+  exploreName: events
+  dimensions:
+    - events_country
+  metrics:
+    - events_total_events
+  filters: {}
+  sorts:
+    - fieldId: events_total_events
+      descending: true
+  limit: 15
+  metricOverrides: {}
+  dimensionOverrides: {}
+  tableCalculations: []
+  additionalMetrics: []
+  customDimensions: []
+chartConfig:
+  type: table
+  config: {}
+slug: traffic-by-country
+tableConfig:
+  columnOrder:
+    - events_country
+    - events_total_events
+spaceSlug: shared
+version: 1
+downloadedAt: "2026-01-29T17:04:22.212Z"
