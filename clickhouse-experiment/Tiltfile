@@ -1,0 +1,21 @@
+# ClickHouse + Superset Hello World
+
+# Load docker-compose services
+docker_compose('./docker-compose.yaml')
+
+# Wait for ClickHouse to be healthy, then load data
+local_resource(
+    'load-data',
+    cmd='cd data-loader && uv run generate_events.py',
+    deps=['data-loader/generate_events.py', 'data-loader/requirements.txt'],
+    resource_deps=['clickhouse'],
+    labels=['data'],
+)
+
+# Wait for Superset to start, then run initialization
+local_resource(
+    'superset-init',
+    cmd='docker compose exec -T superset bash /app/bootstrap.sh',
+    resource_deps=['superset'],
+    labels=['setup'],
+)

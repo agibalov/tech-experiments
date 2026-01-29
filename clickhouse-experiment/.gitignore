@@ -1,0 +1,14 @@
+# ClickHouse data
+clickhouse/data/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Superset
+superset/.superset/
+
+.claude
+.mcp.json

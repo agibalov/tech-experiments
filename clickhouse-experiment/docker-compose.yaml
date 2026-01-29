@@ -1,0 +1,31 @@
+services:
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    ports:
+      - "8123:8123"  # HTTP interface
+      - "9000:9000"  # Native interface
+    environment:
+      - CLICKHOUSE_USER=default
+      - CLICKHOUSE_PASSWORD=clickhouse
+    volumes:
+      - ./clickhouse/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./clickhouse/data:/var/lib/clickhouse
+    healthcheck:
+      test: ["CMD", "clickhouse-client", "--password", "clickhouse", "--query", "SELECT 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  superset:
+    build: ./superset
+    ports:
+      - "8088:8088"
+    environment:
+      - SUPERSET_SECRET_KEY=clickhouse-experiment-secret-key-change-in-prod
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASSWORD=admin
+      - ADMIN_EMAIL=admin@example.com
+    command: ["/bin/bash", "-c", "bash /app/bootstrap.sh && /app/docker/entrypoints/run-server.sh"]
+    depends_on:
+      clickhouse:
+        condition: service_healthy

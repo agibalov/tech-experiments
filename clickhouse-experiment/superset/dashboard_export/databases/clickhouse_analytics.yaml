@@ -1,0 +1,11 @@
+database_name: ClickHouse Analytics
+sqlalchemy_uri: clickhousedb+connect://default:clickhouse@clickhouse:8123/analytics
+uuid: 11111111-1111-1111-1111-111111111111
+version: "1.0.0"
+expose_in_sqllab: true
+allow_run_async: true
+allow_ctas: false
+allow_cvas: false
+allow_dml: false
+allow_csv_upload: false
+extra: {}

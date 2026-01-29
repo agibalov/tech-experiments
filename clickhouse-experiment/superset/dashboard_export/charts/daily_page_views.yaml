@@ -1,0 +1,19 @@
+slice_name: Daily Page Views
+viz_type: echarts_timeseries_line
+uuid: 33333333-3333-3333-3333-333333333331
+version: "1.0.0"
+dataset_uuid: 22222222-2222-2222-2222-222222222222
+description: Page views over time
+params:
+  viz_type: echarts_timeseries_line
+  x_axis: event_time
+  time_grain_sqla: P1D
+  metrics:
+    - count
+  groupby: []
+  row_limit: 10000
+  show_legend: true
+  rich_tooltip: true
+  y_axis_format: SMART_NUMBER
+  truncate_metric: true
+  show_empty_columns: true
