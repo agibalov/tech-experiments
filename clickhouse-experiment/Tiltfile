@@ -1,4 +1,4 @@
-# ClickHouse + Superset + Lightdash
+# ClickHouse + Superset + Lightdash + Grafana
 
 # Load docker-compose services
 docker_compose('./docker-compose.yaml')
@@ -10,6 +10,7 @@ dc_resource('minio', labels=['lightdash'])
 dc_resource('minio-init', labels=['lightdash'])
 dc_resource('lightdash-db', labels=['lightdash'])
 dc_resource('lightdash', labels=['lightdash'])
+dc_resource('grafana', labels=['grafana'])
 
 # Wait for ClickHouse to be healthy, then load data
 local_resource(

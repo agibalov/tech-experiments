@@ -1,8 +1,9 @@
-# ClickHouse + Superset + Lightdash Experiment
+# ClickHouse + Superset + Lightdash + Grafana Experiment
 
-Web analytics dashboard with ClickHouse as the data store, with two BI tools:
+Web analytics dashboard with ClickHouse as the data store, with three BI tools:
 - **Apache Superset** - Direct SQL queries to ClickHouse
 - **Lightdash** - dbt-first semantic layer approach
+- **Grafana** - Observability-focused dashboards
 
 ## Start
 
@@ -11,10 +12,11 @@ just up
 ```
 
 This starts Tilt, which:
-1. Starts ClickHouse, Superset, and Lightdash containers
+1. Starts ClickHouse, Superset, Lightdash, and Grafana containers
 2. Loads ~3.6M synthetic web analytics events (10 years of data)
 3. Imports the pre-configured Superset dashboard
 4. Bootstraps Lightdash (user, organization, project, charts, and dashboard)
+5. Provisions Grafana with ClickHouse datasource and dashboard
 
 Wait for all resources to turn green in Tilt (~2-3 minutes on first run).
 
@@ -31,6 +33,11 @@ Wait for all resources to turn green in Tilt (~2-3 minutes on first run).
 - **Project**: "Analytics" with ClickHouse warehouse (auto-configured)
 - **Dashboard**: "Web Analytics Overview" (pre-configured)
 
+### Grafana (ready to use)
+- **URL**: http://localhost:3001
+- **Login**: admin / admin
+- **Dashboard**: "Web Analytics Overview" (pre-configured)
+
 ## What to Expect
 
 ### Superset Dashboard
@@ -45,6 +52,13 @@ Wait for all resources to turn green in Tilt (~2-3 minutes on first run).
 - Daily Events (line chart)
 - Top Pages (table)
 - Traffic by Device (pie chart)
+- Traffic by Country (table)
+- Big numbers: Total Events, Unique Users
+
+### Grafana Dashboard
+- Daily Events (time series)
+- Traffic by Device (pie chart)
+- Top Pages (table)
 - Traffic by Country (table)
 - Big numbers: Total Events, Unique Users
 
