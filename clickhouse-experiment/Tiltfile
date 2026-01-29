@@ -1,7 +1,15 @@
-# ClickHouse + Superset Hello World
+# ClickHouse + Superset + Lightdash
 
 # Load docker-compose services
 docker_compose('./docker-compose.yaml')
+
+# Group docker-compose services by label
+dc_resource('clickhouse', labels=['clickhouse'])
+dc_resource('superset', labels=['superset'])
+dc_resource('minio', labels=['lightdash'])
+dc_resource('minio-init', labels=['lightdash'])
+dc_resource('lightdash-db', labels=['lightdash'])
+dc_resource('lightdash', labels=['lightdash'])
 
 # Wait for ClickHouse to be healthy, then load data
 local_resource(
@@ -9,5 +17,23 @@ local_resource(
     cmd='cd data-loader && uv run generate_events.py',
     deps=['data-loader/generate_events.py', 'data-loader/requirements.txt'],
     resource_deps=['clickhouse'],
-    labels=['data'],
+    labels=['clickhouse'],
+)
+
+# Bootstrap Lightdash (create user, org, project, connect ClickHouse)
+local_resource(
+    'lightdash-bootstrap',
+    cmd='docker compose exec -T lightdash node /app/bootstrap.js',
+    deps=['lightdash/bootstrap.js'],
+    resource_deps=['lightdash'],
+    labels=['lightdash'],
+)
+
+# Upload Lightdash dashboards from YAML files
+local_resource(
+    'lightdash-dashboards',
+    cmd='bash lightdash/upload-dashboards.sh',
+    deps=['lightdash/charts', 'lightdash/dashboards', 'lightdash/upload-dashboards.sh'],
+    resource_deps=['lightdash-bootstrap'],
+    labels=['lightdash'],
 )

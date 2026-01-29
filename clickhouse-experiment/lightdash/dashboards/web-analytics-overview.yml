@@ -1,0 +1,85 @@
+name: Web Analytics Overview
+description: Web analytics overview dashboard
+updatedAt: "2026-01-29T16:50:04.430Z"
+tiles:
+  - x: 0
+    "y": 0
+    h: 9
+    w: 18
+    tabUuid: null
+    type: saved_chart
+    properties:
+      title: ""
+      hideTitle: false
+      chartSlug: daily-events
+      chartName: Daily Events
+    tileSlug: daily-events
+  - x: 18
+    "y": 0
+    h: 9
+    w: 18
+    tabUuid: null
+    type: saved_chart
+    properties:
+      title: ""
+      hideTitle: false
+      chartSlug: top-pages
+      chartName: Top Pages
+    tileSlug: top-pages
+  - x: 0
+    "y": 9
+    h: 9
+    w: 18
+    tabUuid: null
+    type: saved_chart
+    properties:
+      title: ""
+      hideTitle: false
+      chartSlug: traffic-by-device
+      chartName: Traffic by Device
+    tileSlug: traffic-by-device
+  - x: 18
+    "y": 9
+    h: 9
+    w: 18
+    tabUuid: null
+    type: saved_chart
+    properties:
+      title: ""
+      hideTitle: false
+      chartSlug: traffic-by-country
+      chartName: Traffic by Country
+    tileSlug: traffic-by-country
+  - x: 0
+    "y": 18
+    h: 9
+    w: 18
+    tabUuid: null
+    type: saved_chart
+    properties:
+      title: ""
+      hideTitle: false
+      chartSlug: total-events
+      chartName: Total Events
+    tileSlug: total-events
+  - x: 18
+    "y": 18
+    h: 9
+    w: 18
+    tabUuid: null
+    type: saved_chart
+    properties:
+      title: ""
+      hideTitle: false
+      chartSlug: unique-users
+      chartName: Unique Users
+    tileSlug: unique-users
+filters:
+  metrics: []
+  dimensions: []
+  tableCalculations: []
+tabs: []
+slug: web-analytics-overview
+spaceSlug: shared
+version: 1
+downloadedAt: "2026-01-29T17:04:22.342Z"

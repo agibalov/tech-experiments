@@ -10,5 +10,10 @@ venv/
 # Superset
 superset/.superset/
 
+# dbt
+dbt-project/target/
+dbt-project/dbt_packages/
+dbt-project/logs/
+
 .claude
 .mcp.json

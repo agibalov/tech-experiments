@@ -1,0 +1,29 @@
+name: Unique Users
+description: Total unique users
+tableName: events
+updatedAt: "2026-01-29T16:50:04.361Z"
+metricQuery:
+  exploreName: events
+  dimensions: []
+  metrics:
+    - events_unique_users
+  filters: {}
+  sorts: []
+  limit: 1
+  metricOverrides: {}
+  dimensionOverrides: {}
+  tableCalculations: []
+  additionalMetrics: []
+  customDimensions: []
+chartConfig:
+  type: big_number
+  config:
+    style: big_number
+    selectedField: events_unique_users
+slug: unique-users
+tableConfig:
+  columnOrder:
+    - events_unique_users
+spaceSlug: shared
+version: 1
+downloadedAt: "2026-01-29T17:04:22.212Z"

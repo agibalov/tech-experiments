@@ -45,3 +45,17 @@ logs:
 # Rebuild Superset image
 rebuild-superset:
     docker compose build superset
+
+# --- Lightdash commands ---
+
+# Start only Lightdash
+lightdash-up:
+    docker compose up -d lightdash-db lightdash
+
+# Open Lightdash in browser
+lightdash:
+    xdg-open http://localhost:3000 2>/dev/null || open http://localhost:3000
+
+# View Lightdash logs
+lightdash-logs:
+    docker compose logs -f lightdash

@@ -1,0 +1,29 @@
+name: Total Events
+description: Total number of events
+tableName: events
+updatedAt: "2026-01-29T16:50:04.331Z"
+metricQuery:
+  exploreName: events
+  dimensions: []
+  metrics:
+    - events_total_events
+  filters: {}
+  sorts: []
+  limit: 1
+  metricOverrides: {}
+  dimensionOverrides: {}
+  tableCalculations: []
+  additionalMetrics: []
+  customDimensions: []
+chartConfig:
+  type: big_number
+  config:
+    style: big_number
+    selectedField: events_total_events
+slug: total-events
+tableConfig:
+  columnOrder:
+    - events_total_events
+spaceSlug: shared
+version: 1
+downloadedAt: "2026-01-29T17:04:22.212Z"

@@ -1,0 +1,36 @@
+name: Traffic by Device
+description: Events by device type
+tableName: events
+updatedAt: "2026-01-29T16:50:04.273Z"
+metricQuery:
+  exploreName: events
+  dimensions:
+    - events_device_type
+  metrics:
+    - events_total_events
+  filters: {}
+  sorts:
+    - fieldId: events_total_events
+      descending: true
+  limit: 10
+  metricOverrides: {}
+  dimensionOverrides: {}
+  tableCalculations: []
+  additionalMetrics: []
+  customDimensions: []
+chartConfig:
+  type: pie
+  config:
+    metricId: events_total_events
+    showLegend: true
+    valueLabel: percent
+    groupFieldIds:
+      - events_device_type
+slug: traffic-by-device
+tableConfig:
+  columnOrder:
+    - events_device_type
+    - events_total_events
+spaceSlug: shared
+version: 1
+downloadedAt: "2026-01-29T17:04:22.212Z"

@@ -1,0 +1,11 @@
+analytics:
+  target: dev
+  outputs:
+    dev:
+      type: clickhouse
+      host: clickhouse
+      port: 8123
+      user: default
+      password: clickhouse
+      schema: analytics
+      secure: false
