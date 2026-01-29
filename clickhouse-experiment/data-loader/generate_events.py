@@ -55,7 +55,7 @@ REFERRERS = [
 DEVICE_TYPES = ["desktop", "mobile", "tablet"]
 DEVICE_WEIGHTS = [0.55, 0.38, 0.07]  # Desktop still leads, mobile growing
 
-COUNTRIES = ["US", "UK", "DE", "FR", "CA", "AU", "JP", "BR", "IN", "NL"]
+COUNTRIES = ["US", "GB", "DE", "FR", "CA", "AU", "JP", "BR", "IN", "NL"]
 COUNTRY_WEIGHTS = [0.35, 0.12, 0.10, 0.08, 0.07, 0.06, 0.05, 0.05, 0.07, 0.05]
 
 BROWSERS = ["Chrome", "Firefox", "Safari", "Edge", "Other"]

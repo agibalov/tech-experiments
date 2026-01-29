@@ -1,0 +1,12 @@
+slice_name: Unique Users
+viz_type: big_number_total
+uuid: 33333333-3333-3333-3333-333333333336
+version: "1.0.0"
+dataset_uuid: 22222222-2222-2222-2222-222222222222
+description: Total unique users
+params:
+  viz_type: big_number_total
+  metric: unique_users
+  y_axis_format: SMART_NUMBER
+  header_font_size: 0.4
+  subheader_font_size: 0.15

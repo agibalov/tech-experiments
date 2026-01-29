@@ -1,0 +1,18 @@
+slice_name: Events by Day of Week
+viz_type: dist_bar
+uuid: 33333333-3333-3333-3333-333333333338
+version: "1.0.0"
+dataset_uuid: 22222222-2222-2222-2222-222222222222
+description: Distribution of events by day of week
+params:
+  viz_type: dist_bar
+  metrics:
+    - count
+  groupby:
+    - day_of_week
+  row_limit: 7
+  order_desc: false
+  color_scheme: supersetColors
+  show_legend: false
+  y_axis_format: SMART_NUMBER
+  bar_stacked: false

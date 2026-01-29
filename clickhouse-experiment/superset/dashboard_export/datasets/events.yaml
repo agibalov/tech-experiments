@@ -70,9 +70,27 @@ columns:
     type: String
     groupby: true
     filterable: true
+  - column_name: day_of_week
+    verbose_name: Day of Week
+    is_dttm: false
+    is_active: true
+    type: String
+    groupby: true
+    filterable: true
+    expression: "CASE toDayOfWeek(event_time) WHEN 1 THEN 'Mon' WHEN 2 THEN 'Tue' WHEN 3 THEN 'Wed' WHEN 4 THEN 'Thu' WHEN 5 THEN 'Fri' WHEN 6 THEN 'Sat' WHEN 7 THEN 'Sun' END"
 metrics:
   - metric_name: count
     verbose_name: Count
     metric_type: count
     expression: COUNT(*)
     description: Row count
+  - metric_name: unique_users
+    verbose_name: Unique Users
+    metric_type: count_distinct
+    expression: COUNT(DISTINCT user_id)
+    description: Unique user count
+  - metric_name: unique_sessions
+    verbose_name: Unique Sessions
+    metric_type: count_distinct
+    expression: COUNT(DISTINCT session_id)
+    description: Unique session count
